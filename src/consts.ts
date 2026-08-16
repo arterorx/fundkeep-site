@@ -160,6 +160,15 @@ export const YNAB = {
   recheckBy: '2026-11-16',
 } as const;
 
+/** How the site writes money. One formatter, so nothing rounds differently. */
+export const money = (amount: number): string =>
+  amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
 /**
  * The other apps, named — the штаб's decision of 16.08.2026, which reversed
  * the narrower line this site launched with.
@@ -201,10 +210,14 @@ export interface Competitor {
 
 export const COMPETITORS: readonly Competitor[] = [
   {
-    name: 'YNAB',
-    url: 'https://www.ynab.com/pricing',
-    price: '$109',
-    priceNote: 'a year, or $14.99 a month. 34-day trial.',
+    name: YNAB.name,
+    url: YNAB.source,
+    // Derived, never retyped. YNAB's figure moves, and on the day it does
+    // there must be exactly one line in this repository to change — the
+    // штаб's standing instruction. Writing "$109" here as a string would have
+    // made two, and the second one would have been the one nobody remembered.
+    price: YNAB.price,
+    priceNote: `${YNAB.period}, or ${money(YNAB.monthly)} a month. ${YNAB.trialDays}-day trial.`,
     availability: 'On the App Store, free to download; the subscription is inside.',
     source: "YNAB's own pricing page",
   },
@@ -258,15 +271,6 @@ export const COMPETITORS_CHECKED = {
   recheckBy: '2026-11-16',
 } as const;
 
-/** How the site writes money. One formatter, so nothing rounds differently. */
-export const money = (amount: number): string =>
-  amount.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
 /** The range the savings calculator offers, and where it starts. */
 export const CALCULATOR = {
   minYears: 1,
@@ -285,6 +289,23 @@ export const CALCULATOR = {
  * one piece of arithmetic — which is the only way the printed figures and the
  * checked figures cannot drift apart.
  */
+/**
+ * How many months of the subscription one purchase pays for.
+ *
+ * SPEC §4 asked for this figure and the штаб restated it on 17.08.2026: the
+ * first thing a reader sees on that page has to be their own arithmetic, not
+ * our slogan. This is the sharpest form of it — not "we are cheaper", but a
+ * number they can check against their own bank statement.
+ *
+ * Measured against annual billing, which is the cheaper of the two ways to pay
+ * them, so the figure is the conservative one. Somebody billed monthly is
+ * getting a better deal than this line claims.
+ */
+export function monthsCovered(): number {
+  const once = Number(PRICING.full.replace(/[$,]/g, ''));
+  return once / (YNAB.annual / 12);
+}
+
 export function savings(years: number) {
   const once = Number(PRICING.full.replace(/[$,]/g, ''));
   const annual = YNAB.annual * years;

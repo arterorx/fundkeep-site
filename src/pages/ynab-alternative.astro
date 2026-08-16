@@ -10,6 +10,7 @@ import {
   TRIAL,
   YNAB,
   money,
+  monthsCovered,
   savings,
 } from '../consts';
 
@@ -34,6 +35,20 @@ const description = `Fundkeep is envelope budgeting for iPhone, iPad and Mac, bo
 
 /** Server-rendered so the figures are right before any script runs. */
 const start = savings(CALCULATOR.defaultYears);
+
+/**
+ * The headline figure, and the reason this page is shaped the way it is.
+ *
+ * Штаб, 17.08.2026: the price is no longer held up by anything on the App
+ * Store shelf. We are the most expensive one-time purchase in the visible
+ * category, next to Envy at a fraction of it and a row of free apps. What
+ * holds the price is where the reader arrived from — somebody who searched
+ * "ynab alternative" is already carrying a yearly figure in their head, and
+ * against that this is obviously cheap. So the first thing on the page is
+ * their arithmetic, not our promise.
+ */
+const months = monthsCovered();
+const monthsDisplay = months.toFixed(1);
 
 const schema = [
   {
@@ -79,48 +94,22 @@ const different = [
 <Base title={title} description={description} schema={schema}>
   <script slot="head" is:inline defer src="/savings-calculator.js"></script>
 
-  <!-- ---------------------------------------------------------------- Hero -->
-  <section class="section wrap hero">
-    <div>
-      <p class="eyebrow">Leaving {YNAB.name}?</p>
-      <h1>The same method, bought once</h1>
-      <p class="lede">
-        Fundkeep is zero-based envelope budgeting for {RELEASE.platforms}. You
-        already know how the method works — this page is about what changes and
-        what does not, and what it costs.
-      </p>
-      <p class="price-line">
-        <strong>{PRICING.full}</strong>{' '}
-        <span class="muted"
-          >— {PRICING.note}, against {YNAB.price} {YNAB.period}.</span
-        >
-      </p>
-      <AppStoreCta class="hero__cta" />
-    </div>
-
-    <div class="hero__shot">
-      <Screenshot
-        name="board"
-        priority
-        sizes="300px"
-        alt="The Fundkeep board for August 2026, showing $670.00 still to be assigned above a list of envelopes with what is left in each."
-      />
-    </div>
-  </section>
-
-  <!-- ---------------------------------------------------------- Calculator -->
+  <!-- ------------------------------------------------- Their arithmetic -->
   <section class="section wrap">
     <div class="column">
-      <h2>What the subscription costs you</h2>
-      <p>
-        {YNAB.name} is <strong>{YNAB.price} {YNAB.period}</strong> billed
-        annually, or {money(YNAB.monthly)} a month billed monthly. Fundkeep is{
-          ' '
-        }
-        <strong>{PRICING.full}</strong>, once. Move the years and see the
-        difference.
+      <p class="eyebrow">Leaving {YNAB.name}?</p>
+      <h1>{YNAB.price} {YNAB.period}, or {PRICING.full} once</h1>
+      <p class="lede">
+        You already know the first number — it leaves your account every year,
+        whether or not you opened the app. Here is what the second one does to
+        it.
       </p>
     </div>
+
+    <p class="headline-stat">
+      One purchase costs what your subscription costs in{' '}
+      <strong>{monthsDisplay} months</strong>.
+    </p>
 
     <div
       class="calculator"
@@ -195,11 +184,15 @@ const different = [
         version of the app outright.
       </p>
     </div>
+
+    <div class="column">
+      <AppStoreCta class="hero__cta" />
+    </div>
   </section>
 
   <!-- ---------------------------------------------------------- What's same -->
-  <section class="section wrap">
-    <div class="column">
+  <section class="section wrap same">
+    <div class="same__text">
       <h2>What works the same</h2>
       <p>
         The method is the method — it is older than either app, and Fundkeep
@@ -208,6 +201,14 @@ const different = [
       <ul class="ticks">
         {same.map((item) => <li>{item}</li>)}
       </ul>
+    </div>
+
+    <div class="same__shot">
+      <Screenshot
+        name="board"
+        sizes="300px"
+        alt="The Fundkeep board for August 2026, showing $670.00 still to be assigned above a list of envelopes with what is left in each."
+      />
     </div>
   </section>
 
@@ -273,34 +274,59 @@ const different = [
 </Base>
 
 <style>
-  /* --- Hero -------------------------------------------------------------- */
+  /* --- Their arithmetic, first ------------------------------------------- */
 
-  .hero {
-    display: grid;
-    gap: var(--space-2xl);
-    align-items: center;
+  /* The one line the page is built around. Big enough to be the first thing
+     read, and it is a statement about the reader's own bank statement rather
+     than about us. */
+  .headline-stat {
+    /* Not `var(--measure)`: that is 68ch, and ch grows with the font size, so
+       at this size the block ran wider than the heading and the calculator it
+       sits between. A rem width keeps the three left edges and right edges in
+       one column. */
+    max-width: 45.5rem;
+    margin: var(--space-xl) 0 0;
+    padding: var(--space-l);
+    background: var(--surface-sunk);
+    border-left: 3px solid var(--text-accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: var(--step-2);
+    line-height: var(--leading-tight);
+    text-wrap: balance;
   }
 
-  @media (min-width: 48rem) {
-    .hero {
-      grid-template-columns: 1fr minmax(260px, 320px);
-      gap: var(--space-3xl);
-    }
-  }
-
-  .hero__shot {
-    max-width: 300px;
-    margin-inline: auto;
-    width: 100%;
-  }
-
-  .price-line {
-    font-size: var(--step-1);
-    margin-top: var(--space-l);
+  .headline-stat strong {
+    color: var(--text-accent);
+    white-space: nowrap;
   }
 
   .hero__cta {
     margin-top: var(--space-l);
+  }
+
+  /* --- The method, with the board beside it ------------------------------ */
+
+  .same {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  @media (min-width: 48rem) {
+    .same {
+      grid-template-columns: 1fr minmax(240px, 300px);
+      gap: var(--space-3xl);
+    }
+  }
+
+  .same__text {
+    max-width: var(--measure);
+  }
+
+  .same__shot {
+    max-width: 300px;
+    margin-inline: auto;
+    width: 100%;
   }
 
   /* --- Calculator -------------------------------------------------------- */
