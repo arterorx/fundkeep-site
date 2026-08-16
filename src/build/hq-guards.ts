@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import {
   ALLOWED_ASSET_HOSTS,
   CALCULATOR,
+  COMPETITORS,
+  COMPETITORS_CHECKED,
   DOMAIN,
   INDEXABLE,
   LAUNCH_PRICE,
@@ -161,6 +163,17 @@ export function hqGuards(): AstroIntegration {
               `recheckBy in src/consts.ts.`,
           );
         }
+        if (today() > COMPETITORS_CHECKED.recheckBy) {
+          logger.warn(
+            `The named competitors were last checked on ` +
+              `${COMPETITORS_CHECKED.on} and were due a sweep on ` +
+              `${COMPETITORS_CHECKED.recheckBy}. Re-read each first-party ` +
+              `source in COMPETITORS (src/consts.ts) and move the date. We ` +
+              `name these companies, so a stale figure is a false statement ` +
+              `about somebody else's product.`,
+          );
+        }
+
         if (today() > YNAB.recheckBy) {
           logger.warn(
             `${YNAB.name}'s price is recorded as ${YNAB.price} ${YNAB.period}, ` +
@@ -190,6 +203,26 @@ export function hqGuards(): AstroIntegration {
           money(YNAB.monthly),
         ]);
         if (LAUNCH_PRICE) allowedAmounts.add(LAUNCH_PRICE.amount);
+
+        /**
+         * Other companies' prices, allowed only on a page that declares it
+         * names them.
+         *
+         * Scoped rather than global on purpose. A competitor's price could one
+         * day be the same figure as a promotional price of ours that the штаб
+         * has not authorised — put every amount in one global set and the
+         * guard would wave that through anywhere on the site. Here it can only
+         * appear on a page that has said, in its own front matter, that
+         * naming competitors is what it is for.
+         */
+        const competitorAmounts = new Set<string>();
+        for (const rival of COMPETITORS) {
+          for (const amount of `${rival.price ?? ''} ${rival.priceNote}`.match(
+            /\$\d[\d,]*(?:\.\d{2})?/g,
+          ) ?? []) {
+            competitorAmounts.add(amount);
+          }
+        }
 
         // The savings calculator prints arithmetic rather than constants, so
         // the allowed set has to include every figure that arithmetic can
@@ -228,11 +261,19 @@ export function hqGuards(): AstroIntegration {
           // a price claim automatically, so alt text stays the author's
           // responsibility — write what the picture shows, never an offer.
 
+          const namesCompetitors = html.includes(
+            '<meta name="fundkeep:competitor-prices" content="yes">',
+          );
+          const pageAmounts = namesCompetitors
+            ? new Set([...allowedAmounts, ...competitorAmounts])
+            : allowedAmounts;
+
           for (const amount of text.match(/\$\d[\d,]*(?:\.\d{2})?/g) ?? []) {
-            if (!allowedAmounts.has(amount)) {
+            if (!pageAmounts.has(amount)) {
               problems.push(
-                `${name}: price ${amount} is not in src/consts.ts. ` +
-                  `Allowed: ${[...allowedAmounts].join(', ')}.`,
+                `${name}: price ${amount} is not in src/consts.ts` +
+                  (namesCompetitors ? '' : ', and this page does not declare that it names competitors') +
+                  `. Allowed here: ${[...pageAmounts].join(', ')}.`,
               );
             }
           }

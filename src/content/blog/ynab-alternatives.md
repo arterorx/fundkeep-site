@@ -1,137 +1,159 @@
 ---
-title: 'YNAB alternatives in 2027: what to check before you switch'
-description: 'Eight questions worth asking any budgeting app you are thinking of moving to — and a straight answer to each of them about the one we make.'
-standfirst: 'We are not going to rank other people’s apps, because we sell one and a ranking from us would not be worth reading. Here are the questions to ask instead.'
+title: 'YNAB alternatives in 2027: five apps, named'
+description: 'YNAB, Envy, Zeroed, MoneyCoach, Actual Budget and ours — what each charges, what each is actually for, and where we lose.'
+standfirst: 'We make one of these, so read us accordingly. What we can offer is that every price here was read off a first-party source, and the two we could not verify are marked rather than guessed.'
 published: 2026-08-16
+updated: 2026-08-16
 sourcesCheckedOn: 2026-08-16
+namesCompetitors: true
 ---
 
-Search for a YNAB alternative and you will find a great many lists, most written
-by people who make one of the apps on them, and nearly all of them ranking the
-author's product first. We make one too. So this is not a list.
+A review of budgeting apps written by somebody who sells one is a conflict of
+interest, not a service. So here is how we have handled ours, and you can judge
+whether it is enough.
 
-What follows is the set of questions we would ask if we were switching, with a
-straight answer for Fundkeep under each — including the ones where the answer is
-no. Take the questions to whatever you are considering, ours included.
+**Every price in the table above came from a first-party source** — the
+company's own pricing page, or Apple's own App Store listing — read on the date
+the caption gives. Not from a review site, not from a comparison blog, and not
+from our own internal notes, which turned out to be wrong about two of these
+when we checked. Two rows have no price at all, because we could not confirm one
+first-hand, and an admission is worth more than a number.
 
-## 1. Does it actually do the method, or does it just have folders?
+**Every figure on this page lives in one file** in the site's source, with the
+date it was read and a build that complains when it goes stale. That is not a
+courtesy to these companies. It is the only way a page like this stays true
+after the week it was written.
 
-Zero-based envelope budgeting has a specific shape: money arrives unassigned,
-you assign all of it, envelopes hold what is **left** rather than what you
-planned, and overspending shows up as a hole you have to fill from somewhere
-else. Plenty of apps have categories and a monthly limit and call it envelope
-budgeting. That is a spending tracker with folders, and it will not feel the
-same.
+**And the section at the end is where we lose.** If a roundup by a vendor does
+not have one, it is an advertisement wearing a lab coat.
 
-The test: enter income and see whether the app makes you do something with it.
-If nothing insists that the unassigned pile reaches zero, it is not the method.
+## YNAB
 
-> **Fundkeep:** yes. To Be Assigned sits at the top of the board and the app
-> does not pretend it is fine when it is not zero.
+The one most people are leaving, and the reason this page exists. It is the
+reference implementation of zero-based envelope budgeting: if you learned the
+method anywhere, you probably learned it here, and the vocabulary everyone else
+borrows — give every dollar a job, to be assigned — is theirs.
 
-## 2. Subscription or purchase — and what happens when you stop paying?
+It is a subscription, and the most expensive thing on the list by a distance
+once you run it for a few years. It connects to banks, so transactions arrive
+on their own. It is web-first with capable phone apps, which is either fine or
+the whole problem depending on where you actually sit down to budget. Its trial
+is the longest here, which is genuinely to their credit — it is long enough to
+watch a month roll over, and watching a month roll over is the only real test of
+a budgeting app.
 
-The second half of that question matters more than the first, and it is almost
-never on the pricing page. When your subscription lapses, or you decide the
-one-time app is not for you, what happens to what you already entered? Read-only?
-Export-only? Locked entirely?
+If the subscription does not bother you, there is no case for switching. It
+works, and it invented most of what the rest of us do.
 
-The test: find the answer in writing before you pay anything.
+If you are leaving, take your data first: we wrote up
+[exactly what comes out of a YNAB export and what every column
+means](/blog/ynab-export-guide).
 
-> **Fundkeep:** a one-time purchase. There is a 14-day trial with nothing
-> withheld, and after it the app becomes read-only until you buy it — what you
-> entered stays visible, and **exporting to CSV keeps working**, including
-> before you have paid anything. Whether that is a fair deal is your call; the
-> point is that it is written down.
+## Envy
 
-## 3. Does it need a bank login, and what is the trade?
+The one that should worry us most, and the one we would point a friend at before
+we would point them at ourselves in some cases.
 
-Bank connections are genuinely convenient and genuinely a liability: a third
-party holds standing access to your transaction history. There is no correct
-answer here, only a trade you should make knowingly rather than by default.
+It is free to download with a single unlock — a fraction of what we charge — and
+it is a properly made envelope app: real envelope balances, widgets on the home
+and lock screens, receipt scanning that fills in the amount and date for you.
+Apple's listing shows Data Not Collected. It runs on iPhone and iPad, and on a
+Mac it runs as the iPad app rather than as a Mac app, which matters only if the
+Mac is where you work.
 
-The test: if it does connect, find out which aggregator it uses and what their
-breach history is. If it does not, work out honestly whether you will keep up
-with manual entry.
+The honest position: if you want envelope budgeting on a phone for the least
+money, this is the first thing to try, and you should try it before you pay us
+several times more. Our answer to it is a native Mac app, the migration path,
+and no third-party anything — not a claim to be tidier, because it is not.
 
-> **Fundkeep:** no bank connections, deliberately and permanently. You type
-> transactions, or import a CSV you exported from your own bank. That is less
-> convenient. It is the whole trade.
+## Zeroed
 
-## 4. Can you get your data out — and is what comes out any use?
+The closest thing on this list to our own argument, made by somebody else.
+Offline, local storage, a one-time purchase, no subscription, and privacy as the
+headline rather than a footnote — the same pitch, delivered first.
 
-"Export" covers everything from a complete machine-readable history to a PDF of
-a chart. The question is not whether there is an export button but whether the
-file it makes could rebuild your budget somewhere else.
+Two differences worth knowing. It is cross-platform, which is the right answer
+if your household has an Android phone or a Windows laptop and the wrong answer
+if you wanted a native Mac app. And its licence key travels through Google
+Drive, which is a reasonable engineering choice and is also a third party in a
+story about having none.
 
-The test: export on day one, before you have anything to lose, and open the file.
-If you cannot read it, neither can your next app. (For YNAB specifically, we
-wrote up [exactly what comes out and what each column
-means](/blog/ynab-export-guide).)
+We have not printed a price for it because the only figure on their site today
+is a founder's offer. Promotional prices are exactly the kind that move, and
+quoting one as though it were the standing price is how comparison pages become
+wrong.
 
-> **Fundkeep:** everything exports to CSV at any time, trial or not, paid or not.
+## MoneyCoach
 
-## 5. Does it handle credit cards the way the method needs?
+The most polished Apple citizen here: iPhone, iPad, Mac, Watch and Vision Pro,
+and it has been at it for years. If what you want is a personal-finance app that
+feels like it belongs on the platform, this is the bar.
 
-This is where budgeting apps quietly fall apart. Spend on a card and the money
-should move into that card's payment envelope immediately, so it is set aside
-before the statement arrives. An app that treats a card purchase as a plain
-expense will have you spending the same money twice, and you will not notice for
-a month.
+It is free to download with a Premium subscription. We are not printing a figure
+because their own site shows none and the store listings we found disagreed with
+each other — check it yourself before deciding.
 
-The test: in a trial, buy something on a card and see whether anything at all
-happens to a payment envelope.
+The question to ask it is not about price but about method: find out whether its
+budgeting is genuinely zero-based envelopes, where money is assigned before it
+is spent and an empty envelope stops you, or category limits with reporting.
+Both are useful. Only one of them is the thing you came here for, and the words
+used to sell them are nearly identical.
 
-> **Fundkeep:** a card purchase moves the money into that card's payment
-> envelope as you enter it.
+## Actual Budget
 
-## 6. Is the trial honest?
+Free, open source, envelope-method, local-first, and the only one here you can
+read the source of. If you are technical and you want no vendor at all — not us,
+not anyone — this is the honest end of the spectrum, and nothing on this page
+beats it on price.
 
-A trial that withholds the features you are actually evaluating tells you
-nothing. Neither does one so short that you never see a month roll over — and
-the month roll-over is where budgeting apps either hold up or annoy you forever.
+The cost is in your time. Syncing between devices means running a server, which
+means being the person who keeps it running, patched and backed up. Some people
+enjoy that. If reading that sentence made you tired, it is not for you, and that
+is not a criticism of the software.
 
-The test: can you get through a full month-end inside the trial?
+## Where we lose
 
-> **Fundkeep:** 14 days, every feature working, no watermark. That is **not**
-> long enough to see a month roll over unless you start mid-month, and we would
-> rather say so than let you find out. YNAB's own trial is 34 days, which is
-> long enough — running both at once for a fortnight is a reasonable way to
-> decide.
+Three places, and they are not small.
 
-## 7. Which devices, and who else needs in?
+**No bank connections, ever.** YNAB will fetch your transactions. We will not,
+and this is deliberate rather than unfinished — no aggregator holds a key to
+your accounts, and in exchange you type transactions or import a CSV you
+exported yourself. If automatic import is what you are paying for, we are the
+wrong answer and no amount of privacy argument changes that.
 
-An app that is wonderful on a phone is useless if you do the real work on a
-laptop, and a household budget that one person cannot see is a household
-argument waiting to happen.
+**Apple devices only.** iPhone, iPad and Mac, one purchase for all three, and
+nothing on Android, Windows or the web. Zeroed covers all four platforms; we
+cover three Apple ones properly. If your household is mixed, that decides it.
 
-The test: list the devices that will actually touch it, including other people's.
+**Price against Envy.** We charge several times what Envy charges for something
+that, from the outside, does the same job. Our case is the native Mac app, the
+YNAB migration with a reconciliation report you read before anything is saved,
+and no third-party code anywhere in the app. Whether that is worth the
+difference is genuinely your call, and the fourteen days are free precisely so
+you can make it without taking our word for anything.
 
-> **Fundkeep:** iPhone, iPad and Mac, one purchase for all three, no web app and
-> nothing on Android or Windows. Sharing a budget with another person is not in
-> this version. If either of those is a requirement, we are not your answer.
+## What to check, whichever way you go
 
-## 8. Who is holding it?
+Six questions that separate these apps faster than any feature list:
 
-Budget data is unusually revealing. It is not just what you earn — it is what
-you owe, what you are saving for, what you are worried about, and where you were
-on a Tuesday.
+1. **Is it really zero-based?** Enter income and see whether the app insists you
+   assign all of it. If nothing drives the unassigned pile to zero, it is a
+   spending tracker with folders.
+2. **What happens when you stop paying?** Read-only, export-only, or locked out?
+   The answer is rarely on the pricing page and it is always somewhere.
+3. **Does it need a bank login?** A real convenience and a real liability. Make
+   the trade knowingly rather than by default.
+4. **Can you get your data out, and is the file any use?** Export on day one,
+   before you have anything to lose, and open it.
+5. **Do credit cards work properly?** Spend on a card and see whether money
+   moves into that card's payment envelope. If it does not, you will spend the
+   same money twice and notice a month later.
+6. **Can you see a month roll over inside the trial?** That is where budgeting
+   apps either hold up or annoy you forever.
 
-The test: ask where it is stored and who could read it. "Encrypted" is not an
-answer to "who holds the key".
+Take those to all six apps, ours included. If the answers point somewhere else,
+go there — and take your export with you.
 
-> **Fundkeep:** it stays on your devices. There is no account, no server of
-> ours, no analytics and no third-party code in the app at all. Syncing between
-> your own devices goes through your private iCloud, and you can switch it off.
-> [The privacy policy](/privacy) is the long version.
-
-## The short version
-
-Three of those eight are places where Fundkeep will lose to something else: no
-bank connections, Apple devices only, and no shared budgets in this version. If
-any of the three is a requirement, the honest recommendation is to keep looking
-— and to take your export with you whichever way you go.
-
-If none of them is, [the page for people leaving YNAB](/ynab-alternative) has
-the rest: what stays the same, what the switch costs, and what a subscription
-adds up to over the years you were going to keep budgeting anyway.
+If they point here, [the page for people leaving YNAB](/ynab-alternative) has
+the rest: what stays the same, what the switch costs over the years you were
+going to keep budgeting anyway, and the same list of what you give up.

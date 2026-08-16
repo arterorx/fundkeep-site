@@ -1,0 +1,138 @@
+---
+import { COMPETITORS, COMPETITORS_CHECKED, PRICING, SITE, TRIAL } from '../consts';
+
+/**
+ * The named comparison, built from `COMPETITORS` in src/consts.ts.
+ *
+ * It exists as a component rather than as a table typed into the article so
+ * that **no price is ever written into prose**. The article discusses these
+ * apps in words — "a subscription", "one unlock", "a one-time purchase" — and
+ * every figure on the page comes from here, which comes from the constants,
+ * which record where each was read and when. One number, one home.
+ *
+ * Rows with no price are not a gap. They are two companies whose figures we
+ * could not confirm first-hand on the date below, and saying so is more useful
+ * to a reader than a number we would not stand behind.
+ */
+---
+
+<div class="rivals">
+  <!-- The scroll lives on a labelled, focusable region rather than on the
+       table. A pane that scrolls but cannot be reached by keyboard is a pane
+       some readers simply cannot see the last column of. -->
+  <div
+    class="rivals__scroll"
+    role="region"
+    aria-label="What each budgeting app costs"
+    tabindex="0"
+  >
+    <table>
+      <caption>
+        What each one costs, checked against first-party sources on{' '}
+        <time datetime={COMPETITORS_CHECKED.on}>
+          {COMPETITORS_CHECKED.display}</time
+        >. <span class="rivals__hint">Scrolls sideways.</span>
+      </caption>
+    <thead>
+      <tr>
+        <th scope="col">App</th>
+        <th scope="col">Price</th>
+        <th scope="col">How it is charged</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="rivals__ours">
+        <th scope="row">{SITE.name}</th>
+        <td>{PRICING.full}</td>
+        <td>
+          {PRICING.note}. {TRIAL.days}-day trial. <em>Ours — see below.</em>
+        </td>
+      </tr>
+      {
+        COMPETITORS.map((rival) => (
+          <tr>
+            <th scope="row">
+              <a href={rival.url}>{rival.name}</a>
+            </th>
+            <td>{rival.price ?? <span class="rivals__none">Not printed</span>}</td>
+            <td>{rival.priceNote}</td>
+          </tr>
+        ))
+      }
+      </tbody>
+    </table>
+  </div>
+
+  <p class="small muted">
+    Two rows carry no figure. Their prices could not be confirmed from a
+    first-party source on the date above — one publishes only a promotional
+    price, the other publishes none — and a number we cannot stand behind is
+    worse than an admission. Follow the links and check for yourself; that is
+    what they are there for.
+  </p>
+</div>
+
+<style>
+  .rivals {
+    margin: var(--space-xl) 0 var(--space-2xl);
+  }
+
+  /* Three columns of prose do not fit a phone; let the table scroll inside
+     itself rather than push the page sideways. */
+  .rivals__scroll {
+    overflow-x: auto;
+  }
+
+  .rivals__scroll:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .rivals table {
+    border-collapse: collapse;
+  }
+
+  /* Only say "scrolls sideways" when it does. */
+  .rivals__hint {
+    display: none;
+  }
+
+  @media (max-width: 46rem) {
+    .rivals__hint {
+      display: inline;
+    }
+  }
+
+  .rivals caption {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+    padding-bottom: var(--space-s);
+  }
+
+  .rivals td,
+  .rivals th {
+    min-width: 8rem;
+    vertical-align: top;
+  }
+
+  .rivals td:last-child {
+    min-width: 18rem;
+    white-space: normal;
+  }
+
+  .rivals__ours th,
+  .rivals__ours td {
+    color: var(--text-accent);
+    font-weight: 650;
+  }
+
+  .rivals__ours em {
+    font-weight: 400;
+  }
+
+  .rivals__none {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+</style>

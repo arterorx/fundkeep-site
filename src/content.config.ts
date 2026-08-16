@@ -27,6 +27,13 @@ const blog = defineCollection({
     sourcesCheckedOn: z.date(),
     /** One line under the title. */
     standfirst: z.string(),
+    /**
+     * This article prints other companies' prices, so the build lets their
+     * figures through on this page and nowhere else. Setting it is a promise
+     * that every one of those figures came from a first-party source listed
+     * in COMPETITORS — see the rule written there.
+     */
+    namesCompetitors: z.boolean().default(false),
   }),
 });
 

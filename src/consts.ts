@@ -160,6 +160,89 @@ export const YNAB = {
   recheckBy: '2026-11-16',
 } as const;
 
+/**
+ * The other apps, named — the штаб's decision of 16.08.2026, which reversed
+ * the narrower line this site launched with.
+ *
+ * Every one of these is a liability with a shelf life, which is why they live
+ * here and not in prose: naming a company and attaching a stale number to it
+ * is a false statement about that company, and it is the single most damaging
+ * thing this site could publish.
+ *
+ * THE RULE FOR `price`: it is filled in only from a **first-party** source we
+ * read ourselves — the company's own pricing page, or Apple's own App Store
+ * listing. Not a review site, not a comparison blog, and not the competitor
+ * table in the app repository, which is internal analysis and was wrong about
+ * two of these when it was checked.
+ *
+ * `price: null` means we could not verify one on `checkedOn`, and the article
+ * says so in as many words rather than printing a number we do not stand
+ * behind. Two of the five are null today, and that is the honest state rather
+ * than a gap to be filled in later by guessing.
+ */
+export interface Competitor {
+  name: string;
+  /** Their own page, for the reader to check the price themselves. */
+  url: string;
+  /** Verified first-hand, or null. Never anything in between. */
+  price: string | null;
+  /** How that price is charged, or why there is no figure. */
+  priceNote: string;
+  /** Where the figure was read, named on the page so it can be audited. */
+  source: string;
+}
+
+export const COMPETITORS: readonly Competitor[] = [
+  {
+    name: 'YNAB',
+    url: 'https://www.ynab.com/pricing',
+    price: '$109',
+    priceNote: 'a year, or $14.99 a month. 34-day trial.',
+    source: "YNAB's own pricing page",
+  },
+  {
+    name: 'Envy',
+    url: 'https://apps.apple.com/us/app/envy-envelope-budget-planner/id1569230951',
+    price: '$6.99',
+    priceNote: 'free to download, one in-app purchase called Envy All Access.',
+    source: "Apple's App Store listing",
+  },
+  {
+    name: 'Actual Budget',
+    url: 'https://actualbudget.org',
+    price: 'Free',
+    priceNote: 'open source. Syncing between devices means running a server.',
+    source: 'the project itself',
+  },
+  {
+    name: 'Zeroed',
+    url: 'https://stillwareltd.com',
+    price: null,
+    priceNote:
+      'a one-time purchase, but the only figure on their site today is a founder’s offer — a promotional price, which is exactly the kind that moves.',
+    source: 'their own site',
+  },
+  {
+    name: 'MoneyCoach',
+    url: 'https://moneycoach.ai',
+    price: null,
+    priceNote:
+      'free to download with a Premium subscription. Their site prints no price, and the store listings we found disagreed with each other, so we are not printing one either.',
+    source: 'their own site and Apple',
+  },
+] as const;
+
+/**
+ * All five were read on this date. They move as one because they are re-read
+ * as one — a single sweep is a task somebody will actually do, where five
+ * separate dates would rot at five different speeds.
+ */
+export const COMPETITORS_CHECKED = {
+  on: '2026-08-16',
+  display: '16 August 2026',
+  recheckBy: '2026-11-16',
+} as const;
+
 /** How the site writes money. One formatter, so nothing rounds differently. */
 export const money = (amount: number): string =>
   amount.toLocaleString('en-US', {
