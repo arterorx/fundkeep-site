@@ -140,12 +140,66 @@ export const LAUNCH_PRICE: LaunchPrice | null = null;
  */
 export const YNAB = {
   name: 'YNAB',
+  /** Billed annually. */
   price: '$109',
   period: 'a year',
+  annual: 109,
+  /** Billed monthly, which is what most people actually start on. */
+  monthly: 14.99,
+  /** Their own free trial, for the comparison to be a fair one. */
+  trialDays: 34,
+  /**
+   * Read off ynab.com/pricing itself on this date — not from a review site,
+   * not from memory. The page said "$109 USD paid annually" and "$14.99
+   * USD/month".
+   */
   checkedOn: '2026-08-16',
+  /** The same date as a person would write it, for the caveat line. */
+  checkedOnDisplay: '16 August 2026',
   source: 'https://www.ynab.com/pricing',
   recheckBy: '2026-11-16',
 } as const;
+
+/** How the site writes money. One formatter, so nothing rounds differently. */
+export const money = (amount: number): string =>
+  amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+/** The range the savings calculator offers, and where it starts. */
+export const CALCULATOR = {
+  minYears: 1,
+  maxYears: 10,
+  defaultYears: 5,
+} as const;
+
+/**
+ * What each side costs over `years`, from the constants above and nothing
+ * else.
+ *
+ * The page renders one of these server-side so the calculator says something
+ * true before any script runs, the client script recomputes it from the same
+ * numbers handed to it in data attributes, and `src/build/hq-guards.ts` uses
+ * it to work out which amounts a page is allowed to contain. Three readers,
+ * one piece of arithmetic — which is the only way the printed figures and the
+ * checked figures cannot drift apart.
+ */
+export function savings(years: number) {
+  const once = Number(PRICING.full.replace(/[$,]/g, ''));
+  const annual = YNAB.annual * years;
+  const monthly = YNAB.monthly * 12 * years;
+  return {
+    years,
+    once,
+    annual,
+    monthly,
+    /** Against the cheaper of YNAB's two ways to pay, so the claim is safe. */
+    saved: annual - once,
+  };
+}
 
 /**
  * Release status.

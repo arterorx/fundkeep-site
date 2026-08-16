@@ -4,12 +4,15 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   ALLOWED_ASSET_HOSTS,
+  CALCULATOR,
   DOMAIN,
   INDEXABLE,
   LAUNCH_PRICE,
   PRICING,
   RELEASE,
   YNAB,
+  money,
+  savings,
 } from '../consts.js';
 
 /**
@@ -181,8 +184,30 @@ export function hqGuards(): AstroIntegration {
         const pages = filesUnder(root, '.html');
         const problems: string[] = [];
 
-        const allowedAmounts = new Set<string>([PRICING.full, YNAB.price]);
+        const allowedAmounts = new Set<string>([
+          PRICING.full,
+          YNAB.price,
+          money(YNAB.monthly),
+        ]);
         if (LAUNCH_PRICE) allowedAmounts.add(LAUNCH_PRICE.amount);
+
+        // The savings calculator prints arithmetic rather than constants, so
+        // the allowed set has to include every figure that arithmetic can
+        // produce — computed here by the same function the page uses, never
+        // by copying numbers across. A total that this loop cannot produce is
+        // a total somebody typed by hand, and that is exactly what should
+        // fail.
+        for (
+          let years = CALCULATOR.minYears;
+          years <= CALCULATOR.maxYears;
+          years++
+        ) {
+          const row = savings(years);
+          allowedAmounts.add(money(row.annual));
+          allowedAmounts.add(money(row.monthly));
+          allowedAmounts.add(money(row.saved));
+          allowedAmounts.add(money(row.once));
+        }
 
         for (const page of pages) {
           const html = readFileSync(page, 'utf8');
@@ -194,6 +219,15 @@ export function hqGuards(): AstroIntegration {
           // disagree with src/consts.ts break the build rather than quietly go
           // out on the live site — including a promotional price that has not
           // been switched on in LAUNCH_PRICE.
+          //
+          // This reads `text`, which is the rendered words with tags stripped,
+          // so alt text is deliberately out of scope: alt describes a
+          // screenshot, and the screenshots are full of demo-budget figures
+          // ($670.00 to assign, $1,600.00 of rent) that are not prices and
+          // must not be in the allow-list. Nothing can tell a demo figure from
+          // a price claim automatically, so alt text stays the author's
+          // responsibility — write what the picture shows, never an offer.
+
           for (const amount of text.match(/\$\d[\d,]*(?:\.\d{2})?/g) ?? []) {
             if (!allowedAmounts.has(amount)) {
               problems.push(

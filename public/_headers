@@ -11,17 +11,18 @@
 # 'unsafe-inline' for styles is needed because Astro inlines small per-page
 # stylesheets, which is the right call for performance on a site this size.
 #
-# script-src is 'none' and stays that way while there is no script on the
-# site. When the YNAB savings calculator arrives (SPEC §4, phase 3) its script
-# goes in public/ as a file and this becomes `script-src 'self'` — never
-# 'unsafe-inline', and never anyone else's domain.
+# script-src is 'self' and nothing more. The one script on the site is the
+# savings calculator, and it is served as a file from public/ precisely so
+# this line can stay this strict: an inline script would force 'unsafe-inline'
+# here, or a hash that has to be regenerated on every build. Scripts from
+# anyone else's domain remain impossible.
 #
 # NOTE: `astro preview` does not apply this file. On sawkit.app that cost a
 # broken page in production — a script blocked by CSP that worked perfectly on
 # localhost. Use `npm run serve`, which serves dist with these headers.
 
 /*
-  Content-Security-Policy: default-src 'none'; base-uri 'self'; script-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; manifest-src 'self'
+  Content-Security-Policy: default-src 'none'; base-uri 'self'; script-src 'self'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; manifest-src 'self'
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY

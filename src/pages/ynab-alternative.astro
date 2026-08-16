@@ -1,0 +1,430 @@
+---
+import Base from '../layouts/Base.astro';
+import AppStoreCta from '../components/AppStoreCta.astro';
+import Screenshot from '../components/Screenshot.astro';
+import {
+  CALCULATOR,
+  PRICING,
+  RELEASE,
+  SITE,
+  TRIAL,
+  YNAB,
+  money,
+  savings,
+} from '../consts';
+
+/**
+ * The page SPEC §4 says the site exists for.
+ *
+ * Discovery is the app's main risk: people leaving YNAB search, they do not
+ * browse the App Store. This is where they land, so it has to answer the
+ * three things SPEC §2 says they actually want to know — will I lose my data,
+ * does the method work the same, what does it cost — and it has to be honest
+ * about what they give up, because a page that only lists wins reads as an
+ * advertisement and gets closed.
+ *
+ * YNAB is named here, and only here and in the articles, never in the app
+ * (SPEC §5). The prices are constants that were read off ynab.com/pricing on
+ * YNAB.checkedOn; the build warns when they are due a re-read and refuses any
+ * figure on this page that its own arithmetic cannot produce.
+ */
+
+const title = `${YNAB.name} alternative`;
+const description = `Fundkeep is envelope budgeting for iPhone, iPad and Mac, bought once for ${PRICING.full} instead of ${YNAB.price} ${YNAB.period}. Same method, no bank logins.`;
+
+/** Server-rendered so the figures are right before any script runs. */
+const start = savings(CALCULATOR.defaultYears);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${title} — ${SITE.name}`,
+    description,
+    url: `${SITE.url}/ynab-alternative`,
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+
+/** What is the same, and what is not. Both lists are the honest ones. */
+const same = [
+  'Give every dollar a job. Money that arrives sits in To Be Assigned until you have given all of it somewhere to be.',
+  'Envelopes hold what is left, not what you hoped to spend.',
+  'Overspend an envelope and the app says so, then carries the rest forward the way the method expects.',
+  'Credit cards move money into the card’s payment envelope as you spend, so it is set aside before the bill lands.',
+  'A month is a month. You move between them and each keeps its own assignments.',
+];
+
+const different = [
+  {
+    title: 'No bank connections',
+    body: 'This is the big one, and it is deliberate rather than unfinished. Fundkeep will not fetch your transactions for you. You type them, or you export a CSV from your bank and pick that file. In exchange there is no bank login to hand over, no third party holding a read-only key to your accounts, and nothing to breach.',
+  },
+  {
+    title: 'Apple devices only',
+    body: `${RELEASE.platforms}, and no web app. If you budget from a Windows machine at work, this is not the app for you.`,
+  },
+  {
+    title: 'No targets or goals in this version',
+    body: 'You assign money yourself; the app does not track a monthly target per envelope and tell you how far behind it you are. It is on the list after release, and it is not on this page as a promise.',
+  },
+  {
+    title: 'One person’s devices',
+    body: 'Your own iPhone, iPad and Mac stay in step through your private iCloud. Sharing a budget with somebody else is not in this version.',
+  },
+];
+---
+
+<Base title={title} description={description} schema={schema}>
+  <script slot="head" is:inline defer src="/savings-calculator.js"></script>
+
+  <!-- ---------------------------------------------------------------- Hero -->
+  <section class="section wrap hero">
+    <div>
+      <p class="eyebrow">Leaving {YNAB.name}?</p>
+      <h1>The same method, bought once</h1>
+      <p class="lede">
+        Fundkeep is zero-based envelope budgeting for {RELEASE.platforms}. You
+        already know how the method works — this page is about what changes and
+        what does not, and what it costs.
+      </p>
+      <p class="price-line">
+        <strong>{PRICING.full}</strong>{' '}
+        <span class="muted"
+          >— {PRICING.note}, against {YNAB.price} {YNAB.period}.</span
+        >
+      </p>
+      <AppStoreCta class="hero__cta" />
+    </div>
+
+    <div class="hero__shot">
+      <Screenshot
+        name="board"
+        priority
+        sizes="300px"
+        alt="The Fundkeep board for August 2026, showing $670.00 still to be assigned above a list of envelopes with what is left in each."
+      />
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------- Calculator -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What the subscription costs you</h2>
+      <p>
+        {YNAB.name} is <strong>{YNAB.price} {YNAB.period}</strong> billed
+        annually, or {money(YNAB.monthly)} a month billed monthly. Fundkeep is{
+          ' '
+        }
+        <strong>{PRICING.full}</strong>, once. Move the years and see the
+        difference.
+      </p>
+    </div>
+
+    <div
+      class="calculator"
+      data-calculator
+      data-static
+      data-annual={YNAB.annual}
+      data-monthly={YNAB.monthly}
+      data-once={start.once}
+    >
+      <div class="calculator__control">
+        <label for="years">
+          How long do you expect to keep budgeting?{' '}
+          <output class="calculator__years" for="years" data-out-years
+            >{start.years} years</output
+          >
+        </label>
+        <input
+          id="years"
+          type="range"
+          min={CALCULATOR.minYears}
+          max={CALCULATOR.maxYears}
+          step="1"
+          value={start.years}
+          data-years-input
+        />
+        <p class="calculator__ends small muted" aria-hidden="true">
+          <span>{CALCULATOR.minYears} year</span>
+          <span>{CALCULATOR.maxYears} years</span>
+        </p>
+      </div>
+
+      <table class="calculator__table">
+        <caption class="visually-hidden">
+          What each option costs over <span data-out-years>{start.years} years</span>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Over <span data-out-years>{start.years} years</span></th>
+            <th scope="col">You pay</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">{YNAB.name}, billed annually</th>
+            <td data-out-annual>{money(start.annual)}</td>
+          </tr>
+          <tr>
+            <th scope="row">{YNAB.name}, billed monthly</th>
+            <td data-out-monthly>{money(start.monthly)}</td>
+          </tr>
+          <tr class="calculator__ours">
+            <th scope="row">Fundkeep, bought once</th>
+            <td data-out-once>{money(start.once)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="calculator__result">
+        Difference over <span data-out-years>{start.years} years</span>:{' '}
+        <strong data-out-saved>{money(start.saved)}</strong>
+      </p>
+    </div>
+
+    <div class="column">
+      <p class="small muted">
+        {YNAB.name}'s prices are the ones published at{' '}
+        <a href={YNAB.source}>ynab.com/pricing</a>, read there on{' '}
+        <time datetime={YNAB.checkedOn}>{YNAB.checkedOnDisplay}</time>, before
+        tax. The comparison uses their cheaper annual billing, and it assumes
+        their price stays where it is — which is not something either of us can
+        promise. {PRICING.full} is what Fundkeep costs today, and it buys this
+        version of the app outright.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------- What's same -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What works the same</h2>
+      <p>
+        The method is the method — it is older than either app, and Fundkeep
+        does not have a clever reinterpretation of it.
+      </p>
+      <ul class="ticks">
+        {same.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ----------------------------------------------------- What you give up -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What you give up</h2>
+      <p>
+        Worth knowing before you spend anything, and worth knowing that we told
+        you rather than letting you find out.
+      </p>
+    </div>
+
+    <ul class="gives">
+      {
+        different.map((item) => (
+          <li>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- --------------------------------------------------------- Moving over -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>Bringing your budget across</h2>
+      <p>
+        Fundkeep reads a {YNAB.name} export and rebuilds your categories,
+        accounts and history from it. Then — and this is the part that matters —
+        it shows you a <strong>reconciliation report</strong> before you commit
+        to any of it: what {YNAB.name} said each balance was, what Fundkeep makes
+        it, and every difference it found.
+      </p>
+      <p>
+        You are not asked to trust an importer. You are asked to read a list of
+        differences and decide. If the numbers do not agree, nothing has been
+        saved and you have lost an afternoon rather than a budget.
+      </p>
+      <p>
+        Your own data stays yours on the way out, too: everything exports to CSV
+        at any time, including after the {TRIAL.days}-day trial ends and before
+        you have bought anything.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- Price -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>{PRICING.full}, once</h2>
+      <p class="lede">
+        Free for {TRIAL.days} days with every feature working — {YNAB.name} gives
+        you {YNAB.trialDays}, so you can run both and see. After the trial
+        Fundkeep becomes read-only until you buy it: what you entered stays
+        visible, and exporting keeps working.
+      </p>
+      <AppStoreCta />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* --- Hero -------------------------------------------------------------- */
+
+  .hero {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (min-width: 48rem) {
+    .hero {
+      grid-template-columns: 1fr minmax(260px, 320px);
+      gap: var(--space-3xl);
+    }
+  }
+
+  .hero__shot {
+    max-width: 300px;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .price-line {
+    font-size: var(--step-1);
+    margin-top: var(--space-l);
+  }
+
+  .hero__cta {
+    margin-top: var(--space-l);
+  }
+
+  /* --- Calculator -------------------------------------------------------- */
+
+  .calculator {
+    max-width: var(--measure);
+    margin: var(--space-xl) 0;
+    padding: var(--space-l);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+  }
+
+  /* Without the script the slider cannot move the figures, so it is not
+     offered. The table below it is still correct — it is rendered from the
+     same constants at build time — it just does not move. */
+  .calculator[data-static] .calculator__control {
+    display: none;
+  }
+
+  .calculator__control label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--space-s);
+  }
+
+  .calculator__years {
+    color: var(--text-accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .calculator__control input[type='range'] {
+    width: 100%;
+    accent-color: var(--text-accent);
+  }
+
+  .calculator__ends {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 var(--space-l);
+  }
+
+  .calculator__table {
+    margin-bottom: var(--space-m);
+  }
+
+  .calculator__table td {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .calculator__table thead th:last-child {
+    text-align: right;
+  }
+
+  .calculator__ours th,
+  .calculator__ours td {
+    font-weight: 700;
+    color: var(--text-accent);
+  }
+
+  .calculator__result {
+    margin: 0;
+    font-size: var(--step-1);
+  }
+
+  .calculator__result strong {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* --- Lists ------------------------------------------------------------- */
+
+  .ticks {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .ticks li {
+    padding-left: 1.6em;
+    position: relative;
+    margin-top: var(--space-s);
+  }
+
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    left: 0.2em;
+    top: 0.55em;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--text-accent);
+  }
+
+  .gives {
+    display: grid;
+    gap: var(--space-l);
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .gives {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .gives li {
+    margin-top: 0;
+    padding-top: var(--space-m);
+    border-top: 2px solid var(--border-strong);
+  }
+
+  .gives h3 {
+    margin-top: 0;
+    margin-bottom: var(--space-xs);
+    font-size: var(--step-1);
+  }
+
+  .gives p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>
