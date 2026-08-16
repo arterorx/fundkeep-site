@@ -64,6 +64,19 @@ other file names either address.
 It warns, rather than failing, when the release status or the competitor price
 recorded in `src/consts.ts` is due a re-read.
 
+## The savings calculator
+
+`/ynab-alternative` compares a subscription with a one-time purchase over a
+number of years. The arithmetic is `savings()` in `src/consts.ts` and it has
+three readers: the page renders a correct table at build time, the client
+script recomputes it from data attributes handed to it, and the build guard
+derives from it the set of amounts the page is allowed to contain. The script
+holds no prices of its own.
+
+Without JavaScript the slider is not shown and the table still states five
+years correctly. `public/savings-calculator.js` is a file rather than an inline
+script so the CSP can stay `script-src 'self'`.
+
 ## Images
 
 `public/apple-touch-icon.png` and `public/og.png` are generated:
@@ -75,6 +88,16 @@ python3 scripts/make-images.py
 The icon is the app's own drawing transcribed into vector and Pillow, not a
 bitmap copied out of the app repository — which stays read-only and out of this
 repository entirely.
+
+The app screenshots are resized from the store captures:
+
+```bash
+python3 scripts/make-screens.py
+```
+
+Read the comment at the top of that script before adding a frame. It records
+which captures were rejected and why — including a folder of screenshots from
+the previous design that look like ordinary ones.
 
 ## Not in this repository
 
