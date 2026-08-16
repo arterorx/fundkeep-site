@@ -60,6 +60,20 @@ const steps = [
 ---
 
 <Base title={SITE.name} description={description} schema={schema}>
+  <!-- The board is the largest thing above the fold, so it is what Largest
+       Contentful Paint measures. Without this the browser only learns it
+       exists after the HTML is parsed. `imagesizes` has to match the img's
+       own `sizes` exactly, or the two disagree and the file is fetched
+       twice. -->
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href="/screens/board-360.webp"
+    imagesrcset="/screens/board-360.webp 360w, /screens/board-720.webp 720w"
+    imagesizes="300px"
+    fetchpriority="high"
+  />
   <!-- ---------------------------------------------------------------- Hero -->
   <section class="section wrap hero">
     <div class="hero__text">
@@ -85,7 +99,7 @@ const steps = [
       <Screenshot
         name="board"
         priority
-        sizes="(min-width: 62rem) 320px, (min-width: 40rem) 300px, 78vw"
+        sizes="300px"
         alt="The Fundkeep board for August 2026. A card at the top reads To Be Assigned, $670.00, with Assign and Add Income buttons. Below it the envelopes: Rent, $0.00 left of $1,600.00 assigned; Electric, $1.45 left of $90.00."
       />
     </div>
@@ -144,7 +158,7 @@ const steps = [
       <figure>
         <Screenshot
           name="newspend"
-          sizes="(min-width: 48rem) 300px, 70vw"
+          sizes="300px"
           alt="The New Spend sheet: an amount of 24.50 in red, a Spending and Income switch, a payee field with suggestions, and envelope chips showing Fun with $145.55 left, Groceries with $521.22 left and Dining Out with $254.25 left."
         />
         <figcaption>
@@ -156,7 +170,7 @@ const steps = [
       <figure>
         <Screenshot
           name="reports"
-          sizes="(min-width: 48rem) 300px, 70vw"
+          sizes="300px"
           alt="The Reports screen for August 2026: a summary of what was spent and how old the money was, then a bar chart of where the month went, led by Rent at $1,600.00."
         />
         <figcaption>

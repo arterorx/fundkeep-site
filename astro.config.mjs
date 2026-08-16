@@ -16,6 +16,12 @@ export default defineConfig({
     // serves /privacy without a redirect. Apple's reviewer follows the exact
     // URL filed in App Store Connect, and a 301 there is a needless risk.
     format: 'file',
+    // The whole stylesheet is about 6 kB — smaller than the request that
+    // fetches it is worth. Inlining it removes the one render-blocking
+    // resource on the site, at the cost of repeating it on each of four
+    // pages. There is no script to inline and none to defer, so this is the
+    // only render-blocking thing there was.
+    inlineStylesheets: 'always',
   },
   integrations: [
     // No sitemap while the address is temporary. A sitemap is an invitation,
