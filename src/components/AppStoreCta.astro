@@ -1,0 +1,69 @@
+---
+import { RELEASE } from '../consts';
+
+/**
+ * The App Store button — or the truth, while there is nothing to link to.
+ *
+ * SPEC §3 puts a store button on the first screen. The app is not on the store
+ * yet, and this site is what unblocks the submission, so the button cannot
+ * exist today and a button that goes nowhere is worse than none. This reads
+ * `RELEASE` instead: fill in `state` and `appStoreUrl` in src/consts.ts and
+ * the button appears here, on the home page and anywhere else this component
+ * is used, with no template to hunt down. The build already refuses to finish
+ * if one of the two is set without the other.
+ *
+ * When it does ship, Apple's own "Download on the App Store" artwork replaces
+ * the text label — as a file in public/, never hotlinked from Apple's servers
+ * (SPEC §9: zero third-party requests).
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={['cta', className]}>
+  {
+    RELEASE.state === 'released' && RELEASE.appStoreUrl ? (
+      <a class="cta__button" href={RELEASE.appStoreUrl}>
+        Get it on the App Store
+      </a>
+    ) : (
+      <p class="cta__status">
+        <strong>{RELEASE.status}.</strong> No date is promised here, because a
+        date would be a guess — App Review sets it.
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .cta__button {
+    display: inline-block;
+    padding: var(--space-s) var(--space-xl);
+    background: var(--text-accent);
+    color: var(--on-accent);
+    border-radius: var(--radius);
+    font-size: var(--step-1);
+    font-weight: 650;
+    text-decoration: none;
+  }
+
+  .cta__button:hover {
+    background: var(--accent-hover);
+    color: var(--on-accent);
+  }
+
+  .cta__status {
+    margin: 0;
+    padding-left: var(--space-m);
+    border-left: 3px solid var(--text-accent);
+    color: var(--text-muted);
+    max-width: 46ch;
+  }
+
+  .cta__status strong {
+    color: var(--text);
+  }
+</style>

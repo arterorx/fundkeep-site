@@ -1,0 +1,51 @@
+---
+/**
+ * One app screenshot, at the two sizes `scripts/make-screens.py` writes.
+ *
+ * The rounded corners and the shadow are CSS rather than baked into the file,
+ * so the image stays an unretouched capture. `width` and `height` are the
+ * intrinsic pixels of the smaller file: the browser needs the ratio to hold
+ * the space before the image lands, and a page that jumps while loading is a
+ * layout-shift penalty as well as an annoyance.
+ */
+interface Props {
+  /** File stem in /screens, e.g. 'board'. */
+  name: string;
+  /** What the screenshot shows, for someone who cannot see it. */
+  alt: string;
+  /** CSS width the image is laid out at, for the browser's sizes hint. */
+  sizes: string;
+  /** The hero is the largest element above the fold; everything else waits. */
+  priority?: boolean;
+  class?: string;
+}
+
+const { name, alt, sizes, priority = false, class: className } = Astro.props;
+---
+
+<img
+  class:list={['screenshot', className]}
+  src={`/screens/${name}-360.webp`}
+  srcset={`/screens/${name}-360.webp 360w, /screens/${name}-720.webp 720w`}
+  sizes={sizes}
+  width="360"
+  height="783"
+  alt={alt}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : 'auto'}
+/>
+
+<style>
+  .screenshot {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 26px;
+    /* The captures are full-bleed white at the top; without a hairline they
+       dissolve into the page in the light scheme. */
+    outline: 1px solid var(--rule);
+    outline-offset: -1px;
+    box-shadow: var(--shadow-sheet);
+  }
+</style>

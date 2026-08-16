@@ -165,6 +165,15 @@ th {
   margin-bottom: var(--space-xs);
 }
 
+/* A single column of text at a readable measure, held against the page's left
+   edge rather than centred inside it. Use this instead of `.wrap-narrow` on a
+   page that also has full-width sections: a narrow column centred between wide
+   ones makes the whole page zig-zag, which reads as a mistake because it is
+   one. `.wrap-narrow` stays for pages that are nothing but one column. */
+.column {
+  max-width: var(--measure);
+}
+
 /* Long-form pages: privacy, support, and later the articles. Readable because
    the measure is short and the rules are quiet. */
 .prose {

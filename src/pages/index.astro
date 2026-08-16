@@ -1,110 +1,350 @@
 ---
 import Base from '../layouts/Base.astro';
-import BrandMark from '../components/BrandMark.astro';
+import AppStoreCta from '../components/AppStoreCta.astro';
+import Screenshot from '../components/Screenshot.astro';
 import { PRICING, RELEASE, SITE, TRIAL } from '../consts';
 
 /**
- * A holding page, not the home page.
+ * The home page (SPEC §4, phase 2). It carries the five things that phase
+ * asks for and nothing else: the promise, the board, the price, the
+ * platforms, and privacy.
  *
- * SPEC §8 puts the home page in phase 2; phase 1 exists to put /privacy and
- * /support at a live address so the App Store submission can proceed. But a
- * site whose root is a 404 is a broken site, and Apple's reviewer will click
- * the wordmark. So: the promise, the price, the platforms, and the two links
- * that matter — every line of it a fact from src/consts.ts.
+ * What a reader has to leave with (SPEC §3): the same method, paid for once,
+ * and the data stays theirs. What the reader is (SPEC §2): somebody who
+ * already knows the method — so nothing here explains what a budget is, and
+ * nothing tells anyone what to do with their money.
  *
- * Phase 2 replaces this file wholesale, with the envelope board as the hero
- * (SPEC §3, §7).
+ * Every claim below is checkable against the app or its store metadata.
+ * Deliberately absent: quick entry from the widget, Control Centre, Siri and
+ * Spotlight. It is built, but its rendering in the widget gallery has not been
+ * verified by hand yet, and SPEC §5 does not allow the site to describe a
+ * feature nobody has watched work. It goes in when it has been.
  */
 
 const description = SITE.description;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: SITE.name,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: RELEASE.requires,
+    url: SITE.url,
+    description,
+    offers: {
+      '@type': 'Offer',
+      price: PRICING.full.replace('$', ''),
+      priceCurrency: 'USD',
+      // One payment. Not a subscription, and the markup says so too.
+      category: 'one-time purchase',
+    },
+  },
+];
+
+/** The method, in the order money actually moves through it. */
+const steps = [
+  {
+    title: 'Money arrives',
+    body: 'It lands in To Be Assigned, and the board says plainly that it has no job yet.',
+  },
+  {
+    title: 'You give it a job',
+    body: 'Assign it across your envelopes until To Be Assigned reaches zero. Each envelope then shows what is left in it, not what you hoped to spend.',
+  },
+  {
+    title: 'You spend it',
+    body: 'The envelope falls by what you spent. Overspend one and Fundkeep says so plainly, then carries the rest forward the way the method expects.',
+  },
+];
 ---
 
-<Base title={SITE.name} description={description}>
-  <div class="section wrap wrap-narrow">
-    <BrandMark size={64} id="brand-home" class="hero__mark" />
+<Base title={SITE.name} description={description} schema={schema}>
+  <!-- ---------------------------------------------------------------- Hero -->
+  <section class="section wrap hero">
+    <div class="hero__text">
+      <h1>Envelope budgeting, bought once</h1>
+      <p class="lede">
+        Give every dollar a job before you spend it, on {RELEASE.platforms}. One
+        purchase, no subscription, and no bank login — your budget stays on your
+        own devices.
+      </p>
 
-    <h1>Envelope budgeting, bought once</h1>
+      <p class="price-line">
+        <strong>{PRICING.full}</strong>{' '}
+        <span class="muted"
+          >— {PRICING.note}. Free for the first {TRIAL.days} days, with nothing
+          withheld.</span
+        >
+      </p>
 
+      <AppStoreCta class="hero__cta" />
+    </div>
+
+    <div class="hero__shot">
+      <Screenshot
+        name="board"
+        priority
+        sizes="(min-width: 62rem) 320px, (min-width: 40rem) 300px, 78vw"
+        alt="The Fundkeep board for August 2026. A card at the top reads To Be Assigned, $670.00, with Assign and Add Income buttons. Below it the envelopes: Rent, $0.00 left of $1,600.00 assigned; Electric, $1.45 left of $90.00."
+      />
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- Method -->
+  <section class="section wrap">
+    <h2>Money gets a job before it gets spent</h2>
     <p class="lede">
-      Fundkeep is the zero-based method on {RELEASE.platforms}: you decide what
-      every dollar is for before you spend it, and the board tells you what is
-      actually left.
+      The board is the whole app in one screen: what is still unassigned at the
+      top, and what is genuinely left in each envelope underneath.
     </p>
 
-    <dl class="facts">
-      <div>
-        <dt>Price</dt>
-        <dd>{PRICING.full}, {PRICING.note}</dd>
-      </div>
-      <div>
-        <dt>Trial</dt>
-        <dd>{TRIAL.days} days, with nothing withheld</dd>
-      </div>
-      <div>
-        <dt>Devices</dt>
-        <dd>{RELEASE.platforms} — one purchase covers all three</dd>
-      </div>
-      <div>
-        <dt>Bank logins</dt>
-        <dd>None. Fundkeep never asks for one</dd>
-      </div>
-      <div>
-        <dt>Your data</dt>
-        <dd>Stays on your devices, and exports to CSV whenever you want it</dd>
-      </div>
-    </dl>
+    <ol class="steps">
+      {
+        steps.map((step) => (
+          <li>
+            <h3>{step.title}</h3>
+            <p>{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
 
-    <p class="notice">
-      <strong>{RELEASE.status}.</strong> There is more to say about it than this
-      page says, and that is coming. In the meantime the two pages below are the
-      ones worth reading.
+    <p class="note">
+      Credit cards work the way the method needs them to: a card purchase moves
+      money into that card's payment envelope, so it is set aside the moment you
+      spend it rather than the moment the bill lands.
     </p>
+  </section>
 
-    <ul class="links">
-      <li><a href="/privacy">Privacy policy</a></li>
-      <li><a href="/support">Support</a></li>
-    </ul>
-  </div>
+  <!-- --------------------------------------------------------------- Moving -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>Bringing a budget with you</h2>
+      <p>
+        Coming from YNAB, or from anything else that exports: Fundkeep reads the
+        export, rebuilds your categories, accounts and history, and then shows
+        you a reconciliation report — what the other app said each balance was,
+        what Fundkeep makes it, and every difference it found. You check the
+        numbers before you commit to them.
+      </p>
+      <p>
+        Your bank's own CSV works the same way. Fundkeep works out the columns
+        itself for the layouts the major US banks produce, shows you every row
+        before anything is saved, and importing the same file twice duplicates
+        nothing.
+      </p>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- Screens -->
+  <section class="section wrap">
+    <h2>Two more screens</h2>
+    <div class="screens">
+      <figure>
+        <Screenshot
+          name="newspend"
+          sizes="(min-width: 48rem) 300px, 70vw"
+          alt="The New Spend sheet: an amount of 24.50 in red, a Spending and Income switch, a payee field with suggestions, and envelope chips showing Fun with $145.55 left, Groceries with $521.22 left and Dining Out with $254.25 left."
+        />
+        <figcaption>
+          Entering a spend takes seconds, and the envelope chips show what is
+          left in each one before you pick.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <Screenshot
+          name="reports"
+          sizes="(min-width: 48rem) 300px, 70vw"
+          alt="The Reports screen for August 2026: a summary of what was spent and how old the money was, then a bar chart of where the month went, led by Rent at $1,600.00."
+        />
+        <figcaption>
+          Reports state facts about your own history — where the month went, how
+          it compares with the last three, how old the money you spent was. Every
+          figure is a statement about your figures. The app never tells you what
+          to do with your money.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------ Platforms -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>{RELEASE.platforms}</h2>
+      <p>
+        One purchase covers all three. It needs {RELEASE.requires} or later.
+      </p>
+      <p>
+        The Mac app is a real Mac app, with a menu bar and keyboard shortcuts,
+        rather than a phone app in a window. Your devices stay in step through
+        your own private iCloud, and you can switch that off.
+      </p>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- Privacy -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>No bank logins. No server. Nothing to leak.</h2>
+      <p>
+        Fundkeep never asks for a bank login, and that is deliberate rather than
+        pending — there is no Plaid or equivalent in it. Transactions arrive two
+        ways: you type them, or you pick a CSV you exported from your own bank,
+        and it is read on the device.
+      </p>
+      <p>
+        There is no account, no analytics, no crash reporting and no third-party
+        code of any kind. On the App Store that shows up as the <strong
+          >Data Not Collected</strong
+        > label. Everything exports to CSV whenever you want it, including after
+        the trial ends — an app that held your own records hostage would not be worth
+        trusting with them.
+      </p>
+      <p>
+        <a href="/privacy">The full privacy policy</a> sets out what is stored,
+        what is sent and to whom.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------------------------------------------------------------- Price -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>{PRICING.full}, once</h2>
+      <p class="lede">
+        Free for {TRIAL.days} days with every feature working. After that the app
+        becomes read-only until you buy it: what you entered stays visible, and
+        exporting keeps working. Nothing renews, because there is nothing to
+        renew.
+      </p>
+      <AppStoreCta />
+    </div>
+  </section>
 </Base>
 
 <style>
-  .hero__mark {
-    border-radius: 14px;
-    margin-bottom: var(--space-l);
-  }
+  /* --- Hero -------------------------------------------------------------- */
 
-  .facts {
-    max-width: var(--measure);
-    margin: var(--space-xl) 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .facts > div {
+  .hero {
     display: grid;
-    gap: 0 var(--space-l);
-    padding-block: var(--space-s);
-    border-bottom: 1px solid var(--rule);
+    gap: var(--space-2xl);
+    align-items: center;
   }
 
-  @media (min-width: 34rem) {
-    .facts > div {
-      grid-template-columns: 9rem 1fr;
+  @media (min-width: 48rem) {
+    .hero {
+      grid-template-columns: 1fr minmax(260px, 320px);
+      gap: var(--space-3xl);
+      padding-block: var(--space-3xl);
     }
   }
 
-  .facts dt {
-    font-weight: 650;
+  .hero__text > :last-child {
+    margin-bottom: 0;
   }
 
-  .facts dd {
+  .hero__shot {
+    /* On a phone the screenshot is an illustration, not the point; full width
+       would push the price and the status line off the first screen. */
+    max-width: 300px;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .price-line {
+    font-size: var(--step-1);
+    margin-top: var(--space-l);
+  }
+
+  .price-line strong {
+    font-weight: 700;
+  }
+
+  .hero__cta {
+    margin-top: var(--space-l);
+  }
+
+  /* --- Steps ------------------------------------------------------------- */
+
+  .steps {
+    display: grid;
+    gap: var(--space-l);
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  @media (min-width: 48rem) {
+    .steps {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+    }
+  }
+
+  .steps li {
+    margin-top: 0;
+    padding-top: var(--space-m);
+    border-top: 2px solid var(--text-accent);
+    counter-increment: step;
+  }
+
+  .steps h3 {
+    margin-top: 0;
+    margin-bottom: var(--space-xs);
+    font-size: var(--step-1);
+  }
+
+  .steps h3::before {
+    content: counter(step) '. ';
+    color: var(--text-accent);
+  }
+
+  .steps p {
     margin: 0;
     color: var(--text-muted);
   }
 
-  .links {
+  .note {
+    max-width: var(--measure);
     margin-top: var(--space-xl);
-    padding: 0;
-    list-style: none;
-    font-size: var(--step-1);
+    color: var(--text-muted);
+  }
+
+  /* --- Screens ----------------------------------------------------------- */
+
+  .screens {
+    display: grid;
+    gap: var(--space-2xl);
+    margin-top: var(--space-xl);
+  }
+
+  @media (min-width: 48rem) {
+    .screens {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2xl) var(--space-3xl);
+    }
+  }
+
+  .screens figure {
+    margin: 0;
+    display: grid;
+    gap: var(--space-m);
+    justify-items: start;
+    /* Without this the shorter figure is stretched to its neighbour's height
+       and the leftover space is shared out between its rows, so its caption
+       floats away from its screenshot and the two columns stop lining up. */
+    align-content: start;
+  }
+
+  .screens :global(.screenshot) {
+    max-width: 300px;
+  }
+
+  .screens figcaption {
+    color: var(--text-muted);
+    max-width: 42ch;
   }
 </style>
