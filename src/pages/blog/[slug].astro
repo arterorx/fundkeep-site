@@ -1,0 +1,174 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../consts';
+import { displayDate, machineDate } from '../../utils/dates';
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, standfirst, published, updated, sourcesCheckedOn } =
+  post.data;
+
+const url = `${SITE.url}/blog/${post.id}`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    url,
+    inLanguage: 'en',
+    datePublished: machineDate(published),
+    dateModified: machineDate(updated ?? published),
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Articles',
+        item: `${SITE.url}/blog`,
+      },
+      { '@type': 'ListItem', position: 3, name: title, item: url },
+    ],
+  },
+];
+---
+
+<Base title={title} description={description} schema={schema}>
+  <!-- Read by the build guard, which warns when the facts in an article are a
+       year past their last check. An article nobody has re-read does not break;
+       it quietly stops being true, and these name another company. -->
+  <meta
+    slot="head"
+    name="fundkeep:sources-checked"
+    content={machineDate(sourcesCheckedOn)}
+  />
+
+  <article class="section wrap wrap-narrow">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">{SITE.name}</a> <span aria-hidden="true">›</span>{' '}
+      <a href="/blog">Articles</a>
+    </nav>
+
+    <header class="head">
+      <h1>{title}</h1>
+      <p class="standfirst">{standfirst}</p>
+      <p class="small muted meta">
+        <time datetime={machineDate(published)}>{displayDate(published)}</time>
+        {
+          updated && (
+            <>
+              {' · updated '}
+              <time datetime={machineDate(updated)}>{displayDate(updated)}</time>
+            </>
+          )
+        }
+      </p>
+    </header>
+
+    <div class="prose article">
+      <Content />
+    </div>
+
+    <footer class="foot">
+      <p class="small muted">
+        Facts on this page were last checked against their sources on{' '}
+        <time datetime={machineDate(sourcesCheckedOn)}>
+          {displayDate(sourcesCheckedOn)}</time
+        >. Nothing here is financial advice — we explain a method and describe a
+        tool we make. What you do with your money is yours to decide.
+      </p>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .crumbs {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+    margin-bottom: var(--space-l);
+  }
+
+  .crumbs a {
+    color: var(--text-muted);
+  }
+
+  .crumbs a:hover {
+    color: var(--text-accent);
+  }
+
+  .head {
+    max-width: var(--measure);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .head h1 {
+    margin-bottom: var(--space-s);
+  }
+
+  .standfirst {
+    font-size: var(--step-1);
+    color: var(--text-muted);
+    margin-bottom: var(--space-m);
+  }
+
+  .meta {
+    margin: 0;
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--rule);
+  }
+
+  /* Markdown output: give the headings room and keep the measure short. */
+  .article :global(h2) {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+  }
+
+  .article :global(h3) {
+    margin-top: var(--space-xl);
+  }
+
+  .article :global(ul),
+  .article :global(ol) {
+    padding-left: 1.15em;
+  }
+
+  .article :global(li) {
+    margin-top: var(--space-2xs);
+  }
+
+  .article :global(table) {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .article :global(blockquote) {
+    margin: var(--space-l) 0;
+    padding-left: var(--space-l);
+    border-left: 3px solid var(--rule);
+    color: var(--text-muted);
+  }
+
+  .foot {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
+  }
+</style>

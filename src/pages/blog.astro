@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { SITE, YNAB } from '../consts';
+import { displayDate, machineDate } from '../utils/dates';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.published.getTime() - a.data.published.getTime(),
+);
+
+const title = 'Articles';
+const description = `Practical writing for people leaving a budgeting subscription: what a ${YNAB.name} export actually contains, and how the envelope method works without one.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${title} — ${SITE.name}`,
+    description,
+    url: `${SITE.url}/blog`,
+    inLanguage: 'en',
+    hasPart: posts.map((post) => ({
+      '@type': 'Article',
+      headline: post.data.title,
+      description: post.data.description,
+      url: `${SITE.url}/blog/${post.id}`,
+      datePublished: machineDate(post.data.published),
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} schema={schema}>
+  <div class="section wrap wrap-narrow">
+    <h1>Articles</h1>
+    <p class="lede">
+      For people moving off a budgeting subscription: what your data looks like
+      when you take it with you, and how the method works when nobody is
+      charging you monthly for it. Nothing here tells you what to do with your
+      money — that is yours to decide, and it is not our field.
+    </p>
+
+    <ul class="list">
+      {
+        posts.map((post) => (
+          <li class="entry">
+            <p class="small muted entry__date">
+              <time datetime={machineDate(post.data.published)}>
+                {displayDate(post.data.published)}
+              </time>
+            </p>
+            <h2>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h2>
+            <p class="entry__standfirst">{post.data.standfirst}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <section class="tool">
+      <h2>The calculator</h2>
+      <p>
+        If you would rather see the arithmetic than read about it, the{' '}
+        <a href="/ynab-alternative">page for people leaving {YNAB.name}</a> has a
+        slider: pick how long you expect to keep budgeting and it shows what each
+        way of paying comes to.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .list {
+    list-style: none;
+    margin: var(--space-2xl) 0 0;
+    padding: 0;
+  }
+
+  .entry + .entry {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--rule);
+  }
+
+  .entry__date {
+    margin: 0 0 var(--space-3xs);
+  }
+
+  .entry h2 {
+    margin: 0 0 var(--space-2xs);
+    font-size: var(--step-2);
+  }
+
+  .entry h2 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .entry h2 a:hover {
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  .entry__standfirst {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .tool {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .tool h2 {
+    margin-top: 0;
+    font-size: var(--step-1);
+  }
+</style>

@@ -7,11 +7,16 @@ const path = Astro.url.pathname;
 /** Every page the navigation links to, in one array rather than per template. */
 const links = [
   { href: '/ynab-alternative', label: 'Leaving YNAB?' },
+  { href: '/blog', label: 'Articles' },
   { href: '/support', label: 'Support' },
   { href: '/privacy', label: 'Privacy' },
 ];
 
-const isCurrent = (href: string) => path === href || path === `${href}.html`;
+/** Articles mark the Articles tab, not just /blog itself. */
+const isCurrent = (href: string) =>
+  path === href ||
+  path === `${href}.html` ||
+  (href === '/blog' && path.startsWith('/blog/'));
 ---
 
 <header class="site-header">

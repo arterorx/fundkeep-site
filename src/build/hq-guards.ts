@@ -283,13 +283,44 @@ export function hqGuards(): AstroIntegration {
             );
           }
 
+          // An article whose facts have not been re-read in a year. A warning
+          // rather than a failure: the page does not become false on the
+          // anniversary, it becomes unverified, and that is a different thing.
+          // It matters more here than it would elsewhere, because these
+          // articles state things about a named company's product.
+          const checked = html.match(
+            /<meta name="fundkeep:sources-checked" content="([\d-]+)"/,
+          )?.[1];
+          if (checked) {
+            const due = new Date(checked);
+            due.setFullYear(due.getFullYear() + 1);
+            if (today() > due.toISOString().slice(0, 10)) {
+              logger.warn(
+                `${name}: sources last checked ${checked}, over a year ago. ` +
+                  `Re-read it, then move sourcesCheckedOn in the front matter.`,
+              );
+            }
+          }
+
           // A word run straight into a link or a <strong>, with the space
           // eaten. Astro collapses the newline between a word and an element
           // on the next line, so this happens by writing perfectly ordinary
           // markup — and it is nearly invisible when proof-reading. Three of
           // them shipped to production on roomkeep.app before this existed.
+          //
+          // The third alternative below is an inline element closing directly
+          // onto a link. That is how the breadcrumb lost its space —
+          // "Fundkeep ›Articles" — and the first two alternatives could not
+          // see it, because the character before the link was a `>` rather
+          // than a letter. Only the eye caught it.
+          //
+          // It is deliberately narrow: only a link on the right-hand side, and
+          // no block tags at all. `<li><a>` is ordinary markup, and two spans
+          // butted together are how the slider's end labels sit at opposite
+          // ends of a flex row — the first draft of this rule failed the build
+          // on both.
           for (const m of html.matchAll(
-            /([a-zA-Z,;:])<(?:a|strong|code|em)[\s>]|<\/(?:a|strong|code|em)>([a-zA-Z])/g,
+            /([a-zA-Z,;:])<(?:a|strong|code|em)[\s>]|<\/(?:a|strong|code|em)>([a-zA-Z])|<\/(?:a|span|strong|code|em)><a[\s>]/g,
           )) {
             const at = Math.max(0, m.index - 30);
             problems.push(
