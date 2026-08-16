@@ -37,7 +37,7 @@ import { COMPETITORS, COMPETITORS_CHECKED, PRICING, SITE, TRIAL } from '../const
       <tr>
         <th scope="col">App</th>
         <th scope="col">Price</th>
-        <th scope="col">How it is charged</th>
+        <th scope="col">How it is charged, and where you get it</th>
       </tr>
     </thead>
     <tbody>
@@ -55,7 +55,9 @@ import { COMPETITORS, COMPETITORS_CHECKED, PRICING, SITE, TRIAL } from '../const
               <a href={rival.url}>{rival.name}</a>
             </th>
             <td>{rival.price ?? <span class="rivals__none">Not printed</span>}</td>
-            <td>{rival.priceNote}</td>
+            <td>
+              {rival.priceNote} <strong>{rival.availability}</strong>
+            </td>
           </tr>
         ))
       }

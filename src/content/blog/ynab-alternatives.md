@@ -19,6 +19,10 @@ from our own internal notes, which turned out to be wrong about two of these
 when we checked. Two rows have no price at all, because we could not confirm one
 first-hand, and an admission is worth more than a number.
 
+**Availability was checked against Apple's own catalogue**, by identifier and by
+developer, rather than against anybody's marketing. That check changed this
+article after it was written: one of the five is not on the App Store at all.
+
 **Every figure on this page lives in one file** in the site's source, with the
 date it was read and a build that complains when it goes stale. That is not a
 courtesy to these companies. It is the only way a page like this stays true
@@ -70,28 +74,41 @@ and no third-party anything — not a claim to be tidier, because it is not.
 
 The closest thing on this list to our own argument, made by somebody else.
 Offline, local storage, a one-time purchase, no subscription, and privacy as the
-headline rather than a footnote — the same pitch, delivered first.
+headline rather than a footnote — the same pitch, delivered first. Their licence
+key travels through Google Drive, which is a reasonable engineering choice and
+is also a third party in a story about having none.
 
-Two differences worth knowing. It is cross-platform, which is the right answer
-if your household has an Android phone or a Windows laptop and the wrong answer
-if you wanted a native Mac app. And its licence key travels through Google
-Drive, which is a reasonable engineering choice and is also a third party in a
-story about having none.
+**But if you are reading this on an iPhone, you cannot buy it today.** Apple's
+catalogue returns nothing for Zeroed — not by its identifier, not by its
+developer, in any storefront we checked. It is on Google Play and the Microsoft
+Store. Their own site markets a licence that unlocks iPhone and Mac alongside
+Android and Windows, so the intention is plainly there; the App Store listing is
+not, and an app you cannot install is not an alternative, whatever it costs.
 
-We have not printed a price for it because the only figure on their site today
+We have not printed a price either, because the only figure on their site today
 is a founder's offer. Promotional prices are exactly the kind that move, and
 quoting one as though it were the standing price is how comparison pages become
 wrong.
 
+If you have an Android phone or a Windows laptop in the house, they are worth
+watching. If your household is all Apple, check back rather than plan around
+them.
+
 ## MoneyCoach
 
-The most polished Apple citizen here: iPhone, iPad, Mac, Watch and Vision Pro,
-and it has been at it for years. If what you want is a personal-finance app that
-feels like it belongs on the platform, this is the bar.
+The most polished Apple citizen here: Apple's catalogue lists it for iPhone,
+iPad, Mac and Apple Watch, and it has been at it for years. If what you want is
+a personal-finance app that feels like it belongs on the platform, this is the
+bar.
 
 It is free to download with a Premium subscription. We are not printing a figure
-because their own site shows none and the store listings we found disagreed with
-each other — check it yourself before deciding.
+because their own site shows none and Apple does not publish in-app purchase
+prices in its catalogue — check it in the App Store before deciding.
+
+One warning that cost us an hour: there is a **second, unrelated app also called
+MoneyCoach** by a different developer. Make sure the listing you are looking at
+is the one by MoneyCoach UG, or you will be comparing the wrong product — as we
+briefly were.
 
 The question to ask it is not about price but about method: find out whether its
 budgeting is genuinely zero-based envelopes, where money is assigned before it

@@ -188,6 +188,13 @@ export interface Competitor {
   price: string | null;
   /** How that price is charged, or why there is no figure. */
   priceNote: string;
+  /**
+   * Whether an Apple buyer can actually get it, checked against Apple's own
+   * catalogue rather than against the company's marketing. This matters more
+   * than price on a page read by people with iPhones: an app they cannot
+   * install is not an alternative, whatever it costs.
+   */
+  availability: string;
   /** Where the figure was read, named on the page so it can be audited. */
   source: string;
 }
@@ -198,6 +205,7 @@ export const COMPETITORS: readonly Competitor[] = [
     url: 'https://www.ynab.com/pricing',
     price: '$109',
     priceNote: 'a year, or $14.99 a month. 34-day trial.',
+    availability: 'On the App Store, free to download; the subscription is inside.',
     source: "YNAB's own pricing page",
   },
   {
@@ -205,6 +213,8 @@ export const COMPETITORS: readonly Competitor[] = [
     url: 'https://apps.apple.com/us/app/envy-envelope-budget-planner/id1569230951',
     price: '$6.99',
     priceNote: 'free to download, one in-app purchase called Envy All Access.',
+    availability:
+      'On the App Store. iPhone and iPad; on a Mac it runs as the iPad app.',
     source: "Apple's App Store listing",
   },
   {
@@ -212,6 +222,8 @@ export const COMPETITORS: readonly Competitor[] = [
     url: 'https://actualbudget.org',
     price: 'Free',
     priceNote: 'open source. Syncing between devices means running a server.',
+    availability:
+      'Not an App Store app. You run it yourself, which is the whole idea.',
     source: 'the project itself',
   },
   {
@@ -220,15 +232,18 @@ export const COMPETITORS: readonly Competitor[] = [
     price: null,
     priceNote:
       'a one-time purchase, but the only figure on their site today is a founder’s offer — a promotional price, which is exactly the kind that moves.',
-    source: 'their own site',
+    availability:
+      'Not on the App Store: Apple’s catalogue returns nothing for it in any storefront we checked. On Google Play and the Microsoft Store.',
+    source: 'their own site, and Apple’s catalogue for availability',
   },
   {
     name: 'MoneyCoach',
     url: 'https://moneycoach.ai',
     price: null,
     priceNote:
-      'free to download with a Premium subscription. Their site prints no price, and the store listings we found disagreed with each other, so we are not printing one either.',
-    source: 'their own site and Apple',
+      'free to download with a Premium subscription. Their own site prints no figure and Apple does not publish in-app purchase prices, so neither do we.',
+    availability: 'On the App Store. iPhone, iPad, Mac and Apple Watch.',
+    source: 'their own site, and Apple’s catalogue for availability',
   },
 ] as const;
 
