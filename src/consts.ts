@@ -68,21 +68,22 @@ export const SITE = {
 } as const;
 
 /**
- * The one address on the site.
+ * The one address on the site. The support page, the privacy page, the footer
+ * and the 404 all read it from here.
  *
- * DECISION PENDING — see PROGRESS.md → «Вопросы штабу».
+ * It has to receive mail *before* the App Store submission: Apple files it as
+ * the support contact and may write to it, and a reviewer writing to a
+ * bouncing address is a rejection waiting to happen. `support@fundkeep.app`
+ * cannot do that yet — the domain is not bought — so the штаб's call
+ * (16.08.2026) is to publish an address that works today rather than to hold
+ * the submission for the domain.
  *
- * It must receive mail *before* the App Store submission: Apple files it as
- * the support contact and may write to it, and a reviewer who writes to a
- * bouncing address is a rejection waiting to happen. `fundkeep.app` does not
- * exist yet, so nothing sent here arrives today. Cloudflare Email Routing
- * forwards it to a real inbox for free the moment the domain is attached.
- *
- * If the штаб would rather publish an address that works this minute, change
- * this one constant — the support page, the privacy page, the footer and the
- * 404 all read it from here.
+ * When `fundkeep.app` is attached: turn on Cloudflare Email Routing, point
+ * `support@fundkeep.app` at the same inbox, change this line, and update the
+ * Support URL contact in App Store Connect. That is a metadata change, not a
+ * new build.
  */
-export const CONTACT_EMAIL = 'support@fundkeep.app';
+export const CONTACT_EMAIL = 'kargorage@gmail.com';
 
 /**
  * Prices are the штаб's call (SPEC §5). Change them here and nowhere else:

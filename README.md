@@ -35,6 +35,11 @@ On the day `fundkeep.app` is bought, the whole change is:
 2. Set `DOMAIN.live = true` in `src/consts.ts`.
 3. Deploy, then submit the sitemap in Search Console.
 
+Two things that are not the switch and have to be done by hand the same day:
+turn on Cloudflare Email Routing and move `CONTACT_EMAIL` to the address on the
+new domain, and change the Privacy Policy, Support and Marketing URLs in App
+Store Connect. Both are metadata, not a new build.
+
 That one boolean moves every canonical and `og:url` to the real domain, drops
 `noindex` from every page, opens `robots.txt`, and turns the sitemap on. No
 other file names either address.
