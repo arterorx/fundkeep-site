@@ -1,0 +1,114 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL, RELEASE, SITE } from '../consts';
+import { SUPPORT_FAQ } from '../data/support-faq';
+
+const title = 'Support';
+const description =
+  'How to reach a person about Fundkeep, and answers to the questions that come up after installing it: devices, the trial, purchases, imports and exports.';
+
+/** Same array as the visible list, so the two cannot disagree. */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    url: `${SITE.url}/support`,
+    inLanguage: 'en',
+    mainEntity: SUPPORT_FAQ.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.link ? `${item.a} ${item.link.href}` : item.a,
+      },
+    })),
+  },
+];
+---
+
+<Base title={title} description={description} schema={schema}>
+  <div class="section wrap wrap-narrow">
+    <h1>Support</h1>
+    <p class="lede">
+      Fundkeep is made by one developer. Mail sent to the address below is read
+      by a person and answered by one.
+    </p>
+
+    <p class="contact">
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </p>
+
+    {
+      RELEASE.state === 'unreleased' && (
+        <p class="notice">
+          <strong>{RELEASE.status}.</strong> This page is here for when it is,
+          and the mailbox works today — a question asked before then will still
+          be answered.
+        </p>
+      )
+    }
+
+    <h2>Questions that come up</h2>
+    <dl class="faq">
+      {
+        SUPPORT_FAQ.map((item) => (
+          <div class="faq__item">
+            <dt>{item.q}</dt>
+            <dd>
+              {item.a}
+              {item.link && (
+                <>
+                  {' '}
+                  <a href={item.link.href}>{item.link.label}</a>
+                </>
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <h2>Privacy</h2>
+    <p>
+      What Fundkeep stores, what it sends and to whom is set out in full on the{
+        ' '
+      }
+      <a href="/privacy">privacy policy</a>. The short version: it collects
+      nothing, it never asks for a bank login, and there is no server of ours for
+      anything to reach.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .contact {
+    font-size: var(--step-1);
+    font-weight: 600;
+    margin-bottom: var(--space-l);
+  }
+
+  .faq {
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  .faq__item + .faq__item {
+    margin-top: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .faq dt {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-xs);
+  }
+
+  .faq dd {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+import { CONTACT_EMAIL, SITE } from '../consts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <p class="small muted site-footer__note">
+      {SITE.name} keeps your budget on your own devices. No account, no bank
+      logins, no server of ours.
+    </p>
+    <nav aria-label="Footer">
+      <ul class="footer-nav small">
+        <li><a href="/support">Support</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
+      </ul>
+    </nav>
+    <p class="small muted site-footer__copy">© {year}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-3xl);
+    border-top: 1px solid var(--rule);
+  }
+
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-s) var(--space-l);
+    padding-block: var(--space-l);
+  }
+
+  .site-footer__note {
+    margin: 0;
+    max-width: 38ch;
+  }
+
+  .site-footer__copy {
+    margin: 0;
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-m) var(--space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-nav li + li {
+    margin-top: 0;
+  }
+</style>

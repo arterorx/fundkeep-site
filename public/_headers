@@ -1,0 +1,42 @@
+# Cloudflare Pages reads this file from the build output.
+#
+# The CSP is worth more here than it usually is. "No third-party code, no
+# tracking" is a claim this site makes in writing on /privacy, and
+# `default-src 'none'` turns that claim into something the browser enforces.
+# If a request to somebody else's domain ever creeps in, the page breaks
+# loudly instead of quietly contradicting the policy. SPEC §9 asks for zero
+# third-party requests and says to check it in the Network tab rather than to
+# believe it; this is the belt to that pair of braces.
+#
+# 'unsafe-inline' for styles is needed because Astro inlines small per-page
+# stylesheets, which is the right call for performance on a site this size.
+#
+# script-src is 'none' and stays that way while there is no script on the
+# site. When the YNAB savings calculator arrives (SPEC §4, phase 3) its script
+# goes in public/ as a file and this becomes `script-src 'self'` — never
+# 'unsafe-inline', and never anyone else's domain.
+#
+# NOTE: `astro preview` does not apply this file. On sawkit.app that cost a
+# broken page in production — a script blocked by CSP that worked perfectly on
+# localhost. Use `npm run serve`, which serves dist with these headers.
+
+/*
+  Content-Security-Policy: default-src 'none'; base-uri 'self'; script-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; manifest-src 'self'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# Hashed filenames, so these can be cached hard and forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/favicon.svg
+  Cache-Control: public, max-age=604800
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+
+/og.png
+  Cache-Control: public, max-age=604800

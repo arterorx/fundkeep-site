@@ -1,0 +1,43 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# environment
+.env
+.env.production
+
+# macOS
+.DS_Store
+
+# editors
+.vscode/
+.idea/
+.claude/
+
+# local audit output
+lighthouse/
+.wrangler/
+
+# ---------------------------------------------------------------------------
+# Internal штаб documents. This repository is PUBLIC, so the rule that was a
+# precaution on the previous two sites is a hard requirement here.
+#
+# SPEC.md carries the pricing strategy, the release plan and the wording rules
+# about a named competitor. CLAUDE.md carries the working rules. PROGRESS.md
+# carries the open questions. None of the three is needed to build the site,
+# and history cannot be cleaned after the fact — deleting a file from GitHub
+# does not remove it from the history.
+#
+# They stay on disk, readable between sessions, and never committed.
+# ---------------------------------------------------------------------------
+SPEC.md
+CLAUDE.md
+PROGRESS.md

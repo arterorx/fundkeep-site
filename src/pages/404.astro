@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL, SITE } from '../consts';
+
+const title = 'Page not found';
+const description = `That address does not exist on ${SITE.domain}.`;
+---
+
+<Base title={title} description={description} noindex>
+  <div class="section wrap wrap-narrow">
+    <p class="eyebrow">Error 404</p>
+    <h1>Nothing in this envelope</h1>
+    <p class="lede">
+      There is no page at that address. These two are the ones people are
+      usually looking for:
+    </p>
+    <ul>
+      <li><a href="/privacy">Privacy policy</a></li>
+      <li><a href="/support">Support</a></li>
+    </ul>
+    <p class="muted">
+      If a link sent you here, <a href={`mailto:${CONTACT_EMAIL}`}>tell us</a> and
+      it gets fixed.
+    </p>
+  </div>
+</Base>

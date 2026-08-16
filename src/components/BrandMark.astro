@@ -1,0 +1,60 @@
+---
+/**
+ * The app icon, redrawn as vector.
+ *
+ * The geometry is the same drawing as `Scripts/make-icon.swift` in the app
+ * repository — envelope with a banknote rising out of it, on a slate-blue
+ * plate — transcribed into SVG rather than exported as a bitmap, so it stays
+ * sharp at 30 px in the header and needs no second file. The app repository is
+ * read-only from here, and nothing of it is copied into this repository except
+ * these numbers.
+ *
+ * Decorative: every place it is used has a text name beside it.
+ */
+interface Props {
+  size?: number;
+  /** Unique per instance: two identical gradient ids on one page fight. */
+  id?: string;
+  class?: string;
+}
+
+const { size = 30, id = 'brand', class: className } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 1024 1024"
+  width={size}
+  height={size}
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <linearGradient id={`${id}-plate`} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#21334A"></stop>
+      <stop offset="1" stop-color="#121C2B"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" rx="225" fill={`url(#${id}-plate)`}></rect>
+
+  <!-- Back panel: what the note sits inside. -->
+  <rect x="194.5" y="333.2" width="635" height="419.1" rx="38" fill="#D6D1C7"
+  ></rect>
+
+  <!-- The banknote, drawn before the front panel so the front covers its
+       lower half — which is what makes it read as "inside". -->
+  <rect x="321.5" y="226.6" width="381" height="385.6" rx="19" fill="#339E6B"
+  ></rect>
+  <rect x="390.1" y="305.6" width="243.8" height="21.2" rx="10.6" fill="#268057"
+  ></rect>
+  <rect x="428.2" y="367.3" width="167.6" height="21.2" rx="10.6" fill="#268057"
+  ></rect>
+
+  <!-- Front panel, with the flap's V cut out of its top edge. -->
+  <path
+    d="M194.5 714.2 Q194.5 752.3 232.6 752.3 L791.4 752.3 Q829.5 752.3 829.5 714.2 L829.5 386 L512 509.2 L194.5 386 Z"
+    fill="#F5F2EB"
+    stroke="#B8B2A8"
+    stroke-width="4"></path>
+</svg>

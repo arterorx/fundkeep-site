@@ -1,0 +1,119 @@
+/*
+ * Design tokens.
+ *
+ * The palette is the app's own (SPEC §7), so that the site and the product are
+ * recognisably one thing. It comes from `App/Design/Theme.swift` and the token
+ * table in `docs/superpowers/specs/2026-08-16-design-tokens-newspend-design.md`
+ * in the app repository: deep indigo #2B4396 in light, lifted indigo #8FA5F5
+ * in dark, over a ground with a slight blue cast rather than a neutral grey.
+ *
+ * Calm and money-shaped, per SPEC §7: no fintech gradients across the page, no
+ * green-arrow-up iconography, no stock smiles. Money colours (#1F7A4D positive,
+ * #C63A2F negative) exist in the app; they arrive on this site when there are
+ * figures to colour, not before.
+ *
+ * Every text pair below was measured with a WCAG 2.1 contrast calculation, not
+ * eyeballed:
+ *
+ *   light  text    #171A22 on #F7F8FB  16.38:1  AAA
+ *          muted   #4E5568 on #F7F8FB   7.00:1  AAA
+ *          muted   #4E5568 on #ECEFF7   6.47:1  AA
+ *          accent  #2B4396 on #F7F8FB   8.43:1  AAA
+ *          hover   #1F3272 on #F7F8FB  11.25:1  AAA
+ *          button  #FFFFFF on #2B4396   8.95:1  AAA
+ *   dark   text    #EDEFF5 on #14161F  15.69:1  AAA
+ *          muted   #A3ABC2 on #14161F   7.87:1  AAA
+ *          accent  #8FA5F5 on #14161F   7.62:1  AAA
+ *          hover   #B3C1FA on #14161F  10.24:1  AAA
+ *          button  #0F1220 on #8FA5F5   7.86:1  AAA
+ *
+ * The accent doubles as the focus ring, so it also has to clear 3:1 as a
+ * non-text colour against every ground it can sit on. It clears 6.93:1 at
+ * worst (dark accent on the raised surface).
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- Colour: light ---------------------------------------------------- */
+  --paper: #f7f8fb;
+  --surface: #ffffff;
+  --surface-sunk: #eceff7;
+  --text: #171a22;
+  --text-muted: #4e5568;
+  --text-accent: #2b4396;
+  --accent-hover: #1f3272;
+  /* Text sitting on the accent, i.e. inside the primary button. */
+  --on-accent: #ffffff;
+  --rule: #dce1ee;
+  --border-strong: #b6bed6;
+  --focus: #2b4396;
+  /* Paper lifted off the page. Used sparingly — cards, not everything. */
+  --shadow-sheet:
+    0 1px 2px rgb(20 25 45 / 0.06), 0 8px 24px rgb(20 25 45 / 0.08),
+    0 24px 56px rgb(20 25 45 / 0.05);
+
+  /* --- Type ------------------------------------------------------------- */
+  /* No web fonts. A third-party font file is a third-party request, and this
+     site claims in writing that it makes none — SPEC §9 checks it. */
+  --font-body:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  /* Headings share the body face at a heavier weight rather than borrowing a
+     serif: the app is a system-material app, and a Georgia headline would look
+     like a different product. */
+  --font-display: var(--font-body);
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* Fluid scale, 360 px → 1240 px. The floor matters: SPEC §9 requires the
+     site to read at 360 px without horizontal scrolling. */
+  --step--1: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --step-0: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --step-1: clamp(1.1875rem, 1.11rem + 0.34vw, 1.375rem);
+  --step-2: clamp(1.4375rem, 1.3rem + 0.6vw, 1.75rem);
+  --step-3: clamp(1.75rem, 1.53rem + 0.95vw, 2.25rem);
+  --step-4: clamp(2.0625rem, 1.72rem + 1.5vw, 2.875rem);
+
+  --leading-tight: 1.15;
+  --leading-body: 1.65;
+
+  /* --- Space ------------------------------------------------------------ */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.375rem;
+  --space-xs: 0.5rem;
+  --space-s: 0.75rem;
+  --space-m: 1rem;
+  --space-l: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* --- Measure ---------------------------------------------------------- */
+  --wrap: 68rem;
+  --wrap-narrow: 40rem;
+  --measure: 68ch;
+
+  /* The app's corner radius on cards and glass buttons, near enough. */
+  --radius: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14161f;
+    --surface: #1c1f2a;
+    --surface-sunk: #0f1119;
+    --text: #edeff5;
+    --text-muted: #a3abc2;
+    --text-accent: #8fa5f5;
+    --accent-hover: #b3c1fa;
+    /* The accent is light in the dark scheme, so the button's text goes dark. */
+    --on-accent: #0f1220;
+    --rule: #2b3040;
+    --border-strong: #434a60;
+    --focus: #8fa5f5;
+    --shadow-sheet:
+      0 1px 2px rgb(0 0 0 / 0.5), 0 8px 24px rgb(0 0 0 / 0.5),
+      0 24px 56px rgb(0 0 0 / 0.4);
+  }
+}

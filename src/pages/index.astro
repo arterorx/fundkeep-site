@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import BrandMark from '../components/BrandMark.astro';
+import { PRICING, RELEASE, SITE, TRIAL } from '../consts';
+
+/**
+ * A holding page, not the home page.
+ *
+ * SPEC §8 puts the home page in phase 2; phase 1 exists to put /privacy and
+ * /support at a live address so the App Store submission can proceed. But a
+ * site whose root is a 404 is a broken site, and Apple's reviewer will click
+ * the wordmark. So: the promise, the price, the platforms, and the two links
+ * that matter — every line of it a fact from src/consts.ts.
+ *
+ * Phase 2 replaces this file wholesale, with the envelope board as the hero
+ * (SPEC §3, §7).
+ */
+
+const description = SITE.description;
+---
+
+<Base title={SITE.name} description={description}>
+  <div class="section wrap wrap-narrow">
+    <BrandMark size={64} id="brand-home" class="hero__mark" />
+
+    <h1>Envelope budgeting, bought once</h1>
+
+    <p class="lede">
+      Fundkeep is the zero-based method on {RELEASE.platforms}: you decide what
+      every dollar is for before you spend it, and the board tells you what is
+      actually left.
+    </p>
+
+    <dl class="facts">
+      <div>
+        <dt>Price</dt>
+        <dd>{PRICING.full}, {PRICING.note}</dd>
+      </div>
+      <div>
+        <dt>Trial</dt>
+        <dd>{TRIAL.days} days, with nothing withheld</dd>
+      </div>
+      <div>
+        <dt>Devices</dt>
+        <dd>{RELEASE.platforms} — one purchase covers all three</dd>
+      </div>
+      <div>
+        <dt>Bank logins</dt>
+        <dd>None. Fundkeep never asks for one</dd>
+      </div>
+      <div>
+        <dt>Your data</dt>
+        <dd>Stays on your devices, and exports to CSV whenever you want it</dd>
+      </div>
+    </dl>
+
+    <p class="notice">
+      <strong>{RELEASE.status}.</strong> There is more to say about it than this
+      page says, and that is coming. In the meantime the two pages below are the
+      ones worth reading.
+    </p>
+
+    <ul class="links">
+      <li><a href="/privacy">Privacy policy</a></li>
+      <li><a href="/support">Support</a></li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .hero__mark {
+    border-radius: 14px;
+    margin-bottom: var(--space-l);
+  }
+
+  .facts {
+    max-width: var(--measure);
+    margin: var(--space-xl) 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts > div {
+    display: grid;
+    gap: 0 var(--space-l);
+    padding-block: var(--space-s);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (min-width: 34rem) {
+    .facts > div {
+      grid-template-columns: 9rem 1fr;
+    }
+  }
+
+  .facts dt {
+    font-weight: 650;
+  }
+
+  .facts dd {
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .links {
+    margin-top: var(--space-xl);
+    padding: 0;
+    list-style: none;
+    font-size: var(--step-1);
+  }
+</style>

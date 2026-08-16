@@ -1,0 +1,113 @@
+---
+import { INDEXABLE, SITE } from '../consts';
+import { canonicalPath } from '../utils/canonical';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Overrides the default share image. Must be an absolute path. */
+  image?: string;
+  /** JSON-LD objects to emit in the head. */
+  schema?: Record<string, unknown>[];
+  /** Keeps a page out of the index even once the site is open (see 404). */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  image = '/og.png',
+  schema = [],
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+const fullTitle = title === SITE.name ? SITE.name : `${title} — ${SITE.name}`;
+
+/**
+ * SPEC §6. While the site lives on the temporary Pages address, *every* page
+ * carries `noindex` — not because these pages are unfit to be found, but
+ * because the address is. `nofollow` goes with it while temporary: there is
+ * nothing to be gained by having a crawler walk a site it may not index, and
+ * links from a throwaway host are not links we want counted.
+ *
+ * `INDEXABLE` comes from the one switch in src/consts.ts, and the build fails
+ * if a rendered page disagrees with it (src/build/hq-guards.ts).
+ */
+const robots = !INDEXABLE
+  ? 'noindex, nofollow'
+  : noindex
+    ? 'noindex, follow'
+    : null;
+---
+
+<!doctype html>
+<html lang={SITE.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {robots && <meta name="robots" content={robots} />}
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="theme-color"
+      content="#14161F"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#F7F8FB"
+      media="(prefers-color-scheme: light)"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={SITE.ogLocale} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {INDEXABLE && <link rel="sitemap" href="/sitemap-index.xml" />}
+
+    <!-- Pages that need a tag of their own put it here. -->
+    <slot name="head" />
+
+    {
+      schema.map((entry) => (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(entry)}
+        />
+      ))
+    }
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

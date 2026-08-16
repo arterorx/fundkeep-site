@@ -1,0 +1,266 @@
+/*
+ * Element defaults and the handful of utilities used across pages.
+ * Component styling lives in the component that needs it.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: var(--leading-body);
+  /* Long words — an email address, a bundle identifier — must not push a phone
+     sideways. SPEC §9 checks this at 360 px. */
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  margin: 0 0 var(--space-m);
+}
+
+h1 {
+  font-size: var(--step-4);
+}
+
+h2 {
+  font-size: var(--step-2);
+  margin-top: var(--space-2xl);
+}
+
+h3 {
+  font-size: var(--step-1);
+  margin-top: var(--space-xl);
+}
+
+p,
+ul,
+ol,
+dl {
+  margin: 0 0 var(--space-m);
+}
+
+ul,
+ol {
+  padding-left: 1.25em;
+}
+
+li + li {
+  margin-top: var(--space-2xs);
+}
+
+a {
+  color: var(--text-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: from-font;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+strong {
+  font-weight: 650;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  margin: var(--space-2xl) 0;
+  background: var(--rule);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+
+th,
+td {
+  padding: var(--space-xs) var(--space-s);
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 650;
+}
+
+/* --- Layout -------------------------------------------------------------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--space-l);
+}
+
+.wrap-narrow {
+  max-width: var(--wrap-narrow);
+}
+
+.section {
+  padding-block: var(--space-2xl);
+}
+
+/* --- Text utilities ------------------------------------------------------ */
+
+.lede {
+  font-size: var(--step-1);
+  color: var(--text-muted);
+  max-width: var(--measure);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.small {
+  font-size: var(--step--1);
+}
+
+.eyebrow {
+  font-size: var(--step--1);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-xs);
+}
+
+/* Long-form pages: privacy, support, and later the articles. Readable because
+   the measure is short and the rules are quiet. */
+.prose {
+  max-width: var(--measure);
+}
+
+.prose h2 {
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--rule);
+}
+
+.prose h2:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.prose > p:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Notice -------------------------------------------------------------- */
+
+/* A fact the reader should not miss. A rule down the side rather than a tinted
+   box: it survives both colour schemes and does not shout. */
+.notice {
+  max-width: var(--measure);
+  padding: var(--space-m) var(--space-l);
+  border-left: 3px solid var(--text-accent);
+  background: var(--surface-sunk);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+.notice > :last-child {
+  margin-bottom: 0;
+}
+
+/* --- Skip link ----------------------------------------------------------- */
+
+.skip-link {
+  position: absolute;
+  left: var(--space-s);
+  top: var(--space-s);
+  z-index: 10;
+  padding: var(--space-xs) var(--space-s);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* --- Print --------------------------------------------------------------- */
+
+/* Nobody wants a navigation bar and a copyright line in the middle of a policy
+   they printed to read on paper. */
+@media print {
+  .site-header,
+  .site-footer,
+  .skip-link {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 10pt;
+  }
+
+  .wrap {
+    max-width: none;
+    padding-inline: 0;
+  }
+
+  .section {
+    padding-block: 0;
+  }
+
+  .muted,
+  .small {
+    color: #333;
+  }
+}
+
+/* --- Motion -------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

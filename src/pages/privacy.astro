@@ -1,0 +1,184 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT_EMAIL, PRIVACY_UPDATED, SITE, TRIAL } from '../consts';
+
+/**
+ * Written from the facts the app repository already states about itself and
+ * has had to defend in writing: `Metadata/ReviewNotes.md` («Privacy: "Data Not
+ * Collected" is literal») and the App Privacy answers in
+ * `Metadata/AppStore.md`. Those are the canonical claims; this page says the
+ * same things to a buyer instead of to a reviewer.
+ *
+ * There is no PrivacyPolicy.md in the app repository to adapt, which is what
+ * SPEC §4 expects to find — noted for the штаб in PROGRESS.md. If one is ever
+ * written there, it becomes canonical: change it there first, then here, then
+ * bump PRIVACY_UPDATED, because the policy promises a new date on every
+ * revision.
+ *
+ * Every sentence here is checkable by installing the app or by reading its
+ * source. Nothing is aspirational.
+ */
+
+const title = 'Privacy Policy';
+const description =
+  'Fundkeep collects nothing about you: no account, no analytics, no tracking, no bank logins, no server of ours. Your budget stays on your devices.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${title} — ${SITE.name}`,
+    description,
+    url: `${SITE.url}/privacy`,
+    inLanguage: 'en',
+    dateModified: PRIVACY_UPDATED.machine,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: SITE.name,
+      url: SITE.url,
+    },
+  },
+];
+---
+
+<Base title={title} description={description} schema={schema}>
+  <article class="section wrap wrap-narrow prose">
+    <h1>Privacy Policy</h1>
+    <p class="muted">
+      Last updated: <time datetime={PRIVACY_UPDATED.machine}
+        >{PRIVACY_UPDATED.display}</time
+      >
+    </p>
+
+    <h2>The short version</h2>
+    <p>
+      Fundkeep collects nothing about you. There is no account to create, no
+      analytics, no tracking, no advertising identifier, no crash reporting, and
+      no server of ours anywhere. Your budget, your transactions, your accounts
+      and your reports stay on your own devices.
+    </p>
+    <p>
+      This matters more here than it would in most apps. A budget is a record of
+      what you earn, what you owe and what you are worried about. It is not a
+      thing to hand to a company that keeps data because it might be useful
+      later.
+    </p>
+
+    <h2>Fundkeep does not connect to your bank</h2>
+    <p>
+      Deliberately, and it is not a feature waiting to be added. There is no
+      Plaid or equivalent, no sign-in to a financial institution, and the app
+      asks for no credentials of any kind.
+    </p>
+    <p>Transactions get into Fundkeep two ways, and only two:</p>
+    <ul>
+      <li>You type them.</li>
+      <li>
+        You export a statement from your own bank as a CSV file and pick that
+        file yourself. It is read <strong>on your device</strong>, and you see
+        every row before anything is saved.
+      </li>
+    </ul>
+    <p>
+      Bringing a budget over from another app works the same way: you export the
+      file, Fundkeep reads it on the device, and it shows you a reconciliation
+      report before you commit to any of it.
+    </p>
+
+    <h2>What Fundkeep stores, and where</h2>
+    <p>
+      Everything you enter — envelopes, transactions, accounts, payees, memos,
+      reports — is stored on the device you entered it on.
+    </p>
+    <p>
+      If you leave iCloud sync on, that data is also stored in <strong
+        >your</strong
+      > own private iCloud database, under your own Apple Account. We cannot see
+      it. Apple's iCloud terms govern that storage; we receive no copy of it and
+      no notification about it. Turning sync off in Settings keeps everything on
+      the device.
+    </p>
+
+    <h2>What Fundkeep sends, and to whom</h2>
+    <p>
+      Nothing, except in these two cases, and both are Apple's systems rather
+      than ours:
+    </p>
+    <ol>
+      <li>
+        <strong>Buying Fundkeep.</strong> The purchase goes through Apple's App Store.
+        Apple tells the app whether the purchase succeeded. We never see your name,
+        your payment details or your Apple Account.
+      </li>
+      <li>
+        <strong>iCloud sync, if it is on.</strong> Your budget goes to your own private
+        iCloud database, as described above. Apple also sends a silent signal between
+        your devices to say that something changed; it carries no content of yours,
+        and Fundkeep sends you no notifications.
+      </li>
+    </ol>
+    <p>
+      Fundkeep has no server. There is nothing for us to log, because nothing
+      reaches us. Budgeting works completely offline.
+    </p>
+
+    <h2>On-device intelligence</h2>
+    <p>
+      Where Fundkeep uses Apple's on-device models, it uses them <strong
+        >on the device only</strong
+      >. Private Cloud Compute is deliberately not used, so "nothing leaves your
+      device" needs no asterisk and no exception for a clever feature.
+    </p>
+
+    <h2>Third parties</h2>
+    <p>
+      There are none. Fundkeep contains no third-party code at all: no analytics
+      SDK, no attribution SDK, no advertising SDK, no crash reporter. The app has
+      zero external dependencies. On the App Store this shows up as the <strong
+        >Data Not Collected</strong
+      > label, and it is accurate rather than optimistic.
+    </p>
+    <p>
+      This website holds to the same rule: no analytics, no cookies, no
+      third-party fonts, no content delivery network, no embedded anything. Every
+      request a page here makes goes to <code>{SITE.domain}</code> and nowhere
+      else, and the build refuses to publish a page that breaks that. A site
+      that talks about privacy ought to be an example of it.
+    </p>
+
+    <h2>Children</h2>
+    <p>Fundkeep does not collect data from anyone, of any age.</p>
+
+    <h2>What you can do</h2>
+    <ul>
+      <li>
+        Export everything to CSV at any time — including after the {TRIAL.days}-day
+        trial ends, and including before you have bought the app. Your own records
+        are never held behind a purchase.
+      </li>
+      <li>Delete a transaction, an envelope or an account inside the app.</li>
+      <li>Turn off iCloud sync in Settings to keep everything local.</li>
+      <li>
+        Delete the app to remove all local data. To remove synced data, delete
+        Fundkeep's data from iCloud in your system settings.
+      </li>
+    </ul>
+    <p>
+      Since we hold no data about you, there is nothing for us to send you a copy
+      of, and nothing for us to delete on request.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      If this policy ever changes, the updated version will appear at this
+      address with a new date at the top.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Mail
+      you send there is mail — a person reads it and replies to it, and it is not
+      added to any list.
+    </p>
+  </article>
+</Base>

@@ -1,0 +1,113 @@
+---
+import { SITE } from '../consts';
+import BrandMark from './BrandMark.astro';
+
+const path = Astro.url.pathname;
+
+/** Every page the navigation links to, in one array rather than per template. */
+const links = [
+  { href: '/support', label: 'Support' },
+  { href: '/privacy', label: 'Privacy' },
+];
+
+const isCurrent = (href: string) => path === href || path === `${href}.html`;
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="/" aria-label={`${SITE.name} home`}>
+      <BrandMark size={30} id="brand-header" class="brand__mark" />
+      <span class="brand__name">{SITE.name}</span>
+    </a>
+
+    <nav aria-label="Main">
+      <ul class="site-nav">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={isCurrent(link.href) ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-s);
+    padding-block: var(--space-m);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .brand__mark {
+    border-radius: 7px;
+    flex: none;
+  }
+
+  .site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .site-nav {
+      gap: var(--space-l);
+    }
+  }
+
+  .site-nav li + li {
+    margin-top: 0;
+  }
+
+  .site-nav a {
+    display: inline-block;
+    padding-block: var(--space-2xs);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .site-nav a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .site-nav a[aria-current='page'] {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--text-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+  }
+</style>
