@@ -15,22 +15,29 @@
  */
 
 /* ==========================================================================
- * The domain switch — SPEC §6
+ * The domain switch — SPEC §6. DONE on 17.08.2026.
  *
- * `fundkeep.app` is bought at the end of August 2026. Until then the site
- * lives on the free Cloudflare Pages address and is closed to search engines:
- * a temporary address that gets indexed has to be undone later with redirects
- * and canonical warnings, and both roomkeep.app and sawkit.app collected those.
+ * The site ran on the free Cloudflare Pages address until the domain existed,
+ * closed to search engines the whole time: a temporary address that gets
+ * indexed has to be undone later with redirects and canonical warnings, and
+ * both roomkeep.app and sawkit.app collected those.
  *
- * ON THE DAY THE DOMAIN IS BOUGHT, THIS IS THE WHOLE CHANGE:
+ * Flipping `live` was the whole change, as promised. It moves the canonical
+ * and og:url tags to the real domain, drops `noindex` from every page but
+ * /404, opens `robots.txt`, emits the sitemap, and arms the 301 in
+ * `functions/_middleware.js` that sends the pages.dev duplicate here.
  *
- *   1. Attach fundkeep.app to the Pages project in the Cloudflare dashboard.
- *   2. Set `live: true` below.
- *   3. Deploy, then submit the sitemap in Search Console.
+ * It is kept rather than deleted because it is the only safe way to test a
+ * domain move, and because setting it back to false is the fastest way to put
+ * the site behind a closed door if that is ever needed.
  *
- * That one boolean moves the canonical and og:url tags to the real domain,
- * drops `noindex` from every page, opens `robots.txt`, and turns the sitemap
- * on. Nothing else in the repository mentions either address.
+ * WHAT THE MOVE ACTUALLY COST, so the next one is cheaper: from a machine
+ * whose DNS cache still held the registrar's old A record, the domain looked
+ * misconfigured for twenty minutes — HTTPS timed out, HTTP answered 302 with
+ * `X-Served-By: Namecheap URL Forward`. The zone had been right the whole
+ * time. Ask the zone's own nameservers (`dig @<ns> <domain>`) and curl the
+ * resolved IPs with `--resolve` before believing anything a local resolver
+ * says.
  * ========================================================================== */
 
 export const DOMAIN = {
@@ -74,19 +81,18 @@ export const SITE = {
  * The one address on the site. The support page, the privacy page, the footer
  * and the 404 all read it from here.
  *
- * It has to receive mail *before* the App Store submission: Apple files it as
- * the support contact and may write to it, and a reviewer writing to a
- * bouncing address is a rejection waiting to happen. `support@fundkeep.app`
- * cannot do that yet — the domain is not bought — so the штаб's call
- * (16.08.2026) is to publish an address that works today rather than to hold
- * the submission for the domain.
+ * On the domain since 17.08.2026, through Cloudflare Email Routing, forwarding
+ * to the owner's own inbox. It replaced a personal gmail that stood here for a
+ * day, because Apple files this address as the support contact and a reviewer
+ * writing to a bouncing one is a rejection waiting to happen — so it was never
+ * allowed to be aspirational.
  *
- * When `fundkeep.app` is attached: turn on Cloudflare Email Routing, point
- * `support@fundkeep.app` at the same inbox, change this line, and update the
- * Support URL contact in App Store Connect. That is a metadata change, not a
- * new build.
+ * Delivery was confirmed by the owner before this line changed, and the zone
+ * carries the three Cloudflare MX records, exactly one SPF and the DKIM key.
+ * If mail ever stops, check for a second SPF record first: two of them on the
+ * same name is a permerror, and it is how this breaks quietly.
  */
-export const CONTACT_EMAIL = 'kargorage@gmail.com';
+export const CONTACT_EMAIL = 'support@fundkeep.app';
 
 /**
  * Prices are the штаб's call (SPEC §5). Change them here and nowhere else:
