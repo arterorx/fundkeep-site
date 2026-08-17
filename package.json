@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "serve": "node scripts/serve-dist.mjs",
-    "check": "astro check"
+    "check": "astro check",
+    "check:live": "node scripts/check-live.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

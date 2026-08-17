@@ -16,6 +16,18 @@ npm run check    # TypeScript and Astro diagnostics
 Content-Security-Policy is only real on the served build, and a page that works
 under `preview` can still be broken in production.
 
+```bash
+npm run check:live    # what the edge actually serves
+```
+
+Run it after every deploy, and after any change to Cloudflare settings. The
+build guards read `dist/`, so they can only check what we wrote — and
+Cloudflare rewrites pages on the way out. Its Email Address Obfuscation, on by
+default, once turned every `mailto:` on this site into a script and rendered
+the support address as "[email protected]" for anyone without JavaScript,
+while every build guard passed. On a machine whose DNS is behind, pass
+`-- --resolve <ip>`.
+
 ## One file holds the facts
 
 `src/consts.ts` is the single source of truth for the price, the release
