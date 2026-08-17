@@ -79,7 +79,13 @@ const isCurrent = (href: string) =>
   .site-nav {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2xs) var(--space-m);
+    /* Four labels have to sit on one row next to the wordmark on a 375 px
+       phone. Two rows cost 44 px of the first screen — measured — and on the
+       home page that was the difference between the App Store button being
+       above the fold and just below it. The labels shrink rather than get
+       abbreviated into guesswork. */
+    gap: var(--space-2xs) var(--space-s);
+    font-size: var(--step--1);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -88,6 +94,7 @@ const isCurrent = (href: string) =>
   @media (min-width: 40rem) {
     .site-nav {
       gap: var(--space-l);
+      font-size: inherit;
     }
   }
 
@@ -97,7 +104,8 @@ const isCurrent = (href: string) =>
 
   .site-nav a {
     display: inline-block;
-    padding-block: var(--space-2xs);
+    /* The row got shorter, so the tap target gets the space back. */
+    padding-block: var(--space-xs);
     color: var(--text-muted);
     font-weight: 600;
     text-decoration: none;

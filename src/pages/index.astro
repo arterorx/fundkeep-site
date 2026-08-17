@@ -77,13 +77,28 @@ const steps = [
   <!-- ---------------------------------------------------------------- Hero -->
   <section class="section wrap hero">
     <div class="hero__text">
-      <h1>Envelope budgeting, bought once</h1>
+      {/* 1. What it is, and how it works. The heading is deliberately two
+           words: on a 360×640 phone the platform list pushed it to four lines
+           and drove the price off the first screen, which is the one thing
+           this order exists to prevent. The platforms belong in the sentence
+           that follows anyway. */}
+      <h1>Envelope budgeting</h1>
       <p class="lede">
-        Give every dollar a job before you spend it, on {RELEASE.platforms}. One
-        purchase, no subscription, and no bank login — your budget stays on your
-        own devices.
+        You decide what every dollar is for before you spend it, on {
+          RELEASE.platforms
+        }. The board shows what is genuinely left — not what you meant to spend.
       </p>
 
+      {/* 2. What it does not do to you. Kept to two clauses: the CSV export is
+           true and it is said twice further down, and this line has to stay
+           short enough that the price and the button both survive on a 375×667
+           screen. */}
+      <p class="promise">
+        No subscription, no account, no bank login. Your budget stays on your own
+        devices.
+      </p>
+
+      {/* 3. The price, plainly and on this screen — never below the fold. */}
       <p class="price-line">
         <strong>{PRICING.full}</strong>{' '}
         <span class="muted"
@@ -92,6 +107,7 @@ const steps = [
         >
       </p>
 
+      {/* 4. The way in. */}
       <AppStoreCta class="hero__cta" />
     </div>
 
@@ -245,6 +261,10 @@ const steps = [
     display: grid;
     gap: var(--space-2xl);
     align-items: center;
+    /* Tighter than the other sections on a phone, and for one reason: the
+       price and the button have to stay on the first screen down to 360×640.
+       Measured, not guessed — see the note by .price-line. */
+    padding-block: var(--space-l) var(--space-2xl);
   }
 
   @media (min-width: 48rem) {
@@ -267,9 +287,30 @@ const steps = [
     width: 100%;
   }
 
+  /* The second beat: what it does not do to you. Set apart from the method
+     above it so the two read as separate answers rather than one long
+     paragraph. */
+  .promise {
+    max-width: var(--measure);
+    margin-top: var(--space-s);
+    padding-left: var(--space-m);
+    border-left: 2px solid var(--rule);
+    color: var(--text-muted);
+  }
+
+  /* The price is deliberately still on the first screen. Somebody who hates
+     subscriptions wants to see a one-time figure immediately — a hidden price
+     puts them off harder than a high one. The change was to put it after the
+     two lines that make it make sense, not to move it out of sight. */
   .price-line {
     font-size: var(--step-1);
-    margin-top: var(--space-l);
+    margin-top: var(--space-s);
+  }
+
+  @media (min-width: 48rem) {
+    .price-line {
+      margin-top: var(--space-l);
+    }
   }
 
   .price-line strong {
@@ -277,7 +318,13 @@ const steps = [
   }
 
   .hero__cta {
-    margin-top: var(--space-l);
+    margin-top: var(--space-m);
+  }
+
+  @media (min-width: 48rem) {
+    .hero__cta {
+      margin-top: var(--space-l);
+    }
   }
 
   /* --- Steps ------------------------------------------------------------- */
