@@ -34,8 +34,11 @@
  * ========================================================================== */
 
 export const DOMAIN = {
-  /** False while the site lives on the temporary Pages address. */
-  live: false,
+  /**
+   * True since 17.08.2026: fundkeep.app is attached to the Pages project and
+   * verified serving this site before this line was changed.
+   */
+  live: true,
   production: 'https://fundkeep.app',
   /** The free address, created 2026-08-16. */
   temporary: 'https://fundkeep.pages.dev',
