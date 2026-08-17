@@ -106,6 +106,29 @@ for (const [path, file] of PAGES) {
   }
 }
 
+// Every other hostname that reaches this project has to hand the reader back
+// to the canonical one. This is checked separately from the pages above
+// because it is the failure that arrives without a commit: attaching a
+// hostname is a dashboard click, and on 17.08.2026 `www` was added and served
+// 200 with the whole site until this caught it.
+for (const host of ['www.fundkeep.app', 'fundkeep.pages.dev']) {
+  try {
+    const { stdout } = await run('curl', [
+      '-s', '-o', '/dev/null', '--max-time', '20',
+      '-w', '%{http_code} %{redirect_url}',
+      `https://${host}/privacy`,
+    ]);
+    const [code, target] = stdout.trim().split(/\s+/);
+    if (code !== '301') {
+      note(host, `answers ${code} instead of redirecting — a second address serving the site`);
+    } else if (target !== `${ORIGIN}/privacy`) {
+      note(host, `redirects to "${target}", not ${ORIGIN}/privacy`);
+    }
+  } catch (error) {
+    note(host, `could not be checked — ${error.message}`);
+  }
+}
+
 if (problems.length) {
   console.error(
     `\nThe live site differs from the build in ${problems.length} way` +

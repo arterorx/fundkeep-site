@@ -1,8 +1,8 @@
 import { DOMAIN } from '../src/consts.ts';
 
 /**
- * Sends the automatic *.pages.dev address to the real domain — but only once
- * there is a real domain to send it to.
+ * Sends every address that is not the canonical one to the canonical one — but
+ * only once there is a real domain to send them to.
  *
  * Cloudflare Pages gives every project a `<project>.pages.dev` hostname and
  * keeps serving it after a custom domain is attached. On the sister site
@@ -11,6 +11,19 @@ import { DOMAIN } from '../src/consts.ts';
  * told the truth — but a second address that answers 200 is a trap that had to
  * be closed by hand on an earlier site, and a 301 says it in a way nothing has
  * to interpret.
+ *
+ * IT CHECKS FOR THE ONE GOOD HOST, NOT FOR THE KNOWN BAD ONES. The first
+ * version of this matched `.pages.dev` and nothing else. The day
+ * `www.fundkeep.app` was attached as a second custom domain it walked straight
+ * past that test and served 200 with the whole site — a new duplicate, made by
+ * a dashboard click, with no commit anywhere to notice. A denylist has to be
+ * extended every time someone adds a hostname; an allowlist of exactly one
+ * cannot fall behind.
+ *
+ * The cost is that preview deployments on `<hash>.fundkeep.pages.dev` redirect
+ * to production too, so they cannot be browsed. That is accepted: deploys here
+ * go straight to `--branch=main`, and `npm run check:live` reads production
+ * itself, so nothing in this project needs a preview URL to work.
  *
  * THE GATE MATTERS MORE THAN THE REDIRECT. `DOMAIN.live` is false until
  * fundkeep.app is attached and serving. While it is false this function does
@@ -38,8 +51,9 @@ export async function onRequest(context) {
     if (!DOMAIN.live) return context.next();
 
     const url = new URL(context.request.url);
+    const canonical = new URL(DOMAIN.production).hostname;
 
-    if (url.hostname.endsWith('.pages.dev')) {
+    if (url.hostname !== canonical) {
       const target = new URL(url.pathname + url.search, DOMAIN.production);
 
       // Built by hand rather than with `Response.redirect()`, which returns an
