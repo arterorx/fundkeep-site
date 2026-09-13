@@ -1,5 +1,5 @@
 ---
-import { INDEXABLE, SITE } from '../consts';
+import { INDEXABLE, RELEASE, SITE } from '../consts';
 import { canonicalPath } from '../utils/canonical';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -15,6 +15,12 @@ interface Props {
   schema?: Record<string, unknown>[];
   /** Keeps a page out of the index even once the site is open (see 404). */
   noindex?: boolean;
+  /**
+   * Use `title` exactly as given, with no " — Fundkeep" after it. For a title
+   * written as a whole for search, like the YNAB export guide's, where the
+   * name would push the words that matter past the cut-off.
+   */
+  exactTitle?: boolean;
 }
 
 const {
@@ -23,17 +29,32 @@ const {
   image = '/og.png',
   schema = [],
   noindex = false,
+  exactTitle = false,
 } = Astro.props;
 
 const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
 /**
  * The name goes at the end of every title — unless the title already carries
- * it. The home page's title leads with the name, and appending it again would
- * print "Fundkeep — … — Fundkeep". This checks for the name rather than taking
- * a prop, so no page can ever print it twice, whoever writes the next one.
+ * it, or the page asked for its title exactly. The home page's title leads
+ * with the name, and appending it again would print "Fundkeep — … — Fundkeep";
+ * checking for the name means no page can print it twice, whoever writes the
+ * next one.
  */
-const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+const fullTitle =
+  exactTitle || title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
+
+/**
+ * Apple's Smart App Banner, on every page, while the app is on sale — the
+ * штаб's decision of 14.09.2026. Safari on iPhone and iPad draws a strip at
+ * the top of the page with a View or Open button; Apple's documentation says
+ * it only appears where the device supports the app and the app is sold in
+ * the visitor's country. The ID is read out of `RELEASE.appStoreUrl` rather
+ * than typed a second time, so the banner and the buttons cannot point at two
+ * different apps. /privacy says that it exists, because drawing it is Safari
+ * checking with the App Store.
+ */
+const appStoreId = RELEASE.appStoreUrl?.match(/\/id(\d+)/)?.[1];
 
 /**
  * SPEC §6. While the site lives on the temporary Pages address, *every* page
@@ -62,6 +83,11 @@ const robots = !INDEXABLE
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {robots && <meta name="robots" content={robots} />}
+    {
+      RELEASE.state === 'released' && appStoreId && (
+        <meta name="apple-itunes-app" content={`app-id=${appStoreId}`} />
+      )
+    }
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

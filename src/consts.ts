@@ -397,8 +397,9 @@ export const TRIAL = {
  * text changes — the policy itself promises a new date on every revision.
  */
 export const PRIVACY_UPDATED = {
-  display: '16 August 2026',
-  machine: '2026-08-16',
+  // 14.09.2026: a paragraph saying that Safari's App Store banner exists.
+  display: '14 September 2026',
+  machine: '2026-09-14',
 } as const;
 
 /**
