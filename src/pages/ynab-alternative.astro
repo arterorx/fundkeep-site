@@ -74,11 +74,17 @@ const different = [
     title: 'Apple devices only',
     body: `${RELEASE.platforms}, and no web app. If you budget from a Windows machine at work, this is not the app for you.`,
   },
-  // "No targets or goals in this version" stood here until 13.09.2026. It
-  // stopped being true on 08.09.2026: the App Store release notes for 1.2 say
-  // "Give an envelope a monthly goal — how much to put in each month — and see
-  // what is still missing." Removed rather than rewritten — how Fundkeep's
-  // monthly goal compares with YNAB's targets is a claim for the штаб to make.
+  {
+    // Until 13.09.2026 this item said "No targets or goals in this version",
+    // which stopped being true with 1.2 ("Give an envelope a monthly goal —
+    // how much to put in each month — and see what is still missing", the App
+    // Store release notes). The wording below is the штаб's. Its three YNAB
+    // examples were checked against YNAB's help pages the same day: targets
+    // repeat "Weekly, Monthly, Yearly, or Custom", can "Refill up to...", and
+    // "Have a balance of..." can carry a due date.
+    title: 'Simpler goals than YNAB’s targets',
+    body: 'Fundkeep gives an envelope a monthly goal — how much to put in each month, and what is still missing. YNAB’s targets do more (by a date, refill up to, weekly); if you lean on those, that is a real difference.',
+  },
   {
     title: 'One person’s devices',
     body: 'Your own iPhone, iPad and Mac stay in step through your private iCloud. Sharing a budget with somebody else is not in this version.',
@@ -207,7 +213,8 @@ const different = [
       <h2>{PRICING.full}, once</h2>
       <p class="lede">
         Free for {TRIAL.days} days with every feature working — {YNAB.name} gives
-        you {YNAB.trialDays}, so you can run both and see. After the trial
+        you {YNAB.trialDays} when you sign up on its own site, so you can run both
+        and see. After the trial
         Fundkeep becomes read-only until you buy it: what you entered stays
         visible, and exporting keeps working.
       </p>

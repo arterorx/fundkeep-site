@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import AppStoreCta from '../components/AppStoreCta.astro';
 import SavingsCalculator from '../components/SavingsCalculator.astro';
 import {
-  CALCULATOR,
   PRICING,
   RELEASE,
   SITE,
@@ -38,7 +37,9 @@ const first = YNAB_PRICE_HISTORY[0]!;
 const launch = YNAB_PRICE_HISTORY[1]!;
 const firstAmount = first.price.match(/\$[\d.,]+/)![0];
 
-const title = `${YNAB.name} Pricing 2026: ${YNAB.price}/yr, Every Price Increase Since ${firstAmount}, and the ${CALCULATOR.defaultYears}-Year Cost`;
+// The штаб's wording, cut to 59 characters on 13.09.2026 so a results page
+// shows it whole. Still built from the constants.
+const title = `${YNAB.name} Pricing 2026: ${YNAB.price}/yr and Every Price Increase Since ${firstAmount}`;
 const description = `${YNAB.name} costs ${YNAB.price} a year or ${money(YNAB.monthly)} a month in 2026. Every price since ${first.price.replace(' once', '')}, from ${YNAB.name}'s own pages, and what it adds up to.`;
 
 const schema = [
@@ -166,9 +167,22 @@ const schema = [
         savings goals; there are debt tools with a loan calculator; and direct
         import works with select US, Canadian, UK and EU banks. One subscription
         covers up to six people — partners, families and other close-knit groups.
-        The {YNAB.trialDays}-day trial needs no credit card when you sign up on
-        their site, and college students get a free 365-day trial. All of that
-        is as {YNAB.name}'s own pricing page describes it.
+        College students get a free 365-day trial. All of that is as{' '}
+        {YNAB.name}'s own pricing page describes it.
+      </p>
+      <p>
+        {
+          /* One sentence, not a constant — the штаб's decision of 13.09.2026.
+             The pricing page says 34 days "when you sign up directly through
+             YNAB"; YNAB's help page on the trial speaks of people "charged by
+             Apple after their 30 day YNAB trial". Read on 13.09.2026. */
+        }
+        The free trial is {YNAB.trialDays} days, with no credit card, when you sign
+        up on <a href={YNAB.source}>YNAB's own site</a>, and 30 days if you
+        subscribe through the App Store, according to{' '}
+        <a href="https://support.ynab.com/en_us/your-ynab-trial-ry87vWAc"
+          >YNAB's help page on the trial</a
+        >.
       </p>
     </div>
   </section>
