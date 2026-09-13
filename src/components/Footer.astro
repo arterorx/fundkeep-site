@@ -18,6 +18,17 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
     <p class="small muted site-footer__copy">© {year}</p>
+    {
+      /* Apple's marketing guidelines: "When the App Store badge is used,
+         credit both Apple and the Apple Logo", in the international form,
+         listing the Apple marks that appear on the site. Rewrite the list
+         when a page starts or stops naming one. Once, where the legal line
+         already is, rather than on every mention. */
+    }
+    <p class="small muted site-footer__legal">
+      Apple, the Apple logo, App Store, Apple Watch, iCloud, iPad, iPadOS,
+      iPhone, Mac, macOS and Safari are trademarks of Apple Inc.
+    </p>
   </div>
 </footer>
 
@@ -42,6 +53,11 @@ const year = new Date().getFullYear();
   }
 
   .site-footer__copy {
+    margin: 0;
+  }
+
+  .site-footer__legal {
+    flex-basis: 100%;
     margin: 0;
   }
 

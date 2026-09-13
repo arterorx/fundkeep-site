@@ -2,37 +2,60 @@
 import { RELEASE } from '../consts';
 
 /**
- * The App Store button — or the truth, while there is nothing to link to.
+ * The way to the App Store — or the truth, while there is nothing to link to.
  *
  * SPEC §3 puts a store button on the first screen. It reads `RELEASE`, so the
  * button and the status line cannot both be wrong in different places: before
  * 2 September 2026 this rendered "Not on the App Store yet", and switching
- * `state` and `appStoreUrl` in src/consts.ts turned every copy of it into the
- * button at once — here, twice on the home page and twice on
- * /ynab-alternative. The build fails if a released call to action renders
- * without the link inside it.
+ * `state` and `appStoreUrl` in src/consts.ts turned every copy of it into a
+ * link at once. The build fails if a released call to action renders without
+ * the link inside it.
  *
- * The label is Apple's own wording, the words on their badge. "Get it on" is
- * Google Play's phrase, and the store is free to download with the purchase
- * inside, so "Download" is also the literal truth of what the click does.
+ * TWO VARIANTS, BECAUSE APPLE ALLOWS ONE BADGE. Apple's marketing guidelines
+ * say "Use one App Store badge per layout". The home page and /ynab-alternative
+ * each ask for a call to action twice, so the first one on a page is Apple's
+ * badge and any later one is the text button. The build counts badges and
+ * fails a page that shows two.
  *
- * It is text rather than Apple's badge artwork. If the badge ever replaces it,
- * it goes in as a file in public/, never hotlinked from Apple's servers
- * (SPEC §9: zero third-party requests, and the CSP would block it anyway).
+ * The badge is Apple's own artwork, byte for byte: the black "Download on the
+ * App Store", English, from the Fundkeep page of Apple's App Store Marketing
+ * Tools (download-on-the-app-store-en-us.zip, `black.svg`, 10,804 bytes),
+ * fetched on 14.09.2026 and served from public/badges/ — never hotlinked,
+ * because the site makes no request to anybody else's server (SPEC §9), and
+ * the CSP would block it anyway. The same guidelines say not to modify, angle
+ * or animate it, so it has no hover effect. They also ask for a height of at
+ * least 40 px onscreen, held below, and clear space of a quarter of its height,
+ * which depends on where it is placed and is checked on the page.
+ *
+ * The text label is Apple's wording too, the words on the badge. "Get it on"
+ * is Google Play's phrase.
  */
 interface Props {
   class?: string;
+  /** `badge` for the first call to action on a page, `text` for any after it. */
+  variant?: 'badge' | 'text';
 }
 
-const { class: className } = Astro.props;
+const { class: className, variant = 'badge' } = Astro.props;
 ---
 
 <div class:list={['cta', className]}>
   {
     RELEASE.state === 'released' && RELEASE.appStoreUrl ? (
-      <a class="cta__button" href={RELEASE.appStoreUrl}>
-        Download on the App Store
-      </a>
+      variant === 'badge' ? (
+        <a class="cta__badge" href={RELEASE.appStoreUrl}>
+          <img
+            src="/badges/app-store-black.svg"
+            alt="Download on the App Store"
+            width="120"
+            height="40"
+          />
+        </a>
+      ) : (
+        <a class="cta__button" href={RELEASE.appStoreUrl}>
+          Download on the App Store
+        </a>
+      )
     ) : (
       <p class="cta__status">
         <strong>{RELEASE.status}.</strong> No date is promised here, because a
@@ -43,6 +66,26 @@ const { class: className } = Astro.props;
 </div>
 
 <style>
+  /* 48 px tall: over Apple's 40 px minimum, and seven pixels shorter than the
+     text button it replaced, which is what keeps the first screen of the home
+     page intact at 360×640. `width: auto` lets the file's own proportions win
+     once it loads, so the artwork is never stretched; the width and height
+     attributes only reserve the space before it arrives. */
+  /* No padding trick for Apple's clear space (a quarter of the height, 12 px
+     here): an invisible box around the link would overlap its neighbours
+     rather than keep them away. The space comes from the margins where the
+     badge is placed, and is measured in the browser, not assumed. */
+  .cta__badge {
+    display: inline-block;
+    line-height: 0;
+  }
+
+  .cta__badge img {
+    display: block;
+    height: 48px;
+    width: auto;
+  }
+
   .cta__button {
     display: inline-block;
     padding: var(--space-s) var(--space-xl);
