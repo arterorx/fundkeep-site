@@ -1,0 +1,7 @@
+# /sitemap.xml is the address tools and crawlers try first. Astro's sitemap
+# integration writes sitemap-index.xml instead, and robots.txt already names
+# that one — this line is only for whoever guesses.
+#
+# Host-level redirects (www, pages.dev) cannot live here: this file matches
+# paths. Those are in functions/_middleware.js.
+/sitemap.xml /sitemap-index.xml 301

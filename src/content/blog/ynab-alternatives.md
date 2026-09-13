@@ -1,5 +1,5 @@
 ---
-title: 'YNAB alternatives in 2027: five apps, named'
+title: 'YNAB alternatives in 2026: five apps, named'
 description: 'YNAB, Envy, Zeroed, MoneyCoach, Actual Budget and ours — what each charges, what each is actually for, and where we lose.'
 standfirst: 'We make one of these, so read us accordingly. What we can offer is that every price here was read off a first-party source, and the two we could not verify are marked rather than guessed.'
 published: 2026-08-16
