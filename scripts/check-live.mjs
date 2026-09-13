@@ -102,7 +102,7 @@ for (const [path, file] of PAGES) {
   }
 
   // 2c. The title and the headline the build wrote. The export guide was
-  //     retitled for search on 14.09.2026 and the штаб checks the result by
+  //     retitled for search on 13.09.2026 and the штаб checks the result by
   //     looking at the live page; this looks at every page, every deploy.
   const tag = (html, re) => html.match(re)?.[1]?.replace(/<[^>]+>/g, '').trim();
   for (const [label, re] of [['<title>', /<title>([\s\S]*?)<\/title>/], ['<h1>', /<h1[^>]*>([\s\S]*?)<\/h1>/]]) {

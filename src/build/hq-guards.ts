@@ -327,6 +327,23 @@ export function hqGuards(): AstroIntegration {
             }
           }
 
+          // --- Dates -------------------------------------------------------------
+          // No page may be dated after the day it is built. On 13.09.2026 two
+          // live pages said "updated 14 September" and "last checked on 14
+          // September": the штаб numbers its task documents by day of a plan,
+          // and those numbers were copied onto the pages as if they were the
+          // calendar. A check dated in the future is not a check.
+          for (const m of html.matchAll(
+            /(?:datetime="|"date(?:Published|Modified)":"|name="fundkeep:sources-checked" content=")(\d{4}-\d{2}-\d{2})/g,
+          )) {
+            if (m[1]! > today()) {
+              problems.push(
+                `${name}: dated ${m[1]}, after today (${today()}). Dates on a page ` +
+                  `record when something happened — use the calendar, not a plan's numbering.`,
+              );
+            }
+          }
+
           // --- Apple's banner and badge ----------------------------------------
           // The Smart App Banner on every page while the app is on sale, with
           // the same ID as the buttons — and nowhere while it is not, because
@@ -455,7 +472,7 @@ export function hqGuards(): AstroIntegration {
         // (the page this site exists for), /support (filed with Apple, and
         // opened by people deciding whether to buy), and every article.
         if (RELEASE.state === 'released' && RELEASE.appStoreUrl) {
-          // Articles too, from 14.09.2026: they are where search traffic
+          // Articles too, from 13.09.2026: they are where search traffic
           // lands, and until then not one of them led to the store.
           const articles = pages
             .map((page) => page.slice(root.length))

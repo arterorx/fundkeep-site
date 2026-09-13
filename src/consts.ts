@@ -397,12 +397,12 @@ export const TRIAL = {
  * text changes — the policy itself promises a new date on every revision.
  */
 export const PRIVACY_UPDATED = {
-  // 14.09.2026: a paragraph saying that Safari's App Store banner exists.
-  // 15.09.2026: "no content delivery network" was literally untrue — the
-  // site is served by Cloudflare, which is one. The штаб's wording replaces
-  // it: no third-party CDN for fonts, scripts or images.
-  display: '15 September 2026',
-  machine: '2026-09-15',
+  // 13.09.2026, twice: a paragraph saying that Safari's App Store banner
+  // exists, and "no content delivery network" replaced — it was literally
+  // untrue, the site is served by Cloudflare, which is one. The штаб's wording:
+  // no third-party CDN for fonts, scripts or images.
+  display: '13 September 2026',
+  machine: '2026-09-13',
 } as const;
 
 /**

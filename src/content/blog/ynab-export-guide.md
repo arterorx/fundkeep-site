@@ -4,8 +4,8 @@ seoTitle: 'How to Export YNAB Data to CSV (Plan, Transactions, Targets) — 2026
 description: 'Step by step: where YNAB hides Export Plan, the two CSV files column by column, how to save the targets left out, and opening them in Excel or Sheets.'
 standfirst: "In YNAB's web app, click your plan's name at the top of the left sidebar and choose Export Plan. Your plan, month by month, and every transaction come out as two CSV files (TSV if your currency uses a decimal comma). Targets and category notes are not in them — how to save those by hand is below."
 published: 2026-08-16
-updated: 2026-09-14
-sourcesCheckedOn: 2026-09-14
+updated: 2026-09-13
+sourcesCheckedOn: 2026-09-13
 howTo:
   name: 'Export your plan and all transactions from YNAB'
   steps:
