@@ -4,17 +4,21 @@ import { RELEASE } from '../consts';
 /**
  * The App Store button — or the truth, while there is nothing to link to.
  *
- * SPEC §3 puts a store button on the first screen. The app is not on the store
- * yet, and this site is what unblocks the submission, so the button cannot
- * exist today and a button that goes nowhere is worse than none. This reads
- * `RELEASE` instead: fill in `state` and `appStoreUrl` in src/consts.ts and
- * the button appears here, on the home page and anywhere else this component
- * is used, with no template to hunt down. The build already refuses to finish
- * if one of the two is set without the other.
+ * SPEC §3 puts a store button on the first screen. It reads `RELEASE`, so the
+ * button and the status line cannot both be wrong in different places: before
+ * 2 September 2026 this rendered "Not on the App Store yet", and switching
+ * `state` and `appStoreUrl` in src/consts.ts turned every copy of it into the
+ * button at once — here, twice on the home page and twice on
+ * /ynab-alternative. The build fails if a released call to action renders
+ * without the link inside it.
  *
- * When it does ship, Apple's own "Download on the App Store" artwork replaces
- * the text label — as a file in public/, never hotlinked from Apple's servers
- * (SPEC §9: zero third-party requests).
+ * The label is Apple's own wording, the words on their badge. "Get it on" is
+ * Google Play's phrase, and the store is free to download with the purchase
+ * inside, so "Download" is also the literal truth of what the click does.
+ *
+ * It is text rather than Apple's badge artwork. If the badge ever replaces it,
+ * it goes in as a file in public/, never hotlinked from Apple's servers
+ * (SPEC §9: zero third-party requests, and the CSP would block it anyway).
  */
 interface Props {
   class?: string;
@@ -27,7 +31,7 @@ const { class: className } = Astro.props;
   {
     RELEASE.state === 'released' && RELEASE.appStoreUrl ? (
       <a class="cta__button" href={RELEASE.appStoreUrl}>
-        Get it on the App Store
+        Download on the App Store
       </a>
     ) : (
       <p class="cta__status">

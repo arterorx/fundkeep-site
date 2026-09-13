@@ -14,11 +14,12 @@ import { CONTACT_EMAIL, PRICING, RELEASE, TRIAL } from '../consts';
  *  - No financial advice. Not how much to put in an envelope, not what to cut,
  *    not what a budget "should" look like. We explain the method and show the
  *    tool.
- *  - No feature that is not in the version being submitted, and no "soon".
+ *  - No feature that is not in the version on sale, and no "soon".
  *
  * The source for the app-behaviour answers is the app repository's own
  * `Metadata/ReviewNotes.md` and `Metadata/AppStore.md` — the documents that
- * had to be true in front of App Review.
+ * had to be true in front of App Review, and that the app on sale since
+ * 2 September 2026 was approved against.
  */
 export interface FaqItem {
   q: string;

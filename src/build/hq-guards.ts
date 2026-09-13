@@ -307,6 +307,26 @@ export function hqGuards(): AstroIntegration {
             }
           }
 
+          // --- Release (SPEC §3) --------------------------------------------
+          // A released call to action that rendered without its link is the
+          // "not on the App Store yet" failure in a different costume: the
+          // reader reaches the moment of buying and finds nothing to press.
+          // Counted per page, so every block has to bring its own link. The
+          // app was on sale for eleven days while this site said otherwise;
+          // the constant made the fix one line, and this makes sure the line
+          // actually reached the page.
+          if (RELEASE.state === 'released' && RELEASE.appStoreUrl) {
+            const ctas = html.match(/<div class="cta[\s"]/g)?.length ?? 0;
+            const links = html.split(`href="${RELEASE.appStoreUrl}"`).length - 1;
+            if (links < ctas) {
+              problems.push(
+                `${name}: ${ctas} call-to-action block(s) but ${links} link(s) ` +
+                  `to ${RELEASE.appStoreUrl}. RELEASE says the app is on sale, ` +
+                  `so every call to action has to lead to it.`,
+              );
+            }
+          }
+
           // --- Structure ----------------------------------------------------
           const h1s = html.match(/<h1[\s>]/g)?.length ?? 0;
           if (h1s !== 1) {
@@ -369,6 +389,28 @@ export function hqGuards(): AstroIntegration {
                 `"…${html.slice(at, m.index + m[0].length).replace(/\s+/g, ' ')}…". ` +
                 `Astro eats the newline; write {' '} where the space belongs.`,
             );
+          }
+        }
+
+        // --- The listing, where it has to be --------------------------------
+        // Named rather than inferred, because counting call-to-action blocks
+        // passes trivially on a page that lost its block altogether. These
+        // three: the home page (SPEC §3 puts the button on the first screen),
+        // /ynab-alternative (the page this site exists for), and /support
+        // (filed with Apple, and opened by people deciding whether to buy).
+        if (RELEASE.state === 'released' && RELEASE.appStoreUrl) {
+          for (const required of ['index.html', 'ynab-alternative.html', 'support.html']) {
+            const path = join(root, required);
+            if (!existsSync(path)) {
+              problems.push(`${required} was not emitted.`);
+            } else if (
+              !readFileSync(path, 'utf8').includes(`href="${RELEASE.appStoreUrl}"`)
+            ) {
+              problems.push(
+                `${required}: the app is on sale but this page does not link ` +
+                  `to ${RELEASE.appStoreUrl}.`,
+              );
+            }
           }
         }
 

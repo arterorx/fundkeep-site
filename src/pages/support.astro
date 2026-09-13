@@ -39,7 +39,17 @@ const schema = [
     </p>
 
     {
-      RELEASE.state === 'unreleased' && (
+      /* Released: the status and the way to the listing, in the same box the
+         pre-release notice used. A link rather than the big button on purpose
+         — the one thing this page exists to hand over is the address above,
+         and an accent button beside it would outshout it. */
+      RELEASE.state === 'released' && RELEASE.appStoreUrl ? (
+        <p class="notice">
+          <strong>{RELEASE.status}</strong> for {RELEASE.platforms}:{' '}
+          <a href={RELEASE.appStoreUrl}>download Fundkeep</a>. Every answer
+          below describes the version on sale.
+        </p>
+      ) : (
         <p class="notice">
           <strong>{RELEASE.status}.</strong> This page is here for when it is.
           The answers below describe the version being submitted, and none of

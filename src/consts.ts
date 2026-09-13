@@ -330,30 +330,54 @@ export function savings(years: number) {
 }
 
 /**
- * Release status.
+ * Release status. ON SALE since 2 September 2026.
  *
- * The app is not on the App Store: this site is what unblocks the submission,
- * not the other way round (SPEC §1). So the status carries no month, no year
- * and not the word "soon" — a status without a date cannot go stale, it can
- * only go out of date, and `recheckBy` is what catches that.
+ * App ID 6801904284, listed as "Envelope Budgeting: Fundkeep". iOS 1.1 went on
+ * sale on 02.09.2026 and macOS 1.1 on 07.09.2026; both were on 1.2 by
+ * 13.09.2026. The in-app purchase `app.fundkeep.fullunlock` is approved, and
+ * its US price in the App Store Connect price schedule read $39.99 on
+ * 13.09.2026 — so `PRICING.full` above was already right and did not move.
  *
- * When it ships: set `state` to 'released' and fill in `appStoreUrl`. The
- * build refuses to finish if one is done without the other.
+ * Checked twice, from two sides, on 13.09.2026. The штаб read the version
+ * states from the App Store Connect API (READY_FOR_SALE on both platforms).
+ * Apple's public catalogue (itunes.apple.com/lookup?id=6801904284) was read
+ * separately, because it is what a visitor actually reaches: same name,
+ * version 1.2, first released 2026-09-02, minimumOsVersion 26.0, and the Mac
+ * among the supported devices of the one listing. It shows the download as
+ * Free — the $39.99 is the unlock inside, which is what the pages already say.
+ *
+ * The site kept saying "Not on the App Store yet" for eleven days after the app
+ * went on sale, on the home page and in every call to action, without a single
+ * link to its own listing. That is the failure this constant was built to make
+ * cheap to fix — and it still needed somebody to notice. `recheckBy` is a
+ * reminder, not a monitor.
+ *
+ * WHY THIS FORM OF THE URL. It carries no storefront (`/us/`) on purpose:
+ * apps.apple.com sends a storefront-less link to the visitor's own country, so
+ * a reader in Germany lands in the German store rather than an American page
+ * they cannot buy from. Verified: it answers 200 and redirects to the local
+ * storefront.
+ *
+ * `state` and `appStoreUrl` move together or not at all — the build refuses to
+ * finish otherwise, and it also fails if the released branch renders a call to
+ * action without the link in it (`src/build/hq-guards.ts`).
  */
 export const RELEASE = {
-  state: 'unreleased' as 'unreleased' | 'released',
-  /** The only sentence on the whole site about timing. */
-  status: 'Not on the App Store yet',
+  state: 'released' as 'unreleased' | 'released',
+  /** The only sentence on the whole site about release. */
+  status: 'On the App Store',
   platforms: 'iPhone, iPad and Mac',
-  /** Minimum OS, read from the app's own build settings (Config/Shared.xcconfig). */
+  /**
+   * Minimum OS, read from the app's own build settings (Config/Shared.xcconfig)
+   * and matching Apple's catalogue, which lists minimumOsVersion 26.0.
+   */
   requires: 'iOS 26, iPadOS 26 or macOS 26',
-  /** App ID 6801904284, registered 2026-08-15. Published only once it is live. */
-  appStoreUrl: null as string | null,
+  appStoreUrl: 'https://apps.apple.com/app/id6801904284' as string | null,
   /**
    * Look at `status` again by this date. The build prints a warning once it
    * passes — see `src/build/hq-guards.ts`.
    */
-  recheckBy: '2026-11-01',
+  recheckBy: '2027-03-01',
 } as const;
 
 /**
