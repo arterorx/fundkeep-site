@@ -1,9 +1,9 @@
 ---
 title: 'YNAB alternatives in 2026: five apps, named'
 description: 'YNAB, Envy, Zeroed, MoneyCoach, Actual Budget and ours — what each charges, what each is actually for, and where we lose.'
-standfirst: 'We make one of these, so read us accordingly. What we can offer is that every price here was read off a first-party source, and the two we could not verify are marked rather than guessed.'
+standfirst: 'We make one of these, so read us accordingly. What we can offer is that every price here was read off a first-party source, and anything we could not verify is marked rather than guessed.'
 published: 2026-08-16
-updated: 2026-08-16
+updated: 2026-09-13
 sourcesCheckedOn: 2026-08-16
 namesCompetitors: true
 ---
@@ -16,8 +16,8 @@ whether it is enough.
 company's own pricing page, or Apple's own App Store listing — read on the date
 the caption gives. Not from a review site, not from a comparison blog, and not
 from our own internal notes, which turned out to be wrong about two of these
-when we checked. Two rows have no price at all, because we could not confirm one
-first-hand, and an admission is worth more than a number.
+when we checked. Where a price cannot be confirmed first-hand, the table says so
+rather than printing one, because an admission is worth more than a number.
 
 **Availability was checked against Apple's own catalogue**, by identifier and by
 developer, rather than against anybody's marketing. That check changed this
@@ -80,19 +80,20 @@ is also a third party in a story about having none.
 
 **But if you are reading this on an iPhone, you cannot buy it today.** Apple's
 catalogue returns nothing for Zeroed — not by its identifier, not by its
-developer, in any storefront we checked. It is on Google Play and the Microsoft
-Store. Their own site markets a licence that unlocks iPhone and Mac alongside
-Android and Windows, so the intention is plainly there; the App Store listing is
-not, and an app you cannot install is not an alternative, whatever it costs.
+developer, in any storefront we checked, and their own page lists iOS as coming
+soon. It is on Google Play and the Microsoft Store, and downloads directly for
+Mac. Their site markets a licence that unlocks iPhone alongside Android, Mac and
+Windows, so the intention is plainly there; the App Store listing is not, and an
+app you cannot install is not an alternative, whatever it costs.
 
-We have not printed a price either, because the only figure on their site today
-is a founder's offer. Promotional prices are exactly the kind that move, and
-quoting one as though it were the standing price is how comparison pages become
-wrong.
+Their site now prints two prices: a founder price with the date it ends, and the
+price after it. The table gives both, with that date, because quoting a
+promotional price as though it were the standing price is how comparison pages
+become wrong.
 
-If you have an Android phone or a Windows laptop in the house, they are worth
-watching. If your household is all Apple, check back rather than plan around
-them.
+If you have an Android phone, a Windows laptop or a Mac in the house, they are
+worth a look. If your budget lives on an iPhone, check back rather than plan
+around them.
 
 ## MoneyCoach
 
@@ -101,9 +102,10 @@ iPad, Mac and Apple Watch, and it has been at it for years. If what you want is
 a personal-finance app that feels like it belongs on the platform, this is the
 bar.
 
-It is free to download with a Premium subscription. We are not printing a figure
-because their own site shows none and Apple does not publish in-app purchase
-prices in its catalogue — check it in the App Store before deciding.
+It is free to download, with the most used features free and a Premium
+subscription above them. Their own site shows no prices. Apple's listing shows
+Premium at several different amounts, so the table gives only the one clear
+figure, for Lifetime Premium, and says so — check the listing before deciding.
 
 One warning that cost us an hour: there is a **second, unrelated app also called
 MoneyCoach** by a different developer. Make sure the listing you are looking at
@@ -139,8 +141,8 @@ exported yourself. If automatic import is what you are paying for, we are the
 wrong answer and no amount of privacy argument changes that.
 
 **Apple devices only.** iPhone, iPad and Mac, one purchase for all three, and
-nothing on Android, Windows or the web. Zeroed covers all four platforms; we
-cover three Apple ones properly. If your household is mixed, that decides it.
+nothing on Android, Windows or the web. Zeroed covers Android, Windows and Mac;
+we cover three Apple ones properly. If your household is mixed, that decides it.
 
 **Price against Envy.** We charge several times what Envy charges for something
 that, from the outside, does the same job. Our case is the native Mac app, the

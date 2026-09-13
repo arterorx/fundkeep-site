@@ -1,6 +1,9 @@
 ---
 import { COMPETITORS, COMPETITORS_CHECKED, PRICING, SITE, TRIAL } from '../consts';
 
+/** Worked out from the data. The sentence below used to say "Two rows". */
+const unpriced = COMPETITORS.filter((rival) => rival.price === null).length;
+
 /**
  * The named comparison, built from `COMPETITORS` in src/consts.ts.
  *
@@ -65,13 +68,23 @@ import { COMPETITORS, COMPETITORS_CHECKED, PRICING, SITE, TRIAL } from '../const
     </table>
   </div>
 
-  <p class="small muted">
-    Two rows carry no figure. Their prices could not be confirmed from a
-    first-party source on the date above — one publishes only a promotional
-    price, the other publishes none — and a number we cannot stand behind is
-    worse than an admission. Follow the links and check for yourself; that is
-    what they are there for.
-  </p>
+  {
+    /* Until 13.09.2026 this read "Two rows carry no figure", typed in. The
+       re-read that day priced both rows it meant, and a hard-coded count
+       would have gone on saying two. */
+    unpriced > 0 && (
+      <p class="small muted">
+        {
+          unpriced === 1
+            ? 'One row carries no figure. Its price'
+            : `${unpriced} rows carry no figure. Their prices`
+        }{' '}
+        could not be confirmed from a first-party source on the date above, and
+        a number we cannot stand behind is worse than an admission. Follow the
+        links and check for yourself; that is what they are there for.
+      </p>
+    )
+  }
 </div>
 
 <style>

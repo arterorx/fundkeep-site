@@ -142,10 +142,9 @@ export const LAUNCH_PRICE: LaunchPrice | null = null;
  * re-read from YNAB's own pricing page at every change to this site, and the
  * build warns when `recheckBy` passes.
  *
- * $109 a year: from the app repository's competitor table
- * (`Metadata/ProductReview.md`), which is where the штаб's own comparison
- * comes from. Verify against ynab.com/pricing before publishing any page that
- * shows it — no page does yet; the comparison arrives with SPEC §4 phase 3.
+ * Re-read on ynab.com/pricing itself on 13.09.2026, before the /ynab-pricing
+ * page was published: "$109 USD* paid annually", a monthly plan at "$14.99
+ * USD*", and "How About 34 Days for Free?". Unchanged since the last read.
  */
 export const YNAB = {
   name: 'YNAB',
@@ -162,11 +161,11 @@ export const YNAB = {
    * not from memory. The page said "$109 USD paid annually" and "$14.99
    * USD/month".
    */
-  checkedOn: '2026-08-16',
+  checkedOn: '2026-09-13',
   /** The same date as a person would write it, for the caveat line. */
-  checkedOnDisplay: '16 August 2026',
+  checkedOnDisplay: '13 September 2026',
   source: 'https://www.ynab.com/pricing',
-  recheckBy: '2026-11-16',
+  recheckBy: '2026-12-13',
 } as const;
 
 /** How the site writes money. One formatter, so nothing rounds differently. */
@@ -217,6 +216,92 @@ export interface Competitor {
   source: string;
 }
 
+/*
+ * Each app's facts live in one constant, and every table that names the app
+ * uses that constant. A price that moves is one line to change, however many
+ * pages print it.
+ */
+
+const ENVY: Competitor = {
+  name: 'Envy',
+  url: 'https://apps.apple.com/us/app/envy-envelope-budget-planner/id1569230951',
+  price: '$6.99',
+  priceNote: 'free to download, one in-app purchase called Envy All Access.',
+  availability:
+    'On the App Store. iPhone and iPad; on a Mac it runs as the iPad app.',
+  source: "Apple's App Store listing",
+};
+
+const ACTUAL_BUDGET: Competitor = {
+  name: 'Actual Budget',
+  url: 'https://actualbudget.org',
+  price: 'Free',
+  priceNote: 'open source. Syncing between devices means running a server.',
+  availability:
+    'Not an App Store app. You run it yourself, which is the whole idea.',
+  source: 'the project itself',
+};
+
+const ZEROED: Competitor = {
+  name: 'Zeroed',
+  url: 'https://www.stillwareltd.com/zeroed',
+  // Null until 13.09.2026, when the only figure on their site was a founder's
+  // offer. The page now prints the price that follows it as well, with the
+  // date the offer ends — a promotional price with an end date and the price
+  // after it is a price we can print.
+  price: '$19.99',
+  priceNote:
+    'a founder price until 14 February 2027, then $39.99, paid once after a 34-day trial.',
+  availability:
+    'Not on the App Store: Apple’s catalogue returns nothing for it in any storefront we checked, and its own page says iOS is coming soon. On Google Play and the Microsoft Store, and as a download for Mac and Windows.',
+  source: 'their own site, and Apple’s catalogue for availability',
+};
+
+const MONEYCOACH: Competitor = {
+  name: 'MoneyCoach',
+  url: 'https://moneycoach.ai',
+  // Until 13.09.2026 this said Apple does not publish in-app purchase prices.
+  // It does: the listing shows them. What it shows for Premium is a column of
+  // different amounts with no period against most of them, and that is not a
+  // price anyone can quote as the price — so the one clear figures are given
+  // and the rest is described.
+  price: 'Free',
+  priceNote:
+    'the most used features are free. Premium is a subscription that Apple’s US listing shows at several prices; Lifetime Premium is $199.99.',
+  availability: 'On the App Store. iPhone, iPad, Mac and Apple Watch.',
+  source: 'their own site, and Apple’s App Store listing',
+};
+
+const GOODBUDGET: Competitor = {
+  name: 'Goodbudget',
+  url: 'https://goodbudget.com',
+  price: 'Free',
+  priceNote:
+    'a free plan with 10 regular and 10 more envelopes and one account. Plus is $8 a month or $70 a year; Premium, the plan with bank sync, is $10 a month or $80 a year. Prices from its own website.',
+  availability: 'On the App Store for iPhone, and on Android and the web.',
+  source: 'its own website and help pages',
+};
+
+const PENNIES: Competitor = {
+  name: 'Pennies',
+  url: 'https://www.getpennies.com',
+  price: null,
+  priceNote:
+    'free to download. Apple’s US listing shows annual subscriptions at several prices, and we could not find what a subscription adds, so we print none.',
+  availability: 'On the App Store. iPhone, iPad and Apple Watch.',
+  source: 'its own website, and Apple’s App Store listing',
+};
+
+const SKWAD: Competitor = {
+  name: 'Skwad',
+  url: 'https://skwad.app',
+  price: '$49 a year',
+  priceNote:
+    'for DIY, which syncs from your bank’s email alerts; LINK, with bank linking, is $65 a year. Billed monthly they are $6 and $8. No free plan.',
+  availability: 'On the App Store for iPhone and iPad, on Android, and on the web.',
+  source: 'its own pricing page, and Apple’s App Store listing',
+};
+
 export const COMPETITORS: readonly Competitor[] = [
   {
     name: YNAB.name,
@@ -230,43 +315,10 @@ export const COMPETITORS: readonly Competitor[] = [
     availability: 'On the App Store, free to download; the subscription is inside.',
     source: "YNAB's own pricing page",
   },
-  {
-    name: 'Envy',
-    url: 'https://apps.apple.com/us/app/envy-envelope-budget-planner/id1569230951',
-    price: '$6.99',
-    priceNote: 'free to download, one in-app purchase called Envy All Access.',
-    availability:
-      'On the App Store. iPhone and iPad; on a Mac it runs as the iPad app.',
-    source: "Apple's App Store listing",
-  },
-  {
-    name: 'Actual Budget',
-    url: 'https://actualbudget.org',
-    price: 'Free',
-    priceNote: 'open source. Syncing between devices means running a server.',
-    availability:
-      'Not an App Store app. You run it yourself, which is the whole idea.',
-    source: 'the project itself',
-  },
-  {
-    name: 'Zeroed',
-    url: 'https://stillwareltd.com',
-    price: null,
-    priceNote:
-      'a one-time purchase, but the only figure on their site today is a founder’s offer — a promotional price, which is exactly the kind that moves.',
-    availability:
-      'Not on the App Store: Apple’s catalogue returns nothing for it in any storefront we checked. On Google Play and the Microsoft Store.',
-    source: 'their own site, and Apple’s catalogue for availability',
-  },
-  {
-    name: 'MoneyCoach',
-    url: 'https://moneycoach.ai',
-    price: null,
-    priceNote:
-      'free to download with a Premium subscription. Their own site prints no figure and Apple does not publish in-app purchase prices, so neither do we.',
-    availability: 'On the App Store. iPhone, iPad, Mac and Apple Watch.',
-    source: 'their own site, and Apple’s catalogue for availability',
-  },
+  ENVY,
+  ACTUAL_BUDGET,
+  ZEROED,
+  MONEYCOACH,
 ] as const;
 
 /**
@@ -275,9 +327,12 @@ export const COMPETITORS: readonly Competitor[] = [
  * separate dates would rot at five different speeds.
  */
 export const COMPETITORS_CHECKED = {
-  on: '2026-08-16',
-  display: '16 August 2026',
-  recheckBy: '2026-11-16',
+  // Re-read as one on 13.09.2026. Zeroed now prints the price after its
+  // founder offer, and MoneyCoach's note claimed Apple publishes no in-app
+  // purchase prices, which it does; both were corrected in the same sweep.
+  on: '2026-09-13',
+  display: '13 September 2026',
+  recheckBy: '2026-12-13',
 } as const;
 
 /** The range the savings calculator offers, and where it starts. */
