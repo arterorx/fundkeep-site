@@ -86,6 +86,17 @@ for (const [path, file] of PAGES) {
     if (!liveMailto.has(link)) note(path, `lost the link ${link}`);
   }
 
+  // 2b. The way to the store. A listing link that is in the build but not on
+  //     the live page means the deploy did not land, or something rewrote the
+  //     page on the way out. For eleven days in September 2026 the live site
+  //     said the app was not out while it was on sale — this is the check
+  //     that would have shown the build and the site disagreeing.
+  const listing = /https:\/\/apps\.apple\.com\/app\/id\d+/g;
+  const liveListing = new Set(live.match(listing) ?? []);
+  for (const link of new Set(built.match(listing) ?? [])) {
+    if (!liveListing.has(link)) note(path, `lost the App Store link ${link}`);
+  }
+
   // 3. The address has to be readable as text, not only linked.
   const readable = (html) => (html.match(/support@fundkeep\.app/g) ?? []).length;
   if (readable(live) < readable(built)) {
@@ -127,6 +138,35 @@ for (const host of ['www.fundkeep.app', 'fundkeep.pages.dev']) {
   } catch (error) {
     note(host, `could not be checked — ${error.message}`);
   }
+}
+
+// The two addresses filed with Apple have to answer in place. A redirect is
+// not a failure a browser shows anybody, which is exactly why it has to be
+// checked: App Review opens these, and so does anyone Apple sends there.
+for (const path of ['/privacy', '/support']) {
+  try {
+    const args = ['-s', '-o', '/dev/null', '--max-time', '20', '-w', '%{http_code}'];
+    if (resolveAt) args.push('--resolve', `fundkeep.app:443:${resolveAt}`);
+    const { stdout } = await run('curl', [...args, `${ORIGIN}${path}`]);
+    if (stdout.trim() !== '200') {
+      note(path, `answers ${stdout.trim()}, not 200 in place — this URL is filed with Apple`);
+    }
+  } catch (error) {
+    note(path, `could not be checked — ${error.message}`);
+  }
+}
+
+// The address people guess for the sitemap, sent to the one Astro writes.
+try {
+  const args = ['-s', '-o', '/dev/null', '--max-time', '20', '-w', '%{http_code} %{redirect_url}'];
+  if (resolveAt) args.push('--resolve', `fundkeep.app:443:${resolveAt}`);
+  const { stdout } = await run('curl', [...args, `${ORIGIN}/sitemap.xml`]);
+  const [code, target] = stdout.trim().split(/\s+/);
+  if (code !== '301' || target !== `${ORIGIN}/sitemap-index.xml`) {
+    note('/sitemap.xml', `answers "${stdout.trim()}", expected 301 to ${ORIGIN}/sitemap-index.xml`);
+  }
+} catch (error) {
+  note('/sitemap.xml', `could not be checked — ${error.message}`);
 }
 
 if (problems.length) {
