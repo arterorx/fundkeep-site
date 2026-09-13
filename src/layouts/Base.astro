@@ -27,7 +27,13 @@ const {
 
 const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
-const fullTitle = title === SITE.name ? SITE.name : `${title} — ${SITE.name}`;
+/**
+ * The name goes at the end of every title — unless the title already carries
+ * it. The home page's title leads with the name, and appending it again would
+ * print "Fundkeep — … — Fundkeep". This checks for the name rather than taking
+ * a prop, so no page can ever print it twice, whoever writes the next one.
+ */
+const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
 
 /**
  * SPEC §6. While the site lives on the temporary Pages address, *every* page

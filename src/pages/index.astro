@@ -21,6 +21,14 @@ import { PRICING, RELEASE, SITE, TRIAL } from '../consts';
  * feature nobody has watched work. It goes in when it has been.
  */
 
+/**
+ * Until 13.09.2026 this was the bare name, "Fundkeep" — one word nobody
+ * searches for. The title now says what the thing is, for which devices and on
+ * what terms, in the order a searcher scans it. It is 65 characters, so a
+ * desktop results page may cut the tail; what matters most comes first. The
+ * wording is the штаб's.
+ */
+const title = `${SITE.name} — Envelope Budgeting for Mac, iPhone & iPad, Bought Once`;
 const description = SITE.description;
 
 const schema = [
@@ -39,6 +47,16 @@ const schema = [
       // One payment. Not a subscription, and the markup says so too.
       category: 'one-time purchase',
     },
+    // The listing, three ways, because consumers of this markup each look for
+    // a different one. Emitted only while there is a listing: a null here
+    // would be markup describing a store page that does not exist.
+    ...(RELEASE.appStoreUrl
+      ? {
+          downloadUrl: RELEASE.appStoreUrl,
+          installUrl: RELEASE.appStoreUrl,
+          sameAs: [RELEASE.appStoreUrl],
+        }
+      : {}),
   },
 ];
 
@@ -59,7 +77,7 @@ const steps = [
 ];
 ---
 
-<Base title={SITE.name} description={description} schema={schema}>
+<Base title={title} description={description} schema={schema}>
   <!-- The board is the largest thing above the fold, so it is what Largest
        Contentful Paint measures. Without this the browser only learns it
        exists after the HTML is parsed. `imagesizes` has to match the img's
