@@ -448,6 +448,96 @@ export const TRIAL = {
 } as const;
 
 /**
+ * Budget apps that do not need a bank login — the table on
+ * /blog/budget-app-without-bank-sync (штаб, 13.09.2026).
+ *
+ * Every field was read from a first-party source on 13.09.2026: the company's
+ * own site, pricing page or help, or Apple's own listing — under the same rule
+ * as `COMPETITORS`, and sharing its constants, so an app that appears in both
+ * tables has one price line.
+ *
+ * `bank` is the claim the page is about, and it is split in two on purpose.
+ * Three of these never connect to a bank at all. Four can, if you set it up,
+ * and usually only on a paid plan or in some countries. A headline that said
+ * "don't connect to your bank" of all seven would be wrong about four named
+ * companies, so the table says which is which.
+ *
+ * Alphabetical, with Fundkeep in its place rather than on top — the штаб's
+ * instruction, and the only order that does not sell while it informs.
+ */
+export interface NoBankLoginApp extends Competitor {
+  /** Never connects to a bank, or can if you choose to. */
+  bank: 'never' | 'optional';
+  /** How transactions get in, and the conditions on any bank connection. */
+  bankNote: string;
+  /** Where it runs, from the same sources. */
+  runsOn: string;
+  ours?: true;
+}
+
+export const NO_BANK_LOGIN_APPS: readonly NoBankLoginApp[] = [
+  {
+    ...ACTUAL_BUDGET,
+    bank: 'optional',
+    bankNote:
+      'Bank integration is optional and off until you set it up with one of its data providers. Even then it fetches only when you ask. Otherwise you type transactions or import CSV, QIF, OFX or QFX files.',
+    runsOn: 'The web, Windows, Mac and Linux',
+  },
+  {
+    ...ENVY,
+    bank: 'never',
+    bankNote: 'Manual by design: you type your transactions.',
+    runsOn: 'iPhone and iPad; on a Mac, as the iPad app',
+  },
+  {
+    name: SITE.name,
+    url: '/',
+    price: PRICING.full,
+    priceNote: `${PRICING.note}. Free for the first ${TRIAL.days} days.`,
+    availability: `On the App Store. ${RELEASE.platforms}.`,
+    source: 'our own App Store listing',
+    ours: true,
+    bank: 'never',
+    bankNote: 'You type transactions, or import the CSV file your bank gives you.',
+    runsOn: RELEASE.platforms,
+  },
+  {
+    ...GOODBUDGET,
+    bank: 'optional',
+    bankNote:
+      'Only on the Premium plan, only with US banks, and through Plaid. On the free and Plus plans you type transactions or import QFX, OFX or CSV files.',
+    runsOn: 'iPhone, Android and the web',
+  },
+  {
+    ...MONEYCOACH,
+    bank: 'optional',
+    bankNote:
+      'Only with Premium, and only for European banks; UK banks are not supported. Otherwise you type transactions or import a CSV file.',
+    runsOn: 'iPhone, iPad, Mac and Apple Watch',
+  },
+  {
+    ...PENNIES,
+    bank: 'never',
+    bankNote: 'No bank connection at all, in its developer’s own words.',
+    runsOn: 'iPhone, iPad and Apple Watch',
+  },
+  {
+    ...SKWAD,
+    bank: 'optional',
+    bankNote:
+      'The DIY plan needs no bank login: it reads the alert emails your bank already sends. The LINK plan connects through Plaid.',
+    runsOn: 'iPhone, iPad, Android and the web',
+  },
+] as const;
+
+/** All of NO_BANK_LOGIN_APPS was read on this date, as one sweep. */
+export const NO_BANK_LOGIN_CHECKED = {
+  on: '2026-09-13',
+  display: '13 September 2026',
+  recheckBy: '2026-12-13',
+} as const;
+
+/**
  * Shown at the top of /privacy. Bump both fields together whenever the policy
  * text changes — the policy itself promises a new date on every revision.
  */

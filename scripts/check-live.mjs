@@ -38,6 +38,7 @@ const PAGES = [
   ['/blog/ynab-export-guide', 'blog/ynab-export-guide.html'],
   ['/blog/ynab-alternatives', 'blog/ynab-alternatives.html'],
   ['/blog/envelope-budgeting-without-a-subscription', 'blog/envelope-budgeting-without-a-subscription.html'],
+  ['/blog/budget-app-without-bank-sync', 'blog/budget-app-without-bank-sync.html'],
 ];
 
 /** `--resolve IP` forces the address, for a machine whose DNS is behind. */

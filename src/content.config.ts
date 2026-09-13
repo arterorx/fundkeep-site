@@ -42,6 +42,12 @@ const blog = defineCollection({
      */
     seoTitle: z.string().max(70).optional(),
     /**
+     * Which table of apps goes above the article, if not the named YNAB
+     * comparison that `namesCompetitors` alone brings. Either way the prices
+     * come from src/consts.ts, never from the Markdown.
+     */
+    apps: z.enum(['no-bank-login']).optional(),
+    /**
      * Steps, for an article that is at heart a procedure. The template renders
      * them as a numbered list straight after the opening paragraph, and builds
      * the HowTo markup from the same array — visible list and markup cannot

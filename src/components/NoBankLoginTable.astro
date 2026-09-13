@@ -1,0 +1,188 @@
+---
+import { NO_BANK_LOGIN_APPS, NO_BANK_LOGIN_CHECKED } from '../consts';
+
+/**
+ * The seven apps on /blog/budget-app-without-bank-sync, from
+ * `NO_BANK_LOGIN_APPS` in src/consts.ts.
+ *
+ * A component rather than a table in Markdown for the same reason as
+ * CompetitorTable: no price and no claim about another company's product is
+ * ever typed into prose. Every cell here comes from a constant that records
+ * where it was read, and the build accepts these prices on this page only.
+ *
+ * The bank column is the point of the page, so it is the one that says the
+ * uncomfortable thing plainly: "Optional" apps can connect, and the note says
+ * on which plan and in which countries. The count of rows without a price is
+ * worked out from the data, never written in — the table it is modelled on
+ * once said "two rows" in a sentence that would have outlived the two rows.
+ */
+const unpriced = NO_BANK_LOGIN_APPS.filter((app) => app.price === null).length;
+const bankLabel = { never: 'Never', optional: 'Optional' } as const;
+---
+
+<div class="apps">
+  {
+    /* Above the scrolling region, not inside it as a <caption>: a caption
+       takes the width of the table, and on a phone the date it carries was
+       cut off until the reader scrolled sideways to find it. */
+  }
+  <p class="apps__caption">
+    {NO_BANK_LOGIN_APPS.length} apps, in alphabetical order, checked against
+    first-party sources on{' '}
+    <time datetime={NO_BANK_LOGIN_CHECKED.on}>{NO_BANK_LOGIN_CHECKED.display}</time
+    >. <span class="apps__hint">The table scrolls sideways.</span>
+  </p>
+  <div
+    class="apps__scroll"
+    role="region"
+    aria-label="Budget apps that don't need a bank login"
+    tabindex="0"
+  >
+    <table>
+      <caption class="visually-hidden">
+        Budget apps that don't need a bank login: price, bank connection and
+        platforms
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">App</th>
+          <th scope="col">Price</th>
+          <th scope="col">Connects to a bank</th>
+          <th scope="col">Runs on</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          NO_BANK_LOGIN_APPS.map((app) => (
+            <tr class:list={[{ apps__ours: app.ours }]}>
+              <th scope="row">
+                <a href={app.url}>{app.name}</a>
+                {app.ours && <span class="apps__tag"> (ours)</span>}
+              </th>
+              <td class="apps__col-price">
+                <span class="apps__price">
+                  {app.price ?? <span class="apps__none">Not printed</span>}
+                </span>{' '}
+                <span class="apps__note">{app.priceNote}</span>
+              </td>
+              <td class="apps__col-bank">
+                <strong class:list={['apps__bank', `apps__bank--${app.bank}`]}>
+                  {bankLabel[app.bank]}
+                </strong>{' '}
+                <span class="apps__note">{app.bankNote}</span>
+              </td>
+              <td class="apps__col-runs">{app.runsOn}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  {
+    unpriced > 0 && (
+      <p class="small muted">
+        {
+          unpriced === 1
+            ? 'One row carries no price: it could not be pinned to a single figure'
+            : `${unpriced} rows carry no price: they could not be pinned to a single figure`
+        }{' '}
+        from a first-party source on the date above, and a number we cannot stand
+        behind is worse than an admission. Every name links to the company's own
+        page, so you can check for yourself.
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .apps {
+    margin: var(--space-xl) 0 var(--space-2xl);
+  }
+
+  /* Four columns of prose do not fit a phone; the table scrolls inside
+     itself rather than pushing the page sideways. */
+  .apps__scroll {
+    overflow-x: auto;
+  }
+
+  .apps__scroll:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .apps table {
+    border-collapse: collapse;
+  }
+
+  .apps__hint {
+    display: none;
+  }
+
+  @media (max-width: 46rem) {
+    .apps__hint {
+      display: inline;
+    }
+  }
+
+  .apps__caption {
+    max-width: var(--measure);
+    margin: 0 0 var(--space-s);
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+
+  .apps td,
+  .apps th {
+    vertical-align: top;
+  }
+
+  /* Minimum widths that add up to less than the article column (592 px on a
+     desktop), so the whole table sits on the page there; on a phone it still
+     scrolls inside its region, and the note above says so. Measured, after the
+     first version clipped the last column on a desktop with no hint at all. */
+  .apps th[scope='row'] {
+    min-width: 6rem;
+  }
+
+  .apps__col-price {
+    min-width: 10.5rem;
+  }
+
+  .apps__col-bank {
+    min-width: 12rem;
+  }
+
+  .apps__col-runs {
+    min-width: 6.5rem;
+  }
+
+  .apps__price,
+  .apps__bank {
+    display: block;
+    font-weight: 650;
+  }
+
+  .apps__note {
+    display: block;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+
+  .apps__none {
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .apps__tag {
+    display: block;
+    font-size: var(--step--1);
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .apps__ours th[scope='row'] a {
+    color: var(--text-accent);
+  }
+</style>

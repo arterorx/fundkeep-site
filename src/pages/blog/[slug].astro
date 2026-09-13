@@ -4,6 +4,7 @@ import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import AppStoreCta from '../../components/AppStoreCta.astro';
 import CompetitorTable from '../../components/CompetitorTable.astro';
+import NoBankLoginTable from '../../components/NoBankLoginTable.astro';
 import { SITE } from '../../consts';
 import { displayDate, machineDate } from '../../utils/dates';
 
@@ -24,6 +25,7 @@ const {
   namesCompetitors,
   seoTitle,
   howTo,
+  apps,
 } = post.data;
 
 const url = `${SITE.url}/blog/${post.id}`;
@@ -148,7 +150,11 @@ const schema = [
          the prose below can then discuss the apps without repeating a single
          figure. Markdown cannot hold a component, and that turns out to be
          the right constraint — it is what keeps prices out of prose. */
-      namesCompetitors && <CompetitorTable />
+      apps === 'no-bank-login' ? (
+        <NoBankLoginTable />
+      ) : (
+        namesCompetitors && <CompetitorTable />
+      )
     }
 
     <div class="prose article">

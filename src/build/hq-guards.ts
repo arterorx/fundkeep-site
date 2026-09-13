@@ -7,6 +7,8 @@ import {
   CALCULATOR,
   COMPETITORS,
   COMPETITORS_CHECKED,
+  NO_BANK_LOGIN_APPS,
+  NO_BANK_LOGIN_CHECKED,
   DOMAIN,
   INDEXABLE,
   LAUNCH_PRICE,
@@ -174,6 +176,16 @@ export function hqGuards(): AstroIntegration {
           );
         }
 
+        if (today() > NO_BANK_LOGIN_CHECKED.recheckBy) {
+          logger.warn(
+            `The apps on /blog/budget-app-without-bank-sync were read on ` +
+              `${NO_BANK_LOGIN_CHECKED.on} and are due a sweep. Re-read each ` +
+              `first-party source in NO_BANK_LOGIN_APPS and move the date — ` +
+              `prices and bank-connection terms are both claims about named ` +
+              `companies.`,
+          );
+        }
+
         if (today() > YNAB.recheckBy) {
           logger.warn(
             `${YNAB.name}'s price is recorded as ${YNAB.price} ${YNAB.period}, ` +
@@ -216,7 +228,7 @@ export function hqGuards(): AstroIntegration {
          * naming competitors is what it is for.
          */
         const competitorAmounts = new Set<string>();
-        for (const rival of COMPETITORS) {
+        for (const rival of [...COMPETITORS, ...NO_BANK_LOGIN_APPS]) {
           for (const amount of `${rival.price ?? ''} ${rival.priceNote}`.match(
             /\$\d[\d,]*(?:\.\d{2})?/g,
           ) ?? []) {
@@ -268,7 +280,12 @@ export function hqGuards(): AstroIntegration {
             ? new Set([...allowedAmounts, ...competitorAmounts])
             : allowedAmounts;
 
-          for (const amount of text.match(/\$\d[\d,]*(?:\.\d{2})?/g) ?? []) {
+          // Sums in the millions and billions are left alone: no app on this
+          // site costs one, and they appear only where a page reports a court
+          // settlement or a company's figures. Carved out narrowly and in the
+          // open, so that nobody has to write "58 million dollars" to get a
+          // true sentence past a price check.
+          for (const amount of text.match(/\$\d[\d,]*(?:\.\d{2})?(?!\d|\s*(?:million|billion)\b)/g) ?? []) {
             if (!pageAmounts.has(amount)) {
               problems.push(
                 `${name}: price ${amount} is not in src/consts.ts` +
