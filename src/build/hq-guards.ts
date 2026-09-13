@@ -9,6 +9,7 @@ import {
   COMPETITORS_CHECKED,
   NO_BANK_LOGIN_APPS,
   NO_BANK_LOGIN_CHECKED,
+  YNAB_PRICE_HISTORY,
   DOMAIN,
   INDEXABLE,
   LAUNCH_PRICE,
@@ -230,8 +231,15 @@ export function hqGuards(): AstroIntegration {
         const competitorAmounts = new Set<string>();
         for (const rival of [...COMPETITORS, ...NO_BANK_LOGIN_APPS]) {
           for (const amount of `${rival.price ?? ''} ${rival.priceNote}`.match(
-            /\$\d[\d,]*(?:\.\d{2})?/g,
+            /\$\d+(?:,\d{3})*(?:\.\d{2})?/g,
           ) ?? []) {
+            competitorAmounts.add(amount);
+          }
+        }
+        // YNAB's past prices, for /ynab-pricing. Same scope as the rest: only
+        // on a page that declares it prints another company's prices.
+        for (const row of YNAB_PRICE_HISTORY) {
+          for (const amount of `${row.price} ${row.note}`.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?/g) ?? []) {
             competitorAmounts.add(amount);
           }
         }
@@ -280,12 +288,16 @@ export function hqGuards(): AstroIntegration {
             ? new Set([...allowedAmounts, ...competitorAmounts])
             : allowedAmounts;
 
+          // A comma belongs to a number only when three digits follow it: the
+          // first version took the comma in "Since $60, and" as part of the
+          // price and failed a correct page.
+          //
           // Sums in the millions and billions are left alone: no app on this
           // site costs one, and they appear only where a page reports a court
           // settlement or a company's figures. Carved out narrowly and in the
           // open, so that nobody has to write "58 million dollars" to get a
           // true sentence past a price check.
-          for (const amount of text.match(/\$\d[\d,]*(?:\.\d{2})?(?!\d|\s*(?:million|billion)\b)/g) ?? []) {
+          for (const amount of text.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?(?!\d|\s*(?:million|billion)\b)/g) ?? []) {
             if (!pageAmounts.has(amount)) {
               problems.push(
                 `${name}: price ${amount} is not in src/consts.ts` +
@@ -494,7 +506,7 @@ export function hqGuards(): AstroIntegration {
           const articles = pages
             .map((page) => page.slice(root.length))
             .filter((name) => name.startsWith('blog/'));
-          for (const required of ['index.html', 'ynab-alternative.html', 'support.html', ...articles]) {
+          for (const required of ['index.html', 'ynab-alternative.html', 'ynab-pricing.html', 'support.html', ...articles]) {
             const path = join(root, required);
             if (!existsSync(path)) {
               problems.push(`${required} was not emitted.`);

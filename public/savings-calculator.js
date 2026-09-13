@@ -1,5 +1,5 @@
 /*
- * The savings calculator on /ynab-alternative.
+ * The savings calculator on /ynab-pricing (on /ynab-alternative until 13.09.2026).
  *
  * A file in public/ rather than an inline script, so the site's
  * Content-Security-Policy can stay `script-src 'self'` with no 'unsafe-inline'

@@ -145,6 +145,7 @@ export const LAUNCH_PRICE: LaunchPrice | null = null;
  * Re-read on ynab.com/pricing itself on 13.09.2026, before the /ynab-pricing
  * page was published: "$109 USD* paid annually", a monthly plan at "$14.99
  * USD*", and "How About 34 Days for Free?". Unchanged since the last read.
+ * How the price got here is in `YNAB_PRICE_HISTORY`, every row with its source.
  */
 export const YNAB = {
   name: 'YNAB',
@@ -167,6 +168,118 @@ export const YNAB = {
   source: 'https://www.ynab.com/pricing',
   recheckBy: '2026-12-13',
 } as const;
+
+/**
+ * How YNAB's price got to `YNAB.price` — the table on /ynab-pricing.
+ *
+ * Every row was read on 13.09.2026 in a first-party source: YNAB's own pages,
+ * mostly as archived by the Wayback Machine, and each row links the capture
+ * it came from. Nothing here is from a review site, a forum or memory. Where
+ * YNAB's own pages leave a question open, the note says so instead of filling
+ * it — two stay open: whether "$99" in 2022 was a change or a rounding of
+ * $98.99, and when the 2024 price reached people who already subscribed.
+ *
+ * The archive was read at intervals, so a promotion that lived between two
+ * captures could be missing. A price increase could not: every one of these
+ * stayed on the pricing page for months or years.
+ *
+ * Amounts in `price` and `note` are allowed by the build on /ynab-pricing,
+ * the one page that declares it prints another company's prices.
+ */
+export interface YnabPriceRow {
+  /** When, as a person says it. */
+  when: string;
+  /** For <time>: the effective date if YNAB gave one, else the month first seen. */
+  date: string;
+  /** What it cost, as YNAB's own page put it. */
+  price: string;
+  /** What changed, and anything the sources leave open. */
+  note: string;
+  source: { label: string; url: string };
+}
+
+export const YNAB_PRICE_HISTORY: readonly YnabPriceRow[] = [
+  {
+    when: '2012 to 2017',
+    date: '2012-06',
+    price: '$60 once',
+    note: 'YNAB 4, a program you installed. YNAB’s purchase page: “This one-time purchase lets you use YNAB on every PC and Mac in your home.” It stopped selling by April 2017.',
+    source: {
+      label: 'YNAB’s purchase page, February 2015',
+      url: 'https://web.archive.org/web/20150201191155/https://purchase.youneedabudget.com/',
+    },
+  },
+  {
+    when: 'December 2015',
+    date: '2015-12',
+    price: '$5 a month or $50 a year',
+    note: 'The new YNAB launches, as a subscription.',
+    source: {
+      label: 'YNAB’s launch post, December 2015',
+      url: 'https://web.archive.org/web/20151231182644/http://www.youneedabudget.com/blog/post/the-new-ynab-is-here',
+    },
+  },
+  {
+    when: 'November 2016',
+    date: '2016-11',
+    price: '$50 a year',
+    note: 'Monthly billing ends for new subscribers. People already paying monthly keep doing so.',
+    source: {
+      label: 'YNAB’s 2017 price FAQ',
+      url: 'https://web.archive.org/web/20181017033648/https://www.youneedabudget.com/price-change-faqs-2017/',
+    },
+  },
+  {
+    when: '15 November 2017',
+    date: '2017-11-15',
+    price: '$83.99 a year',
+    note: 'For new subscribers only: “If you signed up for YNAB before November 15, 2017, you will be billed at the same price you paid when you initially subscribed.”',
+    source: {
+      label: 'YNAB’s 2017 price FAQ',
+      url: 'https://web.archive.org/web/20181017033648/https://www.youneedabudget.com/price-change-faqs-2017/',
+    },
+  },
+  {
+    when: 'By November 2019',
+    date: '2019-11',
+    price: '$11.99 a month, or $84 a year',
+    note: 'A monthly plan returns, next to the yearly one. We found no announcement of it.',
+    source: {
+      label: 'YNAB’s pricing page, November 2019',
+      url: 'https://web.archive.org/web/20191115132229/https://www.youneedabudget.com/pricing/',
+    },
+  },
+  {
+    when: '1 December 2021',
+    date: '2021-12-01',
+    price: '$98.99 a year or $14.99 a month',
+    note: 'For everyone, at their first renewal on or after that date — “This price change applies to all customers”, including those still on the 2015 prices.',
+    source: {
+      label: 'YNAB’s 2021 price change page',
+      url: 'https://web.archive.org/web/20211101121240/https://www.youneedabudget.com/price-change-2021/',
+    },
+  },
+  {
+    when: 'September 2022',
+    date: '2022-09',
+    price: '$99 a year; $14.99 a month',
+    note: 'The pricing page starts showing $99. We found no announcement, so this may be the same price, rounded.',
+    source: {
+      label: 'YNAB’s pricing page, September 2022',
+      url: 'https://web.archive.org/web/20220917221424/https://www.youneedabudget.com/pricing/',
+    },
+  },
+  {
+    when: '1 August 2024',
+    date: '2024-08-01',
+    price: '$109 a year; $14.99 a month',
+    note: 'Announced on the pricing page in July 2024: “Our annual subscription rate increases to $109 on 8/1.” We found no first-party word on when it reached existing subscribers.',
+    source: {
+      label: 'YNAB’s pricing page, July 2024',
+      url: 'https://web.archive.org/web/20240704060623/https://www.ynab.com/pricing',
+    },
+  },
+] as const;
 
 /** How the site writes money. One formatter, so nothing rounds differently. */
 export const money = (amount: number): string =>

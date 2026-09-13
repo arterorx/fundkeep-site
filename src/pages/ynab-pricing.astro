@@ -1,0 +1,239 @@
+---
+import Base from '../layouts/Base.astro';
+import AppStoreCta from '../components/AppStoreCta.astro';
+import SavingsCalculator from '../components/SavingsCalculator.astro';
+import {
+  CALCULATOR,
+  PRICING,
+  RELEASE,
+  SITE,
+  YNAB,
+  YNAB_PRICE_HISTORY,
+  money,
+} from '../consts';
+
+/**
+ * What YNAB costs, and how the price got there (штаб, 13.09.2026).
+ *
+ * People search "ynab cost" and "ynab price increase", and the site already
+ * showed up for them at the bottom of the second page without a page that
+ * answered. This one answers, in the order they ask: today's price, what it
+ * adds up to, and how it got here.
+ *
+ * Every figure comes from a constant. Today's price from `YNAB`, re-read on
+ * ynab.com/pricing before this page went up; the history from
+ * `YNAB_PRICE_HISTORY`, every row with the first-party page it was read in;
+ * the totals from the same `savings()` arithmetic the calculator runs. The
+ * title is built from them too, so a price that moves cannot leave the title
+ * behind. The build accepts YNAB's prices on this page because it says, in
+ * its head, that it prints another company's prices.
+ *
+ * The paragraph about what the subscription buys is written from YNAB's own
+ * pricing page and nothing else. A page that only listed what a competitor
+ * charges, and not what it gives, would be the kind of comparison this site
+ * says it does not write.
+ */
+
+const first = YNAB_PRICE_HISTORY[0]!;
+const launch = YNAB_PRICE_HISTORY[1]!;
+const firstAmount = first.price.match(/\$[\d.,]+/)![0];
+
+const title = `${YNAB.name} Pricing 2026: ${YNAB.price}/yr, Every Price Increase Since ${firstAmount}, and the ${CALCULATOR.defaultYears}-Year Cost`;
+const description = `${YNAB.name} costs ${YNAB.price} a year or ${money(YNAB.monthly)} a month in 2026. Every price since ${first.price.replace(' once', '')}, from ${YNAB.name}'s own pages, and what it adds up to.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/ynab-pricing`,
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base title={title} exactTitle description={description} schema={schema}>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <!-- ---------------------------------------------------------------- Today -->
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">{YNAB.name} pricing</p>
+      <h1>What {YNAB.name} costs in 2026, and how the price got here</h1>
+      <p class="lede">
+        <strong>{YNAB.price} a year, or {money(YNAB.monthly)} a month</strong>,
+        after {YNAB.trialDays} days free — as published on{' '}
+        <a href={YNAB.source}>ynab.com/pricing</a> when we read it on{' '}
+        <time datetime={YNAB.checkedOn}>{YNAB.checkedOnDisplay}</time>. It became
+        a subscription in {launch.when} at {launch.price}; before that it was a
+        program you bought once, for {firstAmount}.
+      </p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------ Over the years -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What it adds up to</h2>
+    </div>
+    <SavingsCalculator />
+    <div class="column">
+      <p class="small muted">
+        Before tax. The totals assume {YNAB.name}'s price stays where it is for
+        as long as you keep budgeting, and the table below shows how often it
+        has not.
+      </p>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- History -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>Every price since YNAB 4</h2>
+      <p>
+        Each row was read in one of {YNAB.name}'s own pages — most of them as
+        the Wayback Machine archived them — and links to the copy it came from.
+        Where those pages leave a question open, the row says so rather than
+        filling it in. <span class="history__hint">The table scrolls sideways.</span>
+      </p>
+    </div>
+
+    <div
+      class="history"
+      role="region"
+      aria-label={`How ${YNAB.name}'s price changed`}
+      tabindex="0"
+    >
+      <table>
+        <caption class="visually-hidden">
+          {YNAB.name}'s price, from YNAB 4 to today
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">When</th>
+            <th scope="col">Price</th>
+            <th scope="col">What changed</th>
+            <th scope="col">Source</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            YNAB_PRICE_HISTORY.map((row) => (
+              <tr>
+                <th scope="row">
+                  <time datetime={row.date}>{row.when}</time>
+                </th>
+                <td class="history__price">{row.price}</td>
+                <td>{row.note}</td>
+                <td>
+                  <a href={row.source.url}>{row.source.label}</a>
+                </td>
+              </tr>
+            ))
+          }
+          <tr class="history__today">
+            <th scope="row">
+              <time datetime={YNAB.checkedOn}>{YNAB.checkedOnDisplay}</time>
+            </th>
+            <td class="history__price">
+              {YNAB.price} a year or {money(YNAB.monthly)} a month
+            </td>
+            <td>Today, unchanged since August 2024.</td>
+            <td><a href={YNAB.source}>ynab.com/pricing</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="column">
+      <p class="small muted">
+        The archive was read at intervals, so a short-lived promotion between two
+        copies could be missing. A price increase could not: each of these stayed
+        on the pricing page for months or years.
+      </p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------ What you get -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What you get for it</h2>
+      <p>
+        One plan, paid yearly or monthly. Balances, goals and transactions sync
+        across your devices in real time; target-setting covers spending and
+        savings goals; there are debt tools with a loan calculator; and direct
+        import works with select US, Canadian, UK and EU banks. One subscription
+        covers up to six people — partners, families and other close-knit groups.
+        The {YNAB.trialDays}-day trial needs no credit card when you sign up on
+        their site, and college students get a free 365-day trial. All of that
+        is as {YNAB.name}'s own pricing page describes it.
+      </p>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------------- Ours -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>If you would rather pay once</h2>
+      <p>
+        That is what we make. {SITE.name} is envelope budgeting for{' '}
+        {RELEASE.platforms}, {PRICING.full} once, with no bank connections —{' '}
+        <a href="/ynab-alternative">what stays the same, and what you give up</a
+        >.
+      </p>
+      <AppStoreCta />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .history {
+    overflow-x: auto;
+    margin: var(--space-l) 0;
+  }
+
+  /* Only where it does: the other two tables on the site say the same. */
+  .history__hint {
+    display: none;
+  }
+
+  @media (max-width: 46rem) {
+    .history__hint {
+      display: inline;
+    }
+  }
+
+  .history:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .history table {
+    border-collapse: collapse;
+  }
+
+  .history th,
+  .history td {
+    vertical-align: top;
+  }
+
+  .history th[scope='row'] {
+    white-space: nowrap;
+  }
+
+  .history td {
+    min-width: 11rem;
+  }
+
+  .history__price {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .history__today th,
+  .history__today td {
+    color: var(--text-accent);
+  }
+</style>

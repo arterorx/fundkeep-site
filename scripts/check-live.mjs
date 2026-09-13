@@ -35,6 +35,7 @@ const PAGES = [
   ['/support', 'support.html'],
   ['/blog', 'blog.html'],
   ['/ynab-alternative', 'ynab-alternative.html'],
+  ['/ynab-pricing', 'ynab-pricing.html'],
   ['/blog/ynab-export-guide', 'blog/ynab-export-guide.html'],
   ['/blog/ynab-alternatives', 'blog/ynab-alternatives.html'],
   ['/blog/envelope-budgeting-without-a-subscription', 'blog/envelope-budgeting-without-a-subscription.html'],
