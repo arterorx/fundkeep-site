@@ -40,13 +40,27 @@ const schema = [
     operatingSystem: RELEASE.requires,
     url: SITE.url,
     description,
-    offers: {
-      '@type': 'Offer',
-      price: PRICING.full.replace('$', ''),
-      priceCurrency: 'USD',
-      // One payment. Not a subscription, and the markup says so too.
-      category: 'one-time purchase',
-    },
+    // Two offers, both true and both on this page — the штаб's decision of
+    // 14.09.2026, the same on all three sites. The App Store lists the
+    // download as Free, and Google's guidance for a free app is a price of 0;
+    // the purchase inside is what the page means by "$39.99, once". One offer
+    // at 39.99 described the unlock and contradicted the listing.
+    offers: [
+      {
+        '@type': 'Offer',
+        name: `Free download, ${TRIAL.days}-day trial`,
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      {
+        '@type': 'Offer',
+        name: `${SITE.name} Full`,
+        price: PRICING.full.replace('$', ''),
+        priceCurrency: 'USD',
+        // One payment. Not a subscription, and the markup says so too.
+        category: 'one-time purchase',
+      },
+    ],
     // The listing, three ways, because consumers of this markup each look for
     // a different one. Emitted only while there is a listing: a null here
     // would be markup describing a store page that does not exist.
