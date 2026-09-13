@@ -139,11 +139,12 @@ const schema = [
       > label, and it is accurate rather than optimistic.
     </p>
     <p>
-      This website holds to the same rule: no analytics, no cookies, no
-      third-party fonts, no content delivery network, no embedded anything. Every
-      request a page here makes goes to <code>{SITE.domain}</code> and nowhere
-      else, and the build refuses to publish a page that breaks that. A site
-      that talks about privacy ought to be an example of it.
+      This website holds to the same rule: no analytics, no cookies, no embedded
+      anything, and no third-party CDN for fonts, scripts or images; the site
+      itself is served by Cloudflare. Every request a page here makes goes to{' '}
+      <code>{SITE.domain}</code> and nowhere else, and the build refuses to
+      publish a page that breaks that. A site that talks about privacy ought to
+      be an example of it.
     </p>
     {
       /* Added 14.09.2026 with the Smart App Banner. The sentence above stays

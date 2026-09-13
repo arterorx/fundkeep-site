@@ -398,8 +398,11 @@ export const TRIAL = {
  */
 export const PRIVACY_UPDATED = {
   // 14.09.2026: a paragraph saying that Safari's App Store banner exists.
-  display: '14 September 2026',
-  machine: '2026-09-14',
+  // 15.09.2026: "no content delivery network" was literally untrue — the
+  // site is served by Cloudflare, which is one. The штаб's wording replaces
+  // it: no third-party CDN for fonts, scripts or images.
+  display: '15 September 2026',
+  machine: '2026-09-15',
 } as const;
 
 /**
