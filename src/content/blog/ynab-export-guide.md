@@ -1,136 +1,154 @@
 ---
-title: 'YNAB export: a full guide'
-description: 'Where YNAB''s export lives, what the two files contain column by column, and what to watch for when you open them in a spreadsheet or another app.'
-standfirst: 'Your budget is your record of your own money. Here is exactly what comes out of YNAB when you ask for it back, and what each column means.'
+title: "How to export your YNAB data (and what's missing from the export)"
+seoTitle: 'How to Export YNAB Data to CSV (Plan, Transactions, Targets) — 2026'
+description: 'Step by step: where YNAB hides Export Plan, the two CSV files column by column, how to save the targets left out, and opening them in Excel or Sheets.'
+standfirst: "In YNAB's web app, click your plan's name at the top of the left sidebar and choose Export Plan. Your plan, month by month, and every transaction come out as two CSV files (TSV if your currency uses a decimal comma). Targets and category notes are not in them — how to save those by hand is below."
 published: 2026-08-16
-sourcesCheckedOn: 2026-08-16
+updated: 2026-09-14
+sourcesCheckedOn: 2026-09-14
+howTo:
+  name: 'Export your plan and all transactions from YNAB'
+  steps:
+    - name: 'Open YNAB in a web browser.'
+      text: 'Exporting is only available in the web version of YNAB, not in its apps.'
+    - name: 'Click the name of your plan.'
+      text: 'It sits at the top of the left sidebar. It is a menu, even though it does not look like one.'
+    - name: 'Choose Export Plan.'
+      text: 'It is in the drop-down menu that opens under the plan name.'
+    - name: 'Save the download.'
+      text: 'Its name starts with “YNAB Export -” and your plan’s name. Your plan and your transaction history come as two separate files: CSV, or TSV (tab-separated) for currencies that use a comma for decimals.'
 ---
 
-People usually look this up at a particular moment: they have decided to leave,
-or they are doing their taxes, or they have just realised that years of their
-own financial history live somewhere they do not control. The question underneath
-all three is the same — **can I get it out, and is what comes out any use?**
+## What is NOT exported (targets, category notes, photos)
 
-Short answer: yes, and yes. Here is what to expect.
+[YNAB's own help page](https://support.ynab.com/en_us/how-to-export-plan-data-Sy_CouWA9)
+says it in one line: the export "does not include targets or category notes". Photos are not in it either — YNAB lets you download them
+one at a time, never in bulk. If any of these matter to you, save them
+**before** you close the account. Afterwards there is nothing left to export
+them from.
 
-## Where the export is
+**Targets.** Go through your plan one category at a time and write down what
+each target asks for: the amount, and the date or rhythm it works to. The
+plan file from the export is a good place for it — open it in a spreadsheet,
+add a *Target* column, and fill it in by hand. It takes one sitting, and it is
+the only record of those decisions you will keep.
 
-Exporting is a **web app** job. Sign in on a computer rather than reaching for
-the phone app — YNAB's own help pages for exporting describe the web app, and
-that is where the menu item lives.
+**Category notes.** Same spreadsheet, one more column. Copy each note across
+while you are going through the categories anyway.
 
-Open the plan you want, then **click its name at the top of the left sidebar**.
-That name is a menu, which is the part people miss: it does not look like one.
-In the drop-down you will find **Export Plan**.
+**Photos.** In the account register, click the photo on a transaction and
+choose **Download Image**. There is no faster way.
 
-If the menu says **Export Budget** instead, nothing is wrong — YNAB renamed
-budgets to plans, and which word you see depends on when you are reading this.
-The item is in the same place either way. YNAB's own page on it is
-[Exporting Plan Data in YNAB](https://support.ynab.com/en_us/how-to-export-plan-data-Sy_CouWA9),
-and it is worth a glance because their labels move and this article does not.
+**Scheduled transactions.** YNAB's help pages do not say whether they come out
+with the rest, and we could not confirm it either way. Note each one before you
+leave — payee, amount, how often and the next date — so you can set it up again
+wherever you go.
 
-There is a second export worth knowing about: select some transactions in the
-register and you are offered **Export _n_ Transactions**, which gives you just
-those. Useful at tax time, no use at all for moving house.
+**Reports.** Reflection data — Spending Breakdown, Spending Trends, Income v
+Expense and Net Worth — has its own export in YNAB and is not part of this one.
 
-## What you get
+## What is in the two files
 
-Two files, named after the plan and the day you asked:
+One file is your **plan**: a row for every category in every month. The other
+is your **register**: a row for every transaction. The first column tells them
+apart — `Month` in the plan, `Account` in the register.
 
-```
-My Budget as of 2026-08-15 - Register.csv
-My Budget as of 2026-08-15 - Budget.csv
-```
+The headings below come from a real YNAB export made in August 2026. YNAB's
+help page does not list them, and they have changed before — older exports
+called the plan's `Assigned` column `Budgeted` — so if your file disagrees with
+this table, your file is right.
 
-Two files is all there is. They are comma-separated, or **tab**-separated for
-currencies that use a comma as the decimal separator — the extension may still
-say `.csv`, so if a spreadsheet opens it as one long column, that is why. Tell
-the import dialog the separator is a tab.
-
-### Register.csv — every transaction
-
-One row per transaction. These are the columns that carry the history, and the
-ones our own importer reads by name:
+### The plan file
 
 | Column | What is in it |
 |---|---|
-| Account | The account name as you typed it |
-| Date | The transaction date |
-| Payee | Who it went to |
-| Category Group | The group the category sits in |
-| Category | The category |
-| Category Group/Category | Both, joined — a convenience column |
-| Memo | Your note |
-| Outflow | Money out, as a positive number |
-| Inflow | Money in, as a positive number |
-| Cleared | `Uncleared`, `Cleared` or `Reconciled` |
+| `Month` | The month, written like `Aug 2026` |
+| `Category Group/Category` | The group and the category, joined with a slash |
+| `Category Group` | The group on its own |
+| `Category` | The category on its own |
+| `Assigned` | What you assigned to the category that month |
+| `Activity` | What moved through it that month; spending shows as negative |
+| `Available` | What was available in it for that month |
 
-Your file may carry more columns than these — YNAB has added some over the
-years. That is not a problem for anything that looks columns up by their
-heading rather than by counting from the left, which is worth knowing if you
-are writing a formula: insert a column upstream and position-based formulas
-break silently.
-
-Three things about that table catch people out.
-
-**Outflow and Inflow are two columns, not one signed one.** A spend is a
-positive number in Outflow and an empty or zero Inflow. If you are summing this
-in a spreadsheet, you want `Inflow − Outflow`, not a sum of one column. Anything
-that reads the file has to do the same, and an importer that reads only one of
-them will be wrong about half your history.
-
-**Transfers appear twice, once from each side**, and the payee reads
-`Transfer : Some Account`. That is not a payee called Transfer — it is the other
-end of the move. Sum the file naively and transfers count twice; treat the two
-rows as one movement and the totals come out right.
-
-**Dates in the exports we have worked with are month/day/year.** Check yours
-before a spreadsheet quietly reads 03/04 as the fourth of March.
-
-### Budget.csv — what you assigned, month by month
-
-One row per category per month:
+### The register file
 
 | Column | What is in it |
 |---|---|
-| Month | The month, like `Aug 2026` |
-| Category Group | The group |
-| Category | The category |
-| Budgeted | What you assigned to it that month |
-| Activity | What moved through it that month |
-| Available | What was left at the end of it |
+| `Account` | The account the transaction belongs to |
+| `Flag` | The flag colour, if you set one; otherwise empty |
+| `Date` | The date — month first in the export we checked: `09/14/2026` |
+| `Payee` | Who was paid, or who paid you |
+| `Category Group/Category` | The group and the category, joined with a slash |
+| `Category Group` | The group on its own |
+| `Category` | The category on its own |
+| `Memo` | Your memo, if you wrote one |
+| `Outflow` | Money out, as a positive amount |
+| `Inflow` | Money in, as a positive amount |
+| `Cleared` | The transaction's cleared status |
 
-This is the half people forget to keep. The register says what you spent;
-this file says what you had *decided*, month after month, which is the actual
-record of how you have been budgeting. If you only keep one file, keep both.
+Two things about the register catch people out.
 
-## What to do with it once you have it
+**Money in and money out are separate columns.** A spend has its amount in
+`Outflow` and zero in `Inflow`. For one signed figure per row, calculate
+`Inflow − Outflow`.
 
-**Keep a copy somewhere that is not a budgeting app.** Two CSV files are small
-enough to live in the same folder as your tax records, and they will still open
-in thirty years, which is not something anyone can say about an account on a
-service.
+**Every transfer appears twice**, once from each account, with a payee that
+reads `Transfer : ` followed by the other account's name. Totals across all
+your accounts come out right, because the two halves cancel. Totals of spending
+do not, unless you leave those rows out.
 
-**Open it in a spreadsheet before you trust anything else with it.** Sort the
-register by date and look at the oldest rows: that is where truncation and
-date-format mistakes show up first.
+## Exporting only some transactions
 
-**If you are moving to another app, expect to check its arithmetic.** Any
-importer is somebody's reading of a file format, including ours. The question
+For tax season, or for one account, YNAB can export a selection instead:
+
+1. Open an account, or **All Accounts**, from the left sidebar.
+2. Tick the checkbox beside each transaction you want — or search and filter
+   first, then tick the checkbox in the table header to select everything
+   showing.
+3. Click **More** in the action bar that appears, then **Export # Transactions**.
+
+That file's name starts with "Selected Transactions for" and your plan's name.
+
+## Opening the files in Excel or Google Sheets
+
+**Import them rather than double-clicking.** A double-click lets the
+spreadsheet guess the separator and the dates, and it can guess wrong. Use
+**File → Import** in Google Sheets, or the text/CSV import on Excel's **Data**
+tab, so you get to choose.
+
+**If everything lands in one column, the file is tab-separated.** YNAB writes
+TSV for currencies that use a comma for decimals. Choose *Tab* as the
+separator.
+
+**Check which way round the dates are.** In the export we checked they were
+month first. A spreadsheet set to a region that writes the day first will read
+`03/04/2026` as the 3rd of April instead of the 4th of March — silently, for
+every date where both numbers are 12 or under. Look for a date with a number
+above 12 to be sure, then set the import to match or keep the column as text.
+
+**Amounts carry the currency sign.** In the dollar export we checked, each one
+had its dollar sign attached, with no thousands separator, and a negative put
+the minus in front of the sign. A spreadsheet set to another currency may take
+them for text: find the sign, replace it with nothing, and format the column as
+numbers.
+
+**Use `Category Group` and `Category`, not the joined column.** A category name
+can contain a slash of its own, so splitting `Category Group/Category` on the
+slash can cut in the wrong place.
+
+**If you read them with a script**, expect a byte-order mark in front of the
+first heading, so the first column may not match `Account` or `Month` exactly.
+
+**Keep a copy somewhere that is not a budgeting app.** Two plain text files will
+still open in thirty years, which is more than anyone can promise about an
+account on a service.
+
+## Importing the export into another budget app
+
+Any importer is somebody's reading of this format, ours included. The question
 to ask a new app is not "can it import YNAB" — everything says yes — but "will
-it show me what it made of my numbers before it commits them?"
+it show me what it made of my numbers before it saves them?"
 
-## Bringing it into Fundkeep
-
-That last question is one we have to answer about ourselves, so: Fundkeep reads
-both files, rebuilds your categories, accounts and history from them, and then
-shows a **reconciliation report** — what YNAB said each balance was, what
-Fundkeep makes it, and every difference it found. You read the differences and
-decide. Nothing is saved until you do.
-
-We would rather show you a list of disagreements than a green tick, because a
-green tick from an importer is a claim, and a list of differences is evidence.
-
-If you want the rest of it — what Fundkeep is, what it costs, and what you give
-up by moving — that is on [the page for people leaving YNAB](/ynab-alternative).
-And whatever you decide, take the export. It is your record either way.
+Fundkeep reads both files, rebuilds your categories, accounts and history, and
+shows you every difference between its balances and YNAB's before anything is
+saved — [more on that for people leaving YNAB](/ynab-alternative).

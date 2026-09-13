@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
 import CompetitorTable from '../../components/CompetitorTable.astro';
 import { SITE } from '../../consts';
 import { displayDate, machineDate } from '../../utils/dates';
@@ -21,6 +22,8 @@ const {
   updated,
   sourcesCheckedOn,
   namesCompetitors,
+  seoTitle,
+  howTo,
 } = post.data;
 
 const url = `${SITE.url}/blog/${post.id}`;
@@ -53,10 +56,34 @@ const schema = [
       { '@type': 'ListItem', position: 3, name: title, item: url },
     ],
   },
+  // Built from the same array as the numbered list on the page, step for
+  // step, each pointing at its own list item.
+  ...(howTo
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'HowTo',
+          name: howTo.name,
+          description,
+          step: howTo.steps.map((step, index) => ({
+            '@type': 'HowToStep',
+            position: index + 1,
+            name: step.name,
+            text: step.text,
+            url: `${url}#step-${index + 1}`,
+          })),
+        },
+      ]
+    : []),
 ];
 ---
 
-<Base title={title} description={description} schema={schema}>
+<Base
+  title={seoTitle ?? title}
+  exactTitle={Boolean(seoTitle)}
+  description={description}
+  schema={schema}
+>
   <!-- Read by the build guard, which warns when the facts in an article are a
        year past their last check. An article nobody has re-read does not break;
        it quietly stops being true, and these name another company. -->
@@ -98,6 +125,24 @@ const schema = [
     </header>
 
     {
+      /* The steps come straight after the opening paragraph, before any
+         heading, because a reader who searched "how to export" wants the
+         procedure first and the explanations after it. Rendered from front
+         matter rather than written in Markdown so the HowTo markup above is
+         built from the very same list. */
+      howTo && (
+        <ol class="howto">
+          {howTo.steps.map((step, index) => (
+            <li id={`step-${index + 1}`}>
+              <strong class="howto__name">{step.name}</strong>{' '}
+              <span class="howto__text">{step.text}</span>
+            </li>
+          ))}
+        </ol>
+      )
+    }
+
+    {
       /* The table goes above the article rather than inside it: a reader who
          came for "what do these cost" gets the answer without scrolling, and
          the prose below can then discuss the apps without repeating a single
@@ -109,6 +154,15 @@ const schema = [
     <div class="prose article">
       <Content />
     </div>
+
+    {
+      /* One way to the store, the same on every article, and only here at
+         the end: an article that sells before it has helped is an advert.
+         Apple's badge, and the only one on the page. */
+    }
+    <aside class="article-cta" aria-label={`${SITE.name} on the App Store`}>
+      <AppStoreCta />
+    </aside>
 
     <footer class="foot">
       <p class="small muted">
@@ -189,6 +243,32 @@ const schema = [
     padding-left: var(--space-l);
     border-left: 3px solid var(--rule);
     color: var(--text-muted);
+  }
+
+  /* The procedure: numbered, each step's action in bold on its own line. */
+  .howto {
+    max-width: var(--measure);
+    margin: 0 0 var(--space-2xl);
+    padding-left: 1.4em;
+  }
+
+  .howto li + li {
+    margin-top: var(--space-s);
+  }
+
+  .howto__name {
+    display: block;
+  }
+
+  .howto__text {
+    color: var(--text-muted);
+  }
+
+  .article-cta {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+    max-width: var(--measure);
   }
 
   .foot {

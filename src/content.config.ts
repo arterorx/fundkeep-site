@@ -34,6 +34,27 @@ const blog = defineCollection({
      * in COMPETITORS — see the rule written there.
      */
     namesCompetitors: z.boolean().default(false),
+    /**
+     * The <title>, exactly, when it is written for search and differs from
+     * the headline. Without it the title is `title` with " — Fundkeep" after
+     * it. Capped at 70: results pages cut long before that, and the cap is a
+     * net for a paragraph pasted into the wrong field, not a target.
+     */
+    seoTitle: z.string().max(70).optional(),
+    /**
+     * Steps, for an article that is at heart a procedure. The template renders
+     * them as a numbered list straight after the opening paragraph, and builds
+     * the HowTo markup from the same array — visible list and markup cannot
+     * disagree, the lesson sawkit.app learned with its FAQ.
+     */
+    howTo: z
+      .object({
+        name: z.string(),
+        steps: z
+          .array(z.object({ name: z.string(), text: z.string() }))
+          .min(2),
+      })
+      .optional(),
   }),
 });
 
