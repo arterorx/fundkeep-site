@@ -22,6 +22,7 @@
  */
 
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 
@@ -34,6 +35,9 @@ const PAGES = [
   ['/support', 'support.html'],
   ['/blog', 'blog.html'],
   ['/ynab-alternative', 'ynab-alternative.html'],
+  ['/blog/ynab-export-guide', 'blog/ynab-export-guide.html'],
+  ['/blog/ynab-alternatives', 'blog/ynab-alternatives.html'],
+  ['/blog/envelope-budgeting-without-a-subscription', 'blog/envelope-budgeting-without-a-subscription.html'],
 ];
 
 /** `--resolve IP` forces the address, for a machine whose DNS is behind. */
@@ -97,6 +101,22 @@ for (const [path, file] of PAGES) {
     if (!liveListing.has(link)) note(path, `lost the App Store link ${link}`);
   }
 
+  // 2c. The title and the headline the build wrote. The export guide was
+  //     retitled for search on 14.09.2026 and the штаб checks the result by
+  //     looking at the live page; this looks at every page, every deploy.
+  const tag = (html, re) => html.match(re)?.[1]?.replace(/<[^>]+>/g, '').trim();
+  for (const [label, re] of [['<title>', /<title>([\s\S]*?)<\/title>/], ['<h1>', /<h1[^>]*>([\s\S]*?)<\/h1>/]]) {
+    if (tag(live, re) !== tag(built, re)) {
+      note(path, `live ${label} is "${tag(live, re)}", the build has "${tag(built, re)}"`);
+    }
+  }
+
+  // 2d. Apple's Smart App Banner, if the build put it there.
+  const banner = /<meta name="apple-itunes-app" content="([^"]+)"/;
+  if (built.match(banner) && live.match(banner)?.[1] !== built.match(banner)[1]) {
+    note(path, 'lost the Smart App Banner on the way out');
+  }
+
   // 3. The address has to be readable as text, not only linked.
   const readable = (html) => (html.match(/support@fundkeep\.app/g) ?? []).length;
   if (readable(live) < readable(built)) {
@@ -154,6 +174,32 @@ for (const path of ['/privacy', '/support']) {
   } catch (error) {
     note(path, `could not be checked — ${error.message}`);
   }
+}
+
+// Apple's badge, served as it was downloaded. A missing or altered file is a
+// call to action that is not there, and Apple's guidelines forbid modifying
+// the artwork, so the check is byte for byte against the file in public/.
+try {
+  const args = ['-s', '--max-time', '20', '-D', '-'];
+  if (resolveAt) args.push('--resolve', `fundkeep.app:443:${resolveAt}`);
+  const { stdout } = await run('curl', [...args, `${ORIGIN}/badges/app-store-black.svg`], {
+    encoding: 'buffer',
+    maxBuffer: 5_000_000,
+  });
+  const split = stdout.indexOf('\r\n\r\n');
+  const head = stdout.subarray(0, split).toString();
+  const body = stdout.subarray(split + 4);
+  const local = await readFile(new URL('../public/badges/app-store-black.svg', import.meta.url));
+  const sha = (buffer) => createHash('sha256').update(buffer).digest('hex');
+  if (!/^HTTP\/\S+ 200/m.test(head)) {
+    note('/badges/app-store-black.svg', `answers ${head.split('\r\n')[0]}`);
+  } else if (!/content-type:\s*image\/svg\+xml/i.test(head)) {
+    note('/badges/app-store-black.svg', 'is not served as image/svg+xml');
+  } else if (sha(body) !== sha(local)) {
+    note('/badges/app-store-black.svg', 'differs from public/badges/app-store-black.svg');
+  }
+} catch (error) {
+  note('/badges/app-store-black.svg', `could not be checked — ${error.message}`);
 }
 
 // The address people guess for the sitemap, sent to the one Astro writes.

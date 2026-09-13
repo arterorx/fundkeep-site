@@ -327,6 +327,62 @@ export function hqGuards(): AstroIntegration {
             }
           }
 
+          // --- Apple's banner and badge ----------------------------------------
+          // The Smart App Banner on every page while the app is on sale, with
+          // the same ID as the buttons — and nowhere while it is not, because
+          // a banner for an app that is not in the store is a promise the page
+          // cannot keep.
+          const bannerId = html.match(
+            /<meta name="apple-itunes-app" content="app-id=(\d+)"/,
+          )?.[1];
+          const listingId = RELEASE.appStoreUrl?.match(/\/id(\d+)/)?.[1];
+          if (RELEASE.state === 'released' && bannerId !== listingId) {
+            problems.push(
+              `${name}: Smart App Banner app-id is ${bannerId ?? 'missing'}, ` +
+                `but RELEASE.appStoreUrl points at id${listingId}.`,
+            );
+          }
+          if (RELEASE.state === 'unreleased' && bannerId) {
+            problems.push(
+              `${name}: carries a Smart App Banner while RELEASE says the app ` +
+                `is not on sale.`,
+            );
+          }
+
+          // Apple: "Use one App Store badge per layout." A second call to
+          // action on a page is the text variant of AppStoreCta.
+          const badges = html.match(/src="\/badges\/app-store-[a-z-]+\.svg"/g)?.length ?? 0;
+          if (badges > 1) {
+            problems.push(
+              `${name}: ${badges} App Store badges. Apple's guidelines allow ` +
+                `one per layout — make the later ones <AppStoreCta variant="text" />.`,
+            );
+          }
+
+          // Every file a page loads from this site has to exist in the build.
+          // A missing badge is not an error anyone sees — it is a call to
+          // action that silently isn't there.
+          for (const url of subresourceUrls(html)) {
+            if (!url.startsWith('/') || url.startsWith('//')) continue;
+            const path = url.split(/[?#]/)[0]!;
+            if (!existsSync(join(root, path))) {
+              problems.push(`${name}: loads ${path}, which is not in the build.`);
+            }
+          }
+
+          // A year in a title is a claim that the page is current. Warned, not
+          // failed: the page does not become false on New Year's Day, it
+          // becomes unchecked — re-read the sources, then move the year.
+          const titleText = html.match(/<title>([^<]*)<\/title>/)?.[1] ?? '';
+          for (const year of titleText.match(/\b20\d\d\b/g) ?? []) {
+            if (Number(year) < Number(today().slice(0, 4))) {
+              logger.warn(
+                `${name}: the title says ${year}. Re-check the page's sources ` +
+                  `before changing the year — the year is what promises they are current.`,
+              );
+            }
+          }
+
           // --- Structure ----------------------------------------------------
           const h1s = html.match(/<h1[\s>]/g)?.length ?? 0;
           if (h1s !== 1) {
@@ -394,12 +450,17 @@ export function hqGuards(): AstroIntegration {
 
         // --- The listing, where it has to be --------------------------------
         // Named rather than inferred, because counting call-to-action blocks
-        // passes trivially on a page that lost its block altogether. These
-        // three: the home page (SPEC §3 puts the button on the first screen),
-        // /ynab-alternative (the page this site exists for), and /support
-        // (filed with Apple, and opened by people deciding whether to buy).
+        // passes trivially on a page that lost its block altogether. The home
+        // page (SPEC §3 puts the button on the first screen), /ynab-alternative
+        // (the page this site exists for), /support (filed with Apple, and
+        // opened by people deciding whether to buy), and every article.
         if (RELEASE.state === 'released' && RELEASE.appStoreUrl) {
-          for (const required of ['index.html', 'ynab-alternative.html', 'support.html']) {
+          // Articles too, from 14.09.2026: they are where search traffic
+          // lands, and until then not one of them led to the store.
+          const articles = pages
+            .map((page) => page.slice(root.length))
+            .filter((name) => name.startsWith('blog/'));
+          for (const required of ['index.html', 'ynab-alternative.html', 'support.html', ...articles]) {
             const path = join(root, required);
             if (!existsSync(path)) {
               problems.push(`${required} was not emitted.`);
