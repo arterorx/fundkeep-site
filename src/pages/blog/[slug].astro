@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { bestAlternativesCluster } from '../../i18n/pages';
 import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import AppStoreCta from '../../components/AppStoreCta.astro';
@@ -78,6 +79,12 @@ const schema = [
       ]
     : []),
 ];
+
+/* The ranked comparison exists in four languages; the other articles do not.
+   An article with no translation gets no hreflang, which is the right output
+   rather than a missing feature. */
+const alternates =
+  post.id === 'ynab-alternatives' ? bestAlternativesCluster() : [];
 ---
 
 <Base
@@ -85,6 +92,7 @@ const schema = [
   exactTitle={Boolean(seoTitle)}
   description={description}
   schema={schema}
+  alternates={alternates}
 >
   <!-- Read by the build guard, which warns when the facts in an article are a
        year past their last check. An article nobody has re-read does not break;

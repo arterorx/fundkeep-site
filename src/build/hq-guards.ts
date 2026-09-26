@@ -540,6 +540,15 @@ export function hqGuards(): AstroIntegration {
           for (const m of html.matchAll(
             /([a-zA-Z,;:])<(?:a|strong|code|em)[\s>]|<\/(?:a|strong|code|em)>([a-zA-Z])|<\/(?:a|span|strong|code|em)><a[\s>]/g,
           )) {
+            /* Japanese does not put spaces between words, so "高い。</strong>
+               Zeroed は" is correctly set with nothing between the tag and the
+               next word — the rule above is about English run-ons and has no
+               meaning across a CJK character. Checked on the text either side
+               of the match rather than on the page's language, so an English
+               sentence inside a Japanese page is still checked. */
+            const CJK = /[\u3000-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uff00-\uff9f]/;
+            const near = html.slice(Math.max(0, m.index - 2), m.index + m[0].length + 2);
+            if (CJK.test(near)) continue;
             const at = Math.max(0, m.index - 30);
             problems.push(
               `${name}: missing space around an inline element — ` +

@@ -17,6 +17,7 @@ import type { Locale } from './config';
 const en = {
   'nav.leaving': 'Leaving YNAB?',
   'nav.articles': 'Articles',
+  'nav.compare': 'Compared',
   'nav.support': 'Support',
   'nav.privacy': 'Privacy',
   skipLink: 'Skip to content',
@@ -35,6 +36,7 @@ export type UIKey = keyof typeof en;
 const de = {
   'nav.leaving': 'Weg von YNAB?',
   'nav.articles': 'Artikel',
+  'nav.compare': 'Vergleich',
   'nav.support': 'Hilfe',
   'nav.privacy': 'Datenschutz',
   skipLink: 'Zum Inhalt springen',
@@ -51,6 +53,7 @@ const de = {
 const fr = {
   'nav.leaving': 'Vous quittez YNAB ?',
   'nav.articles': 'Articles',
+  'nav.compare': 'Comparatif',
   'nav.support': 'Assistance',
   'nav.privacy': 'Confidentialité',
   skipLink: 'Aller au contenu',
@@ -67,6 +70,7 @@ const fr = {
 const ja = {
   'nav.leaving': 'YNABからの乗り換え',
   'nav.articles': '記事',
+  'nav.compare': '比較',
   'nav.support': 'サポート',
   'nav.privacy': 'プライバシー',
   skipLink: '本文へスキップ',

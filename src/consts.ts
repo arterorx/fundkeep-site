@@ -576,23 +576,63 @@ export interface MarketRival {
   name: string;
   price: string;
   url: string;
+  /** What that figure is, where the bare number would mislead. */
+  note?: { en: string; de: string; fr: string; ja: string };
 }
+
+/**
+ * MoneyCoach's outright price, which is the one a page about buying rather
+ * than subscribing has to print: Apple lists Lifetime Premium at 199,99 € on
+ * both European stores and ¥30,000 in Japan, beside a column of subscription
+ * prices and a free tier that is genuinely usable. The bare number without
+ * that sentence would read as the price of the app, and it is not.
+ */
+const MONEYCOACH_LIFETIME = {
+  en: 'Lifetime Premium; there is also a free tier and a subscription',
+  de: 'Lifetime Premium; daneben gibt es eine kostenlose Stufe und ein Abo',
+  fr: 'Lifetime Premium ; il existe aussi une offre gratuite et un abonnement',
+  ja: 'Lifetime Premium。無料の範囲とサブスクも別にあります',
+} as const;
 
 export const MARKET_RIVALS: Record<'en' | 'de' | 'fr' | 'ja', readonly MarketRival[]> = {
   en: [
     { name: 'Envy', price: '$6.99', url: 'https://apps.apple.com/us/app/id1569230951' },
     { name: 'Zeroed', price: '$19.99', url: 'https://apps.apple.com/us/app/id6804301133' },
+    {
+      name: 'MoneyCoach',
+      price: '$199.99',
+      url: 'https://apps.apple.com/us/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
   ],
   de: [
     { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/de/app/id1569230951' },
     { name: 'Zeroed', price: '22,99 €', url: 'https://apps.apple.com/de/app/id6804301133' },
+    {
+      name: 'MoneyCoach',
+      price: '199,99 €',
+      url: 'https://apps.apple.com/de/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
   ],
   fr: [
     { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/fr/app/id1569230951' },
+    {
+      name: 'MoneyCoach',
+      price: '199,99 €',
+      url: 'https://apps.apple.com/fr/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
   ],
   ja: [
     { name: 'Envy', price: '¥1,100', url: 'https://apps.apple.com/jp/app/id1569230951' },
     { name: 'Zeroed', price: '¥3,000', url: 'https://apps.apple.com/jp/app/id6804301133' },
+    {
+      name: 'MoneyCoach',
+      price: '¥30,000',
+      url: 'https://apps.apple.com/jp/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
   ],
 } as const;
 

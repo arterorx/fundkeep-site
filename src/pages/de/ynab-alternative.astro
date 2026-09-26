@@ -1,0 +1,175 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, RELEASE, SITE, TRIAL, YNAB } from '../../consts';
+import { BEST_ALTERNATIVES, BOUGHT_ONCE, leavingYnabCluster } from '../../i18n/pages';
+
+/**
+ * „YNAB Alternative“ auf Deutsch. Dieselben Argumente wie auf der englischen
+ * Seite, mit den Preisen des deutschen Stores: 119,00 € im Jahr gegen
+ * 44,99 € einmalig.
+ */
+
+const lang = 'de' as const;
+const m = MARKETS[lang];
+
+const title = `${YNAB.name}-Alternative für Mac, iPhone und iPad: einmal gekauft`;
+const description = `Auf dem Mac ist ${YNAB.name} ein Browser-Tab — laut ihrer eigenen Hilfeseite. ${SITE.name} ist eine echte Mac-App, ${m.full} einmalig statt ${m.ynabYear} im Jahr.`;
+
+const same = [
+  'Jeder Euro bekommt eine Aufgabe. Was hereinkommt, liegt in „Zuzuweisen“, bis alles irgendwo untergebracht ist.',
+  'Im Umschlag liegt, was übrig ist — nicht das, was du ausgeben wolltest.',
+  'Überziehst du einen Umschlag, sagt die App es und trägt den Rest so weiter, wie die Methode es vorsieht.',
+  'Kreditkarten schieben beim Ausgeben Geld in den Zahlungsumschlag der Karte, damit es vor der Abrechnung schon beiseite liegt.',
+  'Ein Monat ist ein Monat. Du wechselst zwischen ihnen, und jeder behält seine eigenen Zuweisungen.',
+];
+
+const different = [
+  {
+    title: 'Keine Bankverbindungen',
+    body: 'Das ist der große Punkt, und er ist Absicht, nicht Baustelle. Die App holt deine Umsätze nicht ab. Du tippst sie ein oder exportierst eine CSV-Datei aus dem Online-Banking und wählst diese Datei. Dafür gibt es keine Bankzugangsdaten herzugeben, keinen Dritten mit Lesezugriff auf deine Konten und nichts, was verloren gehen kann.',
+  },
+  {
+    title: 'Nur Apple-Geräte',
+    body: 'iPhone, iPad und Mac, keine Web-App. Wer vom Windows-Rechner in der Arbeit budgetiert, ist hier falsch.',
+  },
+  {
+    title: 'Einfachere Ziele als YNABs Targets',
+    body: 'Ein Umschlag bekommt ein Monatsziel: wie viel jeden Monat hinein soll und was noch fehlt. YNABs Targets können mehr (bis zu einem Datum, Auffüllen bis zu einem Betrag, wöchentlich); wer sich darauf stützt, spürt den Unterschied.',
+  },
+  {
+    title: 'Die Geräte einer Person',
+    body: 'Dein eigenes iPhone, iPad und dein Mac bleiben über deine private iCloud im Gleichstand. Ein Budget mit jemandem zu teilen, kann diese Version nicht.',
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/de/ynab-alternative`,
+    inLanguage: 'de',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={leavingYnabCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Weg von {YNAB.name}?</p>
+      <h1>Eine {YNAB.name}-Alternative für Mac, iPhone und iPad</h1>
+      <p class="lede">
+        <strong>{m.ynabYear} im Jahr oder {m.full} einmal.</strong> Die erste
+        Zahl kennst du — sie verlässt dein Konto jedes Jahr, ob du die App
+        geöffnet hast oder nicht. Hier steht, was die zweite daraus macht und
+        was sich auf dem Mac ändert.
+      </p>
+      <p class="small muted">
+        Beide Preise stammen aus dem deutschen App Store, gelesen am{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.de}</time>.
+        Nach gut vier Monaten Abo ist der Kaufpreis erreicht.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Auf dem Mac ist {YNAB.name} ein Browser-Tab</h2>
+      <p>
+        Das steht so bei {YNAB.name} selbst. Ihre Hilfeseite zur App schreibt,
+        es gebe keine herunterladbare Version für Laptop oder Desktop, und
+        empfiehlt Chrome- und Safari-Nutzern, die Seite als App zu installieren,
+        damit sie sich eher wie ein eigenständiges Programm anfühlt. Ihre
+        Übersicht der Apps nennt iPhone, Android und Apple Watch.
+      </p>
+      <p>
+        {SITE.name} auf dem Mac ist eine richtige Mac-App mit Menüleiste und
+        Tastaturkürzeln, nicht eine Telefon-App in einem Fenster. Für jemanden,
+        der am Schreibtisch budgetiert, ist das der ganze Unterschied.
+      </p>
+      <p class="small muted">
+        Bei den Alternativen läuft das auseinander: MoneyCoach hat eine
+        eigene Mac-App, Envy läuft auf dem Mac als iPad-App, Actual Budget im
+        Browser oder als Programm, Zeroed auf Macs mit Apple-Chip.{' '}
+        <a href={`/${lang}/${BEST_ALTERNATIVES[lang]}`}
+          >Der Vergleich sagt, wofür jede die richtige Wahl ist</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was gleich bleibt</h2>
+      <p>
+        Die Methode ist die Methode — sie ist älter als beide Apps, und{' '}
+        {SITE.name} hat keine schlaue Neudeutung davon.
+      </p>
+      <ul>
+        {same.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was wegfällt</h2>
+      <p>
+        Gut, das vor dem Bezahlen zu wissen — und gut zu wissen, dass wir es
+        gesagt haben, statt es dich herausfinden zu lassen.
+      </p>
+      {
+        different.map((item) => (
+          <p>
+            <strong>{item.title}.</strong> {item.body}
+          </p>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Wie das Budget herüberkommt</h2>
+      <p>
+        {SITE.name} liest den Export aus {YNAB.name} und baut Kategorien,
+        Konten und Verlauf nach. Bevor irgendetwas gespeichert wird, zeigt die
+        App jede Abweichung zwischen ihren Salden und denen aus {YNAB.name} —
+        du liest den Bericht und entscheidest dann. Was der Export aus{' '}
+        {YNAB.name} mitnimmt und was er zurücklässt, steht in unserer
+        englischen Anleitung: <a href="/blog/ynab-export-guide" hreflang="en" lang="en"
+          >the YNAB export guide</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>{m.full}, einmal</h2>
+      <p>
+        Die ersten {TRIAL.days} Tage kostenlos, danach {m.full} im deutschen
+        App Store — für diese Version der App, so lange du sie benutzt.{' '}
+        {SITE.name} läuft auf {RELEASE.platforms.replace('iPhone, iPad and Mac', 'iPhone, iPad und Mac')}.
+        {' '}<a href={`/${lang}/${BOUGHT_ONCE[lang]}`}
+          >Welche Budget-Apps es sonst noch ohne Abo gibt</a
+        >, steht daneben — samt der Fälle, in denen „einmalig“ jedes Jahr wieder
+        etwas kostet.
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>

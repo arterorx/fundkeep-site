@@ -1,0 +1,186 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, SITE, TRIAL, YNAB } from '../../consts';
+import { BEST_ALTERNATIVES, BOUGHT_ONCE, leavingYnabCluster } from '../../i18n/pages';
+
+/**
+ * 「YNAB から乗り換える」日本語版。日本のストア価格（¥15,000／年 対
+ * ¥6,000 買い切り）と、日本では銀行連携が対象外という事実を前に出す。
+ */
+
+const lang = 'ja' as const;
+const m = MARKETS[lang];
+
+const title = `${YNAB.name} から乗り換えるなら：Mac・iPhone・iPad で買い切り`;
+const description = `Mac では ${YNAB.name} はブラウザのタブです（同社のヘルプによる）。${SITE.name} は本物の Mac アプリで、${m.ynabYear}／年ではなく ${m.full} の買い切り。`;
+
+const same = [
+  'すべてのお金に役割を。入ってきたお金は、行き先が全部決まるまで「未割り当て」に置かれます。',
+  '封筒に入っているのは残っている額で、使うつもりだった額ではありません。',
+  '封筒を使いすぎればアプリがそう言い、方法どおりに残りを翌月へ運びます。',
+  'クレジットカードで使うと、その分がカードの支払い用封筒へ移ります。請求が届く前に取り分けられます。',
+  '1か月は1か月。行き来しても、それぞれの月が自分の割り当てを保ちます。',
+];
+
+const different = [
+  {
+    title: '銀行接続はありません',
+    body: 'ここが一番大きな違いで、未完成ではなく意図です。明細を取りに行くことはしません。自分で入力するか、銀行から CSV を書き出して選びます。その代わり、渡す銀行ログインがなく、口座を読める第三者もおらず、漏れるものもありません。',
+  },
+  {
+    title: 'Apple のデバイスだけ',
+    body: 'iPhone・iPad・Mac のみで、Web 版はありません。職場の Windows で家計を見るなら、このアプリではありません。',
+  },
+  {
+    title: 'YNAB の targets より単純な目標',
+    body: '封筒には毎月の目標を置けます。毎月いくら入れるか、あと何が足りないか。YNAB の targets はもっと多くのことができます（期日まで、いくらまで補充、毎週）。そこに頼っているなら、これは実際の差です。',
+  },
+  {
+    title: '一人分のデバイス',
+    body: '自分の iPhone・iPad・Mac は自分の iCloud を通じて揃います。他の人と家計を共有する機能はこの版にはありません。',
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/ja/ynab-kara-norikae`,
+    inLanguage: 'ja',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={leavingYnabCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">{YNAB.name} からの乗り換え</p>
+      <h1>{YNAB.name} から乗り換えるなら</h1>
+      <p class="lede">
+        <strong>{m.ynabYear}／年か、{m.full} を一度か。</strong>
+        最初の数字はご存じのとおりです。アプリを開いても開かなくても、毎年
+        口座から出ていきます。二つ目の数字がそれをどう変えるか、そして Mac で
+        何が変わるかを書きます。
+      </p>
+      <p class="small muted">
+        どちらの価格も日本の App Store から、
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+        に読み取りました。年額なら、およそ5か月分で買い切りの金額に並びます。
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>日本で使うなら、銀行連携は理由になりません</h2>
+      <p>
+        {YNAB.name} の直接取り込みが対象にしているのは、米国・カナダ・英国・
+        EU の一部の銀行です。日本の銀行はその中にありません。つまりサブスクの
+        いちばん大きな見返りが、日本では受け取れないことになります。入力するか
+        CSV を読み込むかは、どちらのアプリでも同じ作業です。
+      </p>
+      <p>
+        そうであれば、残るのは金額の話です。毎年払い続けるのか、一度で終える
+        のか。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Mac では {YNAB.name} はブラウザのタブです</h2>
+      <p>
+        これは {YNAB.name} 自身がそう書いています。アプリについてのヘルプ
+        ページには、ノートやデスクトップ向けのダウンロード版は存在しないと
+        あり、Chrome や Safari の利用者にはページをアプリとしてインストール
+        すれば単体のソフトに近く感じられる、と案内しています。同社のアプリ
+        一覧に挙がっているのは iPhone、Android、Apple Watch です。
+      </p>
+      <p>
+        {SITE.name} の Mac 版は、メニューバーとキーボードショートカットを
+        持つ本物の Mac アプリで、ウインドウに入れた電話アプリではありません。
+        机の上で家計を見る人にとっては、これが違いのすべてです。
+      </p>
+      <p class="small muted">
+        代替アプリごとに事情は違います。MoneyCoach には専用の Mac アプリが
+        あり、Envy は Mac では iPad アプリとして動き、Actual Budget は
+        ブラウザかソフトとして動きます。
+        <a href={`/${lang}/${BEST_ALTERNATIVES[lang]}`}>比較ページ</a>
+        に、どれが誰に向くかを書いています。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>同じままのもの</h2>
+      <p>
+        方法そのものは変わりません。どちらのアプリよりも古い方法で、
+        {SITE.name} が気の利いた再解釈を持ち込むこともありません。
+      </p>
+      <ul>
+        {same.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>なくなるもの</h2>
+      <p>
+        お金を払う前に知っておくべきことです。そして、あとで気づくのではなく
+        こちらから言ったという事実も。
+      </p>
+      {
+        different.map((item) => (
+          <p>
+            <strong>{item.title}。</strong>
+            {item.body}
+          </p>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>家計の運び方</h2>
+      <p>
+        {SITE.name} は {YNAB.name} の書き出しファイルを読み、カテゴリ・口座・
+        履歴を作り直します。保存する前に、自分の残高と {YNAB.name} の残高の差
+        をすべて表示します。レポートを読んでから決められます。書き出しが何を
+        持ち出し、何を置いていくかは英語のガイドにまとめています：
+        <a href="/blog/ynab-export-guide" hreflang="en" lang="en"
+          >the YNAB export guide</a
+        >。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>{m.full}、一度だけ</h2>
+      <p>
+        最初の{TRIAL.days}日間は無料、そのあとは日本の App Store で {m.full}。
+        使い続けるかぎり、この版のアプリに対してその一度きりです。
+        <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}>買い切りの家計簿アプリ一覧</a>
+        も隣にあります。「買い切り」が毎年の出費になっている例も含めて。
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>

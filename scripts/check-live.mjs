@@ -50,6 +50,12 @@ const PAGES = [
   ['/fr/application-budget-sans-abonnement', 'fr/application-budget-sans-abonnement.html'],
   ['/ja', 'ja.html'],
   ['/ja/kakeibo-apuri-kaikiri', 'ja/kakeibo-apuri-kaikiri.html'],
+  ['/de/ynab-alternative', 'de/ynab-alternative.html'],
+  ['/de/beste-ynab-alternativen', 'de/beste-ynab-alternativen.html'],
+  ['/fr/alternative-ynab', 'fr/alternative-ynab.html'],
+  ['/fr/meilleures-alternatives-ynab', 'fr/meilleures-alternatives-ynab.html'],
+  ['/ja/ynab-kara-norikae', 'ja/ynab-kara-norikae.html'],
+  ['/ja/ynab-daitai-apuri', 'ja/ynab-daitai-apuri.html'],
 ];
 
 /** Apple's badge, in each language the site publishes. */

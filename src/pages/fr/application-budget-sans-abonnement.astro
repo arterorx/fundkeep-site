@@ -74,6 +74,7 @@ const schema = [
           rivals.map((rival) => (
             <li>
               <a href={rival.url}>{rival.name}</a> — {rival.price} une fois.
+              {rival.note && <span class="muted">{rival.note.fr}</span>}
             </li>
           ))
         }

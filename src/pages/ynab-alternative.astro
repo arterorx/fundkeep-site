@@ -10,6 +10,7 @@ import {
   YNAB,
   monthsCovered,
 } from '../consts';
+import { leavingYnabCluster } from '../i18n/pages';
 
 /**
  * The page SPEC §4 says the site exists for.
@@ -102,7 +103,13 @@ const different = [
 ];
 ---
 
-<Base title={title} exactTitle description={description} schema={schema}>
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  alternates={leavingYnabCluster()}
+>
 
   <!-- ------------------------------------------------- Their arithmetic -->
   <section class="section wrap">

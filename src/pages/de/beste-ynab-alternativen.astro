@@ -1,0 +1,289 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  MARKET_RIVALS,
+  SITE,
+  TRIAL,
+  YNAB,
+} from '../../consts';
+import { bestAlternativesCluster, BOUGHT_ONCE, LEAVING_YNAB } from '../../i18n/pages';
+
+/**
+ * Die Rangliste auf Deutsch. Keine Übersetzung der englischen Fassung,
+ * sondern dieselbe Recherche mit deutschen Store-Preisen: Envy 7,99 €,
+ * Zeroed 22,99 €, MoneyCoach 199,99 € einmalig, YNAB 119,00 € im Jahr.
+ */
+
+const lang = 'de' as const;
+const m = MARKETS[lang];
+const priceOf = (name: string) =>
+  MARKET_RIVALS[lang].find((rival) => rival.name === name)!;
+const envy = priceOf('Envy');
+const zeroed = priceOf('Zeroed');
+const moneycoach = priceOf('MoneyCoach');
+
+const title = 'Die besten YNAB-Alternativen für iPhone, iPad und Mac (2026)';
+const description = `Fünf Alternativen, unsere zuerst und offen gesagt: was jede kostet, für wen sie taugt, wo wir die falsche Antwort sind. Preise vom ${MARKETS_CHECKED.display.de}.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'de',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/de/beste-ynab-alternativen`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={bestAlternativesCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Vergleich</p>
+      <h1>Die besten {YNAB.name}-Alternativen auf Apple-Geräten</h1>
+      <p class="lede">
+        {SITE.name} ist unsere App und steht hier an erster Stelle — lies die
+        Liste entsprechend. Jeder Preis und jede Plattform unten stammt von der
+        Seite des Herstellers oder aus Apples Eintrag, gelesen am{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.de}</time>,
+        in den Preisen des deutschen Stores.
+      </p>
+      <p class="small muted">
+        Eine Rangliste von jemandem, der eine der Apps verkauft, ist nichts
+        wert, solange die anderen nicht ihren echten Fall bekommen. Deshalb hat
+        hier jede App einen Fall, in dem sie uns schlägt — und unsere sagt, wo
+        sie verliert.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>1. {SITE.name} — für die Methode auf iPhone, iPad und Mac</h2>
+      <p>
+        Unsere. Die Umschlagmethode so, wie {YNAB.name} sie lehrt: Geld bekommt
+        eine Aufgabe, bevor es ausgegeben wird, und im Umschlag liegt das, was
+        übrig ist, nicht das, was man gehofft hatte. Auf iPhone, iPad und Mac,{' '}
+        <strong>{m.full} einmalig</strong> statt im Abo. Die App liest einen{' '}
+        {YNAB.name}-Export, baut Kategorien, Konten und Verlauf nach und zeigt
+        jede Abweichung zwischen ihren Salden und denen aus {YNAB.name}, bevor
+        irgendetwas gespeichert wird. Eine Bankverbindung gibt es überhaupt
+        nicht: du tippst Ausgaben ein oder importierst die CSV-Datei deiner
+        Bank. Jeder Umschlag kann ein Monatsziel bekommen, und Eingetragenes
+        bleibt dauerhaft sichtbar, weil die App gekauft und nicht gemietet ist.
+      </p>
+      <p><strong>Wo sie verliert, und das ist nicht wenig:</strong></p>
+      <ul>
+        <li>
+          <strong>Teurer als die anderen Käufe hier.</strong> {zeroed.name}{' '}
+          kostet mit {zeroed.price} rund die Hälfte, {envy.name} mit{' '}
+          {envy.price} einen Bruchteil.
+        </li>
+        <li>
+          <strong>Nur Apple.</strong> Kein Android, kein Windows, kein Web. Ein
+          gemischter Haushalt entscheidet sich allein an dieser Zeile gegen uns.
+        </li>
+        <li>
+          <strong>Ein Budget für eine Person.</strong> Es gleicht sich über die
+          eigene iCloud zwischen den eigenen Geräten ab; ein Budget mit dem
+          Partner teilen kann diese Version nicht, {YNAB.name} kann es.
+        </li>
+        <li>
+          <strong>{TRIAL.days} Tage Testzeit.</strong> {zeroed.name} gibt 34,
+          {' '}{YNAB.name} auf der eigenen Seite ebenfalls 34.
+        </li>
+        <li>
+          <strong>Nie eine Bankverbindung.</strong> Wenn der automatische
+          Import genau das ist, wofür du bezahlst, sind wir die falsche
+          Antwort, und kein Datenschutzargument ändert daran etwas.
+        </li>
+      </ul>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>2. {zeroed.name} — wenn auch Windows oder Android im Haus ist</h2>
+      <p>
+        <a href={zeroed.url}>{zeroed.name}</a> ist unser eigenes Argument,
+        vorgetragen von jemand anderem: offline, einmal bezahlen, kein Abo,
+        Datenschutz als Überschrift. Seit dem 14. September 2026 im App Store
+        für iPhone, iPad und Macs mit Apple-Chip, außerdem bei Google Play, im
+        Microsoft Store und als Direkt-Download für Mac und Windows — ein Kauf
+        deckt alles ab, im deutschen Store {zeroed.price}. Kontoauszüge kommen
+        als CSV oder PDF herein statt über eine Bankverbindung, und die Lizenz
+        reist über die eigene Google-Drive.
+      </p>
+      <p>
+        Für einen Haushalt, der nicht komplett aus Apple besteht, ist das die
+        Antwort — und mit dem Gründerpreis bis Februar 2027 unterbietet sie uns
+        deutlich. Zwei Dinge zum Abwägen: danach steigt der Preis auf das, was
+        wir heute nehmen, und der Lizenzschlüssel in Google Drive ist ein
+        Dritter in einer Geschichte, in der es keinen geben soll.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>3. Actual Budget — wenn du es selbst betreiben willst</h2>
+      <p>
+        <a href="https://actualbudget.org">Actual Budget</a> ist kostenlos und
+        quelloffen und außer unserer die einzige App hier, die {YNAB.name}s
+        eigene Exportformate beim Namen nennt: die Projektseite wirbt mit
+        eingebauten Importern für YNAB4 und nYNAB, die den Verlauf mitnehmen.
+        Es läuft auf Windows, macOS, Linux und im Browser, und die
+        Bankverbindung ist optional — aus, bis du sie mit einem eigenen
+        Anbieter einrichtest.
+      </p>
+      <p>
+        Der Preis von kostenlos: Abgleich zwischen deinen Geräten heißt, einen
+        Server zu betreiben — einen eigenen oder einen bezahlten Hoster. Wenn
+        dieser Satz nach einem Wochenende klingt und nicht nach einer Last,
+        wird dich hier nichts besser bedienen, und es kostet dich nichts.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>4. {envy.name} — wenn es die günstigste Freischaltung sein soll</h2>
+      <p>
+        <a href={envy.url}>{envy.name}</a> ist die Umschlagidee auf iPhone und
+        iPad, kostenlos zum Laden mit einem einzigen In-App-Kauf namens Envy
+        All Access, im deutschen Store {envy.price}. Die App verbindet sich nie
+        mit einer Bank — der Entwickler schreibt es selbst — und gleicht über
+        iCloud zwischen den eigenen Geräten ab.
+      </p>
+      <p>
+        Wir verlangen ein Vielfaches davon für etwas, das von außen dieselbe
+        Aufgabe erledigt. Unser Fall sind die Mac-App, die {YNAB.name}-Migration
+        mit einem Abgleichbericht, den du liest, bevor etwas gespeichert wird,
+        und kein fremder Code in der App. Ob das den Unterschied wert ist,
+        entscheidest ehrlich gesagt du — und unsere {TRIAL.days} Tage sind
+        genau dafür kostenlos.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>5. {moneycoach.name} — wenn Bankabgleich in Europa gewünscht ist</h2>
+      <p>
+        <a href={moneycoach.url}>{moneycoach.name}</a> ist der polierteste
+        Apple-Bürger dieser Liste: iPhone, iPad, Mac und Apple Watch, mit
+        Jahren Arbeit dahinter. Die meistgenutzten Funktionen sind kostenlos,
+        darüber liegt ein Premium-Abo — Apples Eintrag zeigt dafür mehrere
+        verschiedene Preise und daneben Lifetime Premium zu{' '}
+        {moneycoach.price}. Die Bankverbindung ist optional, nur mit Premium zu
+        haben und deckt europäische Banken ab; britische Banken werden nicht
+        unterstützt.
+      </p>
+      <p>
+        Wenn die Umsätze von allein kommen sollen und deine Bank in Europa
+        sitzt, ist das die App auf dieser Seite, die es tut. Sie ist zugleich
+        die einzige hier, die ein Abo verlangt statt eines Kaufs — also genau
+        das, wovor die meisten {YNAB.name} verlassen.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>6. {YNAB.name} — wenn du für Bankabgleich und Teilen bezahlst</h2>
+      <p>
+        Das gehört ausgesprochen: Bleiben ist eine echte Option. {YNAB.name}{' '}
+        kostet im deutschen App Store {m.ynabYear} im Jahr oder {m.ynabMonth} im
+        Monat. Dafür bekommst du direkten Import von ausgewählten Banken in den
+        USA, Kanada, Großbritannien und der EU, Ziele mit Terminen und
+        Nachfüllregeln und ein Abo für bis zu sechs Personen. Keine der Apps
+        oben kann alle drei Dinge.
+      </p>
+      <p>
+        Wenn du gehst, weil die Methode nicht mehr passt, hilft diese Liste
+        nicht. Wenn du wegen der Jahresrechnung gehst, wegen der Bankverbindung
+        oder wegen beidem, sind die Zeilen oben der Tausch, den du machst.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Wie du wählst</h2>
+      <ul>
+        <li>
+          <strong>Alles bei dir ist Apple, und du willst die Methode, einmal
+          bezahlt.</strong> Dafür wurde {SITE.name} gebaut. Nimm zuerst die{' '}
+          {TRIAL.days} Tage, und sieh dir{' '}
+          <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}>die Apps ohne Abo</a> an,
+          wenn es dir vor allem um das Bezahlmodell geht.
+        </li>
+        <li>
+          <strong>Jemand im Haus nutzt Windows oder Android.</strong>{' '}
+          {zeroed.name}, und bis Februar 2027 günstiger.
+        </li>
+        <li>
+          <strong>Du zahlst lieber nichts und betreibst gern einen
+          Server.</strong> Actual Budget, das auch deinen {YNAB.name}-Export liest.
+        </li>
+        <li>
+          <strong>Es soll die kleinstmögliche Rechnung auf dem iPhone
+          sein.</strong> Die eine Freischaltung von {envy.name}.
+        </li>
+        <li>
+          <strong>Umsätze sollen von allein kommen, und du bankst in
+          Europa.</strong> {moneycoach.name} Premium.
+        </li>
+        <li>
+          <strong>Sie sollen anderswo von allein kommen, und das Budget soll
+          geteilt werden.</strong> Bleib bei {YNAB.name}. Nichts auf dieser
+          Seite ersetzt das.
+        </li>
+      </ul>
+      <p>
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >Was der Wechsel von {YNAB.name} konkret bedeutet</a
+        > — was gleich bleibt, was wegfällt und wie das Budget herüberkommt.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Wie diese Zahlen geprüft wurden</h2>
+      <p>
+        Jeder Preis stammt von der Seite des Herstellers oder aus Apples
+        eigenem Eintrag, gelesen am {MARKETS_CHECKED.display.de} — nie von
+        einer Testseite und nie aus unseren Notizen. Apple setzt Preise je
+        Region: hier stehen die des deutschen Stores, nicht umgerechnete
+        amerikanische. Wo sich eine Zahl nicht aus erster Hand bestätigen ließ,
+        steht keine.
+      </p>
+      <p class="small muted">
+        Bei der Prüfung fiel unser eigener Fehler auf: Wir hatten behauptet,
+        {' '}{zeroed.name} sei nicht im App Store — Apples Suche gibt die App
+        für das Wort „zeroed“ nicht zurück, der Link auf ihrer eigenen Seite
+        schon.
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>

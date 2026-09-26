@@ -1,0 +1,281 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  MARKET_RIVALS,
+  SITE,
+  TRIAL,
+  YNAB,
+} from '../../consts';
+import { bestAlternativesCluster, BOUGHT_ONCE, LEAVING_YNAB } from '../../i18n/pages';
+
+/**
+ * 日本語の比較。ここだけは結論が他言語と変わる：YNAB の銀行連携は米・加・英・
+ * EU の銀行が対象で、MoneyCoach の連携は欧州の銀行。つまり日本の読者にとって、
+ * サブスクの主な理由がそもそも効かない。英語版を訳すとこの事実が抜け落ちる。
+ */
+
+const lang = 'ja' as const;
+const m = MARKETS[lang];
+const priceOf = (name: string) =>
+  MARKET_RIVALS[lang].find((rival) => rival.name === name)!;
+const envy = priceOf('Envy');
+const zeroed = priceOf('Zeroed');
+const moneycoach = priceOf('MoneyCoach');
+
+const title = 'YNAB の代替アプリ：iPhone・iPad・Mac で使える5つ（2026年）';
+const description = `自社のアプリを1番目に置いた比較です。価格、向いている人、そして私たちが答えにならない場合。${MARKETS_CHECKED.display.ja}に日本の App Store で確認。`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'ja',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/ja/ynab-daitai-apuri`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={bestAlternativesCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">比較</p>
+      <h1>{YNAB.name} の代替になる封筒家計簿アプリ</h1>
+      <p class="lede">
+        {SITE.name} は私たちのアプリで、この一覧の1番目にあります。そのつもりで
+        読んでください。価格と対応機種はすべて、開発元のページか Apple の掲載
+        から、<time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+        に日本の App Store の価格で読み取ったものです。
+      </p>
+      <p class="small muted">
+        並んでいるアプリの一つを売っている側が書いた順位は、他のアプリに本当の
+        出番を与えないかぎり何の価値もありません。ですからどのアプリにも「ここ
+        では私たちより良い」という場面を書き、私たちの項目には負ける場所を
+        書いています。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>日本の読者へ、先に一つ</h2>
+      <p>
+        {YNAB.name} の直接取り込みの対象は、米国・カナダ・英国・EU の一部の銀行
+        です。その一覧に日本の銀行はありません。{moneycoach.name} の銀行連携も
+        欧州の銀行が対象です。つまり日本で使う場合、サブスクリプションの最大の
+        理由——明細が勝手に入ってくること——はそもそも働きません。手で入力するか
+        CSV を読み込むかは、どのアプリを選んでも同じになります。
+      </p>
+      <p>
+        だとすれば残る問いは「毎年払い続けるか、一度で終わらせるか」です。
+        この比較はそこを見ています。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>1. {SITE.name} — iPhone・iPad・Mac で封筒式を続けるなら</h2>
+      <p>
+        私たちのアプリです。{YNAB.name} が教える通りの封筒式——お金は使われる前
+        に役割をもらい、封筒には「期待した額」ではなく「実際に残っている額」が
+        入ります。iPhone・iPad・Mac で、サブスクではなく
+        <strong>{m.full} の買い切り</strong>。{YNAB.name} の書き出しファイルを
+        読み、カテゴリ・口座・履歴を作り直したうえで、保存する前に残高の差を
+        すべて表示します。銀行接続は一切ありません。封筒ごとに毎月の目標を
+        置けて、入力したものは買い切りだからこそ消えずに残ります。
+      </p>
+      <p><strong>負けるところ。小さくありません：</strong></p>
+      <ul>
+        <li>
+          <strong>ここにある買い切りの中では高い。</strong>{zeroed.name} は{' '}
+          {zeroed.price}、{envy.name} は {envy.price} です。
+        </li>
+        <li>
+          <strong>Apple だけ。</strong>Android も Windows も Web もありません。
+          家族に Android の人がいるなら、この一行だけで選から外れます。
+        </li>
+        <li>
+          <strong>一人分の家計。</strong>自分の iCloud を通じて自分の端末どうし
+          で揃いますが、家族と家計を共有する機能はこの版にはありません。
+          {YNAB.name} にはあります。
+        </li>
+        <li>
+          <strong>体験は{TRIAL.days}日間。</strong>{zeroed.name} は34日、
+          {YNAB.name} も自社サイトで34日です。
+        </li>
+        <li>
+          <strong>銀行にはつながりません。</strong>自動取り込みのためにお金を
+          払うつもりなら、私たちは答えではありません。
+        </li>
+      </ul>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>2. {zeroed.name} — Windows や Android も使うなら</h2>
+      <p>
+        <a href={zeroed.url}>{zeroed.name}</a> は、私たちと同じ主張を別の会社が
+        しているアプリです。オフライン、買い切り、サブスクなし、前面に
+        プライバシー。2026年9月14日から App Store にあり（iPhone・iPad・Apple
+        シリコンの Mac）、Google Play、Microsoft Store、Mac と Windows 向けの
+        直接ダウンロードでも配布されています。日本のストアでは {zeroed.price}。
+        取り込みは CSV と PDF の明細で、ライセンスは自分の Google ドライブを
+        通ります。
+      </p>
+      <p>
+        Apple だけで揃っていない家庭にはこれが答えで、2027年2月までの創業価格の
+        あいだは私たちよりかなり安いままです。見るべき点は二つ。その後の値上げ
+        で私たちの現在価格に並ぶこと、そして「第三者はいない」という話の中で
+        ライセンスキーが Google ドライブにあることです。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>3. Actual Budget — 自分で動かせるなら</h2>
+      <p>
+        <a href="https://actualbudget.org">Actual Budget</a> は無料でオープン
+        ソースです。私たちのほかに、{YNAB.name} の書き出し形式を名指ししている
+        唯一のアプリでもあります。プロジェクトのサイトは YNAB4 と nYNAB の
+        取り込み機能を掲げ、履歴を保ったまま読み込めるとしています。Windows、
+        macOS、Linux、ブラウザで動き、銀行接続は任意です。
+      </p>
+      <p>
+        無料の代価は、端末どうしを揃えるにはサーバーが要るということです。自分
+        で立てるか、有料のホスティングを使うか。その一文が面倒ではなく週末の
+        楽しみに聞こえるなら、ここで一番良い選択で、しかも費用はかかりません。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>4. {envy.name} — いちばん安く済ませるなら</h2>
+      <p>
+        <a href={envy.url}>{envy.name}</a> は iPhone と iPad 向けの封筒式で、
+        ダウンロードは無料、Envy All Access というアプリ内課金が一つだけ。
+        日本のストアでは {envy.price} です。銀行には決してつながらないと開発元
+        自身が書いており、同期は iCloud で自分の端末どうしの間だけです。
+      </p>
+      <p>
+        外から見れば同じ仕事をするものに、私たちはその何倍かを請求しています。
+        こちらの言い分は、Mac アプリであること、保存前に読める照合レポート付き
+        の {YNAB.name} 移行、そしてアプリの中に他社のコードが一行もないこと。
+        その差額に見合うかどうかは正直あなたの判断で、{TRIAL.days}日間が無料な
+        のはまさにそのためです。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>5. {moneycoach.name} — Apple らしさで選ぶなら</h2>
+      <p>
+        <a href={moneycoach.url}>{moneycoach.name}</a> はこの一覧でもっとも
+        Apple らしく作り込まれています。iPhone・iPad・Mac・Apple Watch に対応し、
+        よく使う機能は無料、その上に Premium のサブスクがあります。Apple の掲載
+        には複数の価格が並び、その横に Lifetime Premium が {moneycoach.price}。
+        銀行連携は任意で Premium 限定、対象は欧州の銀行です（英国の銀行は
+        対象外）。
+      </p>
+      <p>
+        日本の銀行はその対象に含まれないため、日本で使うなら連携は選ぶ理由に
+        なりません。それでも、Apple Watch まで含めた作り込みを重視するなら、
+        この一覧で最も完成度が高いのはこのアプリです。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>6. {YNAB.name} — 共有と銀行連携にお金を払うなら</h2>
+      <p>
+        はっきり書いておきます。残るのも本当の選択肢です。日本の App Store で{' '}
+        {YNAB.name} は {m.ynabYear}／年、または {m.ynabMonth}／月。その対価は、
+        米国・カナダ・英国・EU の一部銀行からの直接取り込み、期日と補充ルールを
+        持つ目標、そして最大6人をカバーする1つの契約です。上のどのアプリも
+        三つ全部はできません。
+      </p>
+      <p>
+        方法そのものが合わなくなって離れるのなら、この一覧は助けになりません。
+        毎年の請求、あるいは銀行連携（日本では働かない機能）のために離れるの
+        なら、上の行があなたの選ぶ交換条件です。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>選び方</h2>
+      <ul>
+        <li>
+          <strong>手元がすべて Apple で、方法を買い切りで使いたい。</strong>{' '}
+          {SITE.name} はそのために作りました。まず{TRIAL.days}日間を使い、
+          支払い方で選ぶなら
+          <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}>買い切りのアプリ一覧</a>
+          も見てください。
+        </li>
+        <li>
+          <strong>家に Windows か Android の人がいる。</strong>{zeroed.name}。
+          2027年2月までは価格でも上です。
+        </li>
+        <li>
+          <strong>お金は払わず、サーバーを動かす手間は構わない。</strong>{' '}
+          Actual Budget。{YNAB.name} の書き出しも読みます。
+        </li>
+        <li>
+          <strong>iPhone で出費を最小にしたい。</strong>{envy.name} の一度の
+          課金。
+        </li>
+        <li>
+          <strong>Apple Watch まで含めた作り込みを重視する。</strong>{' '}
+          {moneycoach.name}。
+        </li>
+        <li>
+          <strong>家計を家族と共有したい。</strong>{YNAB.name} に残る。この
+          ページのどれもその代わりにはなりません。
+        </li>
+      </ul>
+      <p>
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >{YNAB.name} から移るとき、実際に何が起きるか</a
+        >——同じままのもの、なくなるもの、家計の運び方。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>この数字の確かめ方</h2>
+      <p>
+        価格はすべて、開発元自身のページか Apple 自身の掲載から、
+        {MARKETS_CHECKED.display.ja}に読み取りました。レビューサイトや自分たちの
+        メモからは取っていません。Apple は地域ごとに価格を決めるため、ここに
+        あるのは日本のストアの価格で、米ドルの換算ではありません。一次情報で
+        確かめられなかった数字は、書いていません。
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>

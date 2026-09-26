@@ -1,6 +1,7 @@
 ---
 import { SITE } from '../consts';
 import { DEFAULT_LOCALE, localePath, type Locale } from '../i18n/config';
+import { BEST_ALTERNATIVES, LEAVING_YNAB } from '../i18n/pages';
 import { t } from '../i18n/ui';
 import BrandMark from './BrandMark.astro';
 
@@ -30,6 +31,8 @@ const links =
         { href: '/privacy', label: ui('nav.privacy') },
       ]
     : [
+        { href: `/${lang}/${LEAVING_YNAB[lang]}`, label: ui('nav.leaving') },
+        { href: `/${lang}/${BEST_ALTERNATIVES[lang]}`, label: ui('nav.compare') },
         // Support and Privacy are written in English and are not translated
         // yet. They keep their English labels and are marked as English, so a
         // screen reader does not read them in the page's language and nobody

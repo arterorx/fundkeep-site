@@ -72,6 +72,7 @@ const schema = [
           rivals.map((rival) => (
             <li>
               <a href={rival.url}>{rival.name}</a> — {rival.price} の買い切り。
+              {rival.note && <span class="muted">{rival.note.ja}</span>}
             </li>
           ))
         }

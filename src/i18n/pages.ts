@@ -26,7 +26,29 @@ export const BOUGHT_ONCE = {
   ja: 'kakeibo-apuri-kaikiri',
 } as const;
 
+/**
+ * "I am leaving YNAB, what do I use." The English page leads with the Mac,
+ * because that is the query it can win; the translations lead with the same
+ * argument in the words their own market uses.
+ */
+export const LEAVING_YNAB = {
+  en: 'ynab-alternative',
+  de: 'ynab-alternative',
+  fr: 'alternative-ynab',
+  ja: 'ynab-kara-norikae',
+} as const;
+
+/** The ranked comparison. English lives in the blog; the others stand alone. */
+export const BEST_ALTERNATIVES = {
+  en: 'blog/ynab-alternatives',
+  de: 'beste-ynab-alternativen',
+  fr: 'meilleures-alternatives-ynab',
+  ja: 'ynab-daitai-apuri',
+} as const;
+
 export const homeCluster = () => clusterFor(HOME);
+export const leavingYnabCluster = () => clusterFor(LEAVING_YNAB);
+export const bestAlternativesCluster = () => clusterFor(BEST_ALTERNATIVES);
 export const boughtOnceCluster = () => clusterFor(BOUGHT_ONCE);
 
 /** The path of a page in one language, for linking between them. */
