@@ -282,13 +282,210 @@ export const YNAB_PRICE_HISTORY: readonly YnabPriceRow[] = [
 ] as const;
 
 /** How the site writes money. One formatter, so nothing rounds differently. */
-export const money = (amount: number): string =>
-  amount.toLocaleString('en-US', {
-    style: 'currency',
+/**
+ * What this app and YNAB actually cost on each storefront the site is
+ * published in.
+ *
+ * WHY THESE ARE NOT CONVERTED. Apple does not convert; it sets a price per
+ * region, and the numbers are not a translation of the American one — the app
+ * is $39.99 in the United States and 44,99 € in Germany, and YNAB is $109 a
+ * year there and 119,00 € here. A German page that printed "$39.99" would
+ * be wrong twice: it is not the price, and it is not the currency the reader
+ * is charged in. Every figure below was read on the storefront itself, in the
+ * App Store's own listing, on 26.09.2026:
+ *
+ *   ours     apps.apple.com/{us,de,fr,jp}/app/id6801904284 → "Fundkeep Full"
+ *   YNAB     apps.apple.com/{us,de,fr,jp}/app/id1010865877 → "YNAB Subscription"
+ *
+ * Apple shows the two YNAB amounts without a period against them. They are
+ * named here as the year and the month because the American pair, $109.00 and
+ * $14.99, is exactly what ynab.com/pricing publishes as annual and monthly —
+ * the same two products, priced per region.
+ *
+ * A price that moves is one line here, and `src/build/hq-guards.ts` fails any
+ * page printing a money amount that is not in this file.
+ */
+export interface Market {
+  /** What one purchase costs on this storefront. */
+  full: string;
+  /** What YNAB charges there, as the App Store lists it. */
+  ynabYear: string;
+  ynabMonth: string;
+  /** The storefront the figures were read on. */
+  storeUrl: string;
+  /**
+   * The same three figures as numbers, for the calculator's arithmetic, plus
+   * how to format the result. Kept beside the strings rather than parsed out
+   * of them: "44,99 €" and "¥6,000" need two different parsers, and a parser
+   * that is wrong prints a wrong price rather than failing.
+   */
+  fullAmount: number;
+  ynabAnnual: number;
+  ynabMonthly: number;
+  currency: 'USD' | 'EUR' | 'JPY';
+  /** The locale Intl formats in — decimal comma, symbol placement, spacing. */
+  intl: string;
+}
+
+export const MARKETS: Record<'en' | 'de' | 'fr' | 'ja', Market> = {
+  en: {
+    full: '$39.99',
+    ynabYear: '$109',
+    ynabMonth: '$14.99',
+    storeUrl: 'https://apps.apple.com/us/app/id6801904284',
+    fullAmount: 39.99,
+    ynabAnnual: 109,
+    ynabMonthly: 14.99,
     currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    intl: 'en-US',
+  },
+  de: {
+    full: '44,99 €',
+    ynabYear: '119,00 €',
+    ynabMonth: '15,49 €',
+    storeUrl: 'https://apps.apple.com/de/app/id6801904284',
+    fullAmount: 44.99,
+    ynabAnnual: 119,
+    ynabMonthly: 15.49,
+    currency: 'EUR',
+    intl: 'de-DE',
+  },
+  fr: {
+    full: '44,99 €',
+    ynabYear: '119,00 €',
+    ynabMonth: '15,49 €',
+    storeUrl: 'https://apps.apple.com/fr/app/id6801904284',
+    fullAmount: 44.99,
+    ynabAnnual: 119,
+    ynabMonthly: 15.49,
+    currency: 'EUR',
+    intl: 'fr-FR',
+  },
+  ja: {
+    full: '¥6,000',
+    ynabYear: '¥15,000',
+    ynabMonth: '¥1,700',
+    storeUrl: 'https://apps.apple.com/jp/app/id6801904284',
+    fullAmount: 6000,
+    ynabAnnual: 15000,
+    ynabMonthly: 1700,
+    currency: 'JPY',
+    // Apple writes Japanese prices as "¥6,000" — the symbol, no decimals.
+    // Intl's ja-JP agrees, which is why the strings above and the calculator's
+    // output match without a special case.
+    intl: 'ja-JP',
+  },
+} as const;
+
+/**
+ * The other App Store apps a translated page names, priced on that page's own
+ * storefront. Read the same day and the same way as MARKETS, from each app's
+ * listing:
+ *
+ *   Envy    id1569230951 → "Envy All Access"
+ *   Zeroed  id6804301133 → "Zeroed - Offline Budget Planner"
+ *
+ * Zeroed is absent from the French list because it is absent from the French
+ * store: Apple's own lookup returns nothing for it on `fr`, while `de`, `us`
+ * and `jp` all return the app. An app somebody cannot install is not an
+ * alternative to them, whatever it costs somewhere else.
+ *
+ * The desktop apps (Moneydance, Moneyspire) are sold by their makers in US
+ * dollars rather than through the App Store, so their prices are the same
+ * figure everywhere and stay in COMPETITORS. Where a translated page names
+ * them, it says the amount is in dollars.
+ */
+export interface MarketRival {
+  name: string;
+  price: string;
+  url: string;
+  /** What that figure is, where the bare number would mislead. */
+  note?: { en: string; de: string; fr: string; ja: string };
+}
+
+/**
+ * MoneyCoach's outright price, which is the one a page about buying rather
+ * than subscribing has to print: Apple lists Lifetime Premium at 199,99 € on
+ * both European stores and ¥30,000 in Japan, beside a column of subscription
+ * prices and a free tier that is genuinely usable. The bare number without
+ * that sentence would read as the price of the app, and it is not.
+ */
+const MONEYCOACH_LIFETIME = {
+  en: 'Lifetime Premium; there is also a free tier and a subscription',
+  de: 'Lifetime Premium; daneben gibt es eine kostenlose Stufe und ein Abo',
+  fr: 'Lifetime Premium ; il existe aussi une offre gratuite et un abonnement',
+  ja: 'Lifetime Premium。無料の範囲とサブスクも別にあります',
+} as const;
+
+export const MARKET_RIVALS: Record<'en' | 'de' | 'fr' | 'ja', readonly MarketRival[]> = {
+  en: [
+    { name: 'Envy', price: '$6.99', url: 'https://apps.apple.com/us/app/id1569230951' },
+    { name: 'Zeroed', price: '$19.99', url: 'https://apps.apple.com/us/app/id6804301133' },
+    {
+      name: 'MoneyCoach',
+      price: '$199.99',
+      url: 'https://apps.apple.com/us/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
+  ],
+  de: [
+    { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/de/app/id1569230951' },
+    { name: 'Zeroed', price: '22,99 €', url: 'https://apps.apple.com/de/app/id6804301133' },
+    {
+      name: 'MoneyCoach',
+      price: '199,99 €',
+      url: 'https://apps.apple.com/de/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
+  ],
+  fr: [
+    { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/fr/app/id1569230951' },
+    {
+      name: 'MoneyCoach',
+      price: '199,99 €',
+      url: 'https://apps.apple.com/fr/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
+  ],
+  ja: [
+    { name: 'Envy', price: '¥1,100', url: 'https://apps.apple.com/jp/app/id1569230951' },
+    { name: 'Zeroed', price: '¥3,000', url: 'https://apps.apple.com/jp/app/id6804301133' },
+    {
+      name: 'MoneyCoach',
+      price: '¥30,000',
+      url: 'https://apps.apple.com/jp/app/id989642198',
+      note: MONEYCOACH_LIFETIME,
+    },
+  ],
+} as const;
+
+/** The day every figure in MARKETS was read on its own storefront. */
+export const MARKETS_CHECKED = {
+  on: '2026-09-26',
+  display: { en: '26 September 2026', de: '26. September 2026', fr: '26 septembre 2026', ja: '2026年9月26日' },
+  recheckBy: '2026-12-26',
+} as const;
+
+/**
+ * A money amount, written the way the reader's storefront writes it.
+ *
+ * Yen has no minor unit, so the two fraction digits that are right for
+ * dollars and euros would print "¥6,000.00" — a figure nobody in Japan has
+ * ever seen on a price tag. Intl knows this per currency, so the digits are
+ * left to it rather than fixed here.
+ */
+export const money = (amount: number, lang: keyof typeof MARKETS = 'en'): string => {
+  const market = MARKETS[lang];
+  const formatted = amount.toLocaleString(market.intl, {
+    style: 'currency',
+    currency: market.currency,
   });
+  /* Intl writes yen with the fullwidth sign ￥ (U+FFE5); Apple's own listing
+     writes ¥ (U+00A5), and so does every price on the Japanese pages here.
+     Two signs for one currency on one page looks like two currencies, and it
+     also slips past a check that is looking for the other character. */
+  return formatted.replace(/\uffe5/g, '¥');
+};
 
 /**
  * The other apps, named — the штаб's decision of 16.08.2026, which reversed
@@ -494,154 +691,65 @@ export const COMPETITORS_CHECKED = {
   recheckBy: '2026-12-26',
 } as const;
 
-/**
- * What this app and YNAB actually cost on each storefront the site is
- * published in.
- *
- * WHY THESE ARE NOT CONVERTED. Apple does not convert; it sets a price per
- * region, and the numbers are not a translation of the American one — the app
- * is $39.99 in the United States and 44,99 € in Germany, and YNAB is $109 a
- * year there and 119,00 € here. A German page that printed "$39.99" would
- * be wrong twice: it is not the price, and it is not the currency the reader
- * is charged in. Every figure below was read on the storefront itself, in the
- * App Store's own listing, on 26.09.2026:
- *
- *   ours     apps.apple.com/{us,de,fr,jp}/app/id6801904284 → "Fundkeep Full"
- *   YNAB     apps.apple.com/{us,de,fr,jp}/app/id1010865877 → "YNAB Subscription"
- *
- * Apple shows the two YNAB amounts without a period against them. They are
- * named here as the year and the month because the American pair, $109.00 and
- * $14.99, is exactly what ynab.com/pricing publishes as annual and monthly —
- * the same two products, priced per region.
- *
- * A price that moves is one line here, and `src/build/hq-guards.ts` fails any
- * page printing a money amount that is not in this file.
- */
-export interface Market {
-  /** What one purchase costs on this storefront. */
-  full: string;
-  /** What YNAB charges there, as the App Store lists it. */
-  ynabYear: string;
-  ynabMonth: string;
-  /** The storefront the figures were read on. */
-  storeUrl: string;
-}
-
-export const MARKETS: Record<'en' | 'de' | 'fr' | 'ja', Market> = {
-  en: {
-    full: '$39.99',
-    ynabYear: '$109',
-    ynabMonth: '$14.99',
-    storeUrl: 'https://apps.apple.com/us/app/id6801904284',
-  },
-  de: {
-    full: '44,99 €',
-    ynabYear: '119,00 €',
-    ynabMonth: '15,49 €',
-    storeUrl: 'https://apps.apple.com/de/app/id6801904284',
-  },
-  fr: {
-    full: '44,99 €',
-    ynabYear: '119,00 €',
-    ynabMonth: '15,49 €',
-    storeUrl: 'https://apps.apple.com/fr/app/id6801904284',
-  },
-  ja: {
-    full: '¥6,000',
-    ynabYear: '¥15,000',
-    ynabMonth: '¥1,700',
-    storeUrl: 'https://apps.apple.com/jp/app/id6801904284',
-  },
-} as const;
 
 /**
- * The other App Store apps a translated page names, priced on that page's own
- * storefront. Read the same day and the same way as MARKETS, from each app's
- * listing:
+ * The same eight rows, said in the other three languages.
  *
- *   Envy    id1569230951 → "Envy All Access"
- *   Zeroed  id6804301133 → "Zeroed - Offline Budget Planner"
+ * Only the two short label columns: the amounts stay in dollars, because the
+ * increases happened in dollars on YNAB's own American pages, and a converted
+ * historical price is a number nobody ever paid. What is translated is the
+ * words around them — "once", "a year", "By November 2019" — which would
+ * otherwise sit in English in the middle of a German table.
  *
- * Zeroed is absent from the French list because it is absent from the French
- * store: Apple's own lookup returns nothing for it on `fr`, while `de`, `us`
- * and `jp` all return the app. An app somebody cannot install is not an
- * alternative to them, whatever it costs somewhere else.
- *
- * The desktop apps (Moneydance, Moneyspire) are sold by their makers in US
- * dollars rather than through the App Store, so their prices are the same
- * figure everywhere and stay in COMPETITORS. Where a translated page names
- * them, it says the amount is in dollars.
+ * Keyed by the row's `date`, so adding a row to the history above does not
+ * mean editing four places; a row with no entry here falls back to English,
+ * which is visibly wrong rather than silently missing.
  */
-export interface MarketRival {
-  name: string;
-  price: string;
-  url: string;
-  /** What that figure is, where the bare number would mislead. */
-  note?: { en: string; de: string; fr: string; ja: string };
-}
-
-/**
- * MoneyCoach's outright price, which is the one a page about buying rather
- * than subscribing has to print: Apple lists Lifetime Premium at 199,99 € on
- * both European stores and ¥30,000 in Japan, beside a column of subscription
- * prices and a free tier that is genuinely usable. The bare number without
- * that sentence would read as the price of the app, and it is not.
- */
-const MONEYCOACH_LIFETIME = {
-  en: 'Lifetime Premium; there is also a free tier and a subscription',
-  de: 'Lifetime Premium; daneben gibt es eine kostenlose Stufe und ein Abo',
-  fr: 'Lifetime Premium ; il existe aussi une offre gratuite et un abonnement',
-  ja: 'Lifetime Premium。無料の範囲とサブスクも別にあります',
-} as const;
-
-export const MARKET_RIVALS: Record<'en' | 'de' | 'fr' | 'ja', readonly MarketRival[]> = {
-  en: [
-    { name: 'Envy', price: '$6.99', url: 'https://apps.apple.com/us/app/id1569230951' },
-    { name: 'Zeroed', price: '$19.99', url: 'https://apps.apple.com/us/app/id6804301133' },
-    {
-      name: 'MoneyCoach',
-      price: '$199.99',
-      url: 'https://apps.apple.com/us/app/id989642198',
-      note: MONEYCOACH_LIFETIME,
-    },
-  ],
-  de: [
-    { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/de/app/id1569230951' },
-    { name: 'Zeroed', price: '22,99 €', url: 'https://apps.apple.com/de/app/id6804301133' },
-    {
-      name: 'MoneyCoach',
-      price: '199,99 €',
-      url: 'https://apps.apple.com/de/app/id989642198',
-      note: MONEYCOACH_LIFETIME,
-    },
-  ],
-  fr: [
-    { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/fr/app/id1569230951' },
-    {
-      name: 'MoneyCoach',
-      price: '199,99 €',
-      url: 'https://apps.apple.com/fr/app/id989642198',
-      note: MONEYCOACH_LIFETIME,
-    },
-  ],
-  ja: [
-    { name: 'Envy', price: '¥1,100', url: 'https://apps.apple.com/jp/app/id1569230951' },
-    { name: 'Zeroed', price: '¥3,000', url: 'https://apps.apple.com/jp/app/id6804301133' },
-    {
-      name: 'MoneyCoach',
-      price: '¥30,000',
-      url: 'https://apps.apple.com/jp/app/id989642198',
-      note: MONEYCOACH_LIFETIME,
-    },
-  ],
-} as const;
-
-/** The day every figure in MARKETS was read on its own storefront. */
-export const MARKETS_CHECKED = {
-  on: '2026-09-26',
-  display: { en: '26 September 2026', de: '26. September 2026', fr: '26 septembre 2026', ja: '2026年9月26日' },
-  recheckBy: '2026-12-26',
-} as const;
+export const YNAB_PRICE_HISTORY_I18N: Record<
+  string,
+  Record<'de' | 'fr' | 'ja', { when: string; price: string }>
+> = {
+  '2012-06': {
+    de: { when: '2012 bis 2017', price: '$60 einmalig' },
+    fr: { when: 'de 2012 à 2017', price: '$60 une fois' },
+    ja: { when: '2012〜2017年', price: '$60 の買い切り' },
+  },
+  '2015-12': {
+    de: { when: 'Dezember 2015', price: '$5 im Monat oder $50 im Jahr' },
+    fr: { when: 'décembre 2015', price: '$5 par mois ou $50 par an' },
+    ja: { when: '2015年12月', price: '$5／月 または $50／年' },
+  },
+  '2016-11': {
+    de: { when: 'November 2016', price: '$50 im Jahr' },
+    fr: { when: 'novembre 2016', price: '$50 par an' },
+    ja: { when: '2016年11月', price: '$50／年' },
+  },
+  '2017-11-15': {
+    de: { when: '15. November 2017', price: '$83.99 im Jahr' },
+    fr: { when: '15 novembre 2017', price: '$83.99 par an' },
+    ja: { when: '2017年11月15日', price: '$83.99／年' },
+  },
+  '2019-11': {
+    de: { when: 'bis November 2019', price: '$11.99 im Monat oder $84 im Jahr' },
+    fr: { when: 'avant novembre 2019', price: '$11.99 par mois ou $84 par an' },
+    ja: { when: '2019年11月までに', price: '$11.99／月 または $84／年' },
+  },
+  '2021-12-01': {
+    de: { when: '1. Dezember 2021', price: '$98.99 im Jahr oder $14.99 im Monat' },
+    fr: { when: '1er décembre 2021', price: '$98.99 par an ou $14.99 par mois' },
+    ja: { when: '2021年12月1日', price: '$98.99／年 または $14.99／月' },
+  },
+  '2022-09': {
+    de: { when: 'September 2022', price: '$99 im Jahr; $14.99 im Monat' },
+    fr: { when: 'septembre 2022', price: '$99 par an ; $14.99 par mois' },
+    ja: { when: '2022年9月', price: '$99／年、$14.99／月' },
+  },
+  '2024-08-01': {
+    de: { when: '1. August 2024', price: '$109 im Jahr; $14.99 im Monat' },
+    fr: { when: '1er août 2024', price: '$109 par an ; $14.99 par mois' },
+    ja: { when: '2024年8月1日', price: '$109／年、$14.99／月' },
+  },
+};
 
 /** The range the savings calculator offers, and where it starts. */
 export const CALCULATOR = {
@@ -678,10 +786,11 @@ export function monthsCovered(): number {
   return once / (YNAB.annual / 12);
 }
 
-export function savings(years: number) {
-  const once = Number(PRICING.full.replace(/[$,]/g, ''));
-  const annual = YNAB.annual * years;
-  const monthly = YNAB.monthly * 12 * years;
+export function savings(years: number, lang: keyof typeof MARKETS = 'en') {
+  const market = MARKETS[lang];
+  const once = market.fullAmount;
+  const annual = market.ynabAnnual * years;
+  const monthly = market.ynabMonthly * 12 * years;
   return {
     years,
     once,

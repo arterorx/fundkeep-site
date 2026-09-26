@@ -46,7 +46,25 @@ export const BEST_ALTERNATIVES = {
   ja: 'ynab-daitai-apuri',
 } as const;
 
+/** What YNAB costs, and every price since YNAB 4. */
+export const YNAB_PRICING = {
+  en: 'ynab-pricing',
+  de: 'ynab-preise',
+  fr: 'prix-ynab',
+  ja: 'ynab-ryokin',
+} as const;
+
+/** Getting your data out of YNAB. */
+export const EXPORT_GUIDE = {
+  en: 'blog/ynab-export-guide',
+  de: 'ynab-daten-exportieren',
+  fr: 'exporter-donnees-ynab',
+  ja: 'ynab-export',
+} as const;
+
 export const homeCluster = () => clusterFor(HOME);
+export const ynabPricingCluster = () => clusterFor(YNAB_PRICING);
+export const exportGuideCluster = () => clusterFor(EXPORT_GUIDE);
 export const leavingYnabCluster = () => clusterFor(LEAVING_YNAB);
 export const bestAlternativesCluster = () => clusterFor(BEST_ALTERNATIVES);
 export const boughtOnceCluster = () => clusterFor(BOUGHT_ONCE);

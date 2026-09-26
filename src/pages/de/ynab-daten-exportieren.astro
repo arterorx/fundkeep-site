@@ -1,0 +1,295 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { SITE, YNAB } from '../../consts';
+import { exportGuideCluster, LEAVING_YNAB } from '../../i18n/pages';
+
+/**
+ * Wie man seine Daten aus YNAB herausbekommt — auf Deutsch.
+ *
+ * Eine Sache gehört hier weiter nach oben als in der englischen Fassung: YNAB
+ * schreibt TSV statt CSV für Währungen mit Dezimalkomma, also für den Euro.
+ * Wer hier exportiert, bekommt fast immer eine Tab-getrennte Datei, und genau
+ * daran scheitert der erste Import in Excel.
+ *
+ * Die Spaltennamen bleiben englisch: sie stehen so in der Datei.
+ */
+
+const lang = 'de' as const;
+
+const title = 'YNAB-Daten exportieren: Plan, Umsätze und was fehlt (2026)';
+const description =
+  'Schritt für Schritt: wo „Export Plan“ versteckt ist, was in den zwei Dateien steht, warum sie TSV sind, und wie man Targets rettet, die nicht mitkommen.';
+
+const steps = [
+  {
+    name: 'Öffne YNAB im Webbrowser.',
+    text: 'Exportieren geht nur in der Webversion von YNAB, nicht in den Apps.',
+  },
+  {
+    name: 'Klicke auf den Namen deines Plans.',
+    text: 'Er steht oben in der linken Seitenleiste. Es ist ein Menü, auch wenn es nicht danach aussieht.',
+  },
+  {
+    name: 'Wähle „Export Plan“.',
+    text: 'Der Eintrag steht im Klappmenü unter dem Plannamen.',
+  },
+  {
+    name: 'Speichere den Download.',
+    text: 'Der Dateiname beginnt mit „YNAB Export -“ und dem Namen deines Plans. Plan und Umsatzhistorie kommen als zwei getrennte Dateien: CSV, oder TSV (tabgetrennt) bei Währungen mit Dezimalkomma — also beim Euro.',
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Plan und alle Umsätze aus YNAB exportieren',
+    description,
+    inLanguage: 'de',
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'de',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/de/ynab-daten-exportieren`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={exportGuideCluster()}
+>
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Anleitung</p>
+      <h1>{YNAB.name}-Daten exportieren — und was im Export fehlt</h1>
+      <p class="lede">
+        In der Webversion von {YNAB.name} klickst du oben in der linken
+        Seitenleiste auf den Namen deines Plans und wählst <strong
+          >Export Plan</strong
+        >. Dein Plan Monat für Monat und alle Umsätze kommen als zwei Dateien
+        heraus — beim Euro als TSV, weil das Dezimalkomma sonst mit dem
+        Trennzeichen kollidiert. Targets und Kategorienotizen sind nicht dabei.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>So geht der Export</h2>
+      <ol>
+        {
+          steps.map((step) => (
+            <li>
+              <strong>{step.name}</strong> {step.text}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was nicht exportiert wird</h2>
+      <p>
+        <a
+          href="https://support.ynab.com/en_us/how-to-export-plan-data-Sy_CouWA9"
+          hreflang="en"
+          lang="en">Die Hilfeseite von {YNAB.name}</a
+        > sagt es in einem Satz: der Export enthält keine Targets und keine
+        Kategorienotizen. Fotos auch nicht — die lädt {YNAB.name} nur einzeln
+        herunter. Wenn dir davon etwas wichtig ist, sichere es,{' '}
+        <strong>bevor</strong> du das Konto schließt. Danach gibt es nichts mehr,
+        woraus man es exportieren könnte.
+      </p>
+      <p>
+        <strong>Targets.</strong> Geh den Plan Kategorie für Kategorie durch und
+        schreib auf, was jedes Target verlangt: den Betrag und das Datum oder den
+        Rhythmus. Die Plandatei aus dem Export ist ein guter Ort dafür — öffne
+        sie in einer Tabelle, füge eine Spalte <em>Target</em> hinzu und trag es
+        von Hand ein. Das ist eine Sitzung Arbeit und die einzige Aufzeichnung
+        dieser Entscheidungen, die dir bleibt.
+      </p>
+      <p>
+        <strong>Kategorienotizen.</strong> Dieselbe Tabelle, eine Spalte mehr.
+      </p>
+      <p>
+        <strong>Fotos.</strong> Im Kontoregister auf das Foto eines Umsatzes
+        klicken und <em>Download Image</em> wählen. Schneller geht es nicht.
+      </p>
+      <p>
+        <strong>Geplante Umsätze.</strong> Ob sie mitkommen, sagen die
+        Hilfeseiten von {YNAB.name} nicht, und wir konnten es in keine Richtung
+        bestätigen. Notiere sie vorher — Empfänger, Betrag, Rhythmus und
+        nächstes Datum.
+      </p>
+      <p>
+        <strong>Berichte.</strong> Die Auswertungen haben in {YNAB.name} einen
+        eigenen Export und gehören nicht zu diesem.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was in den zwei Dateien steht</h2>
+      <p>
+        Die eine Datei ist dein <strong>Plan</strong>: eine Zeile für jede
+        Kategorie in jedem Monat. Die andere ist das <strong>Register</strong>:
+        eine Zeile pro Umsatz. Die erste Spalte unterscheidet sie —{' '}
+        <code>Month</code> im Plan, <code>Account</code> im Register.
+      </p>
+      <p class="small muted">
+        Die Spaltenüberschriften stehen hier so, wie sie in der Datei stehen:
+        englisch. Sie stammen aus einem echten Export vom August 2026. Die
+        Hilfeseiten von {YNAB.name} listen sie nicht auf, und sie haben sich
+        schon geändert — ältere Exporte nannten <code>Assigned</code> noch{' '}
+        <code>Budgeted</code>. Wenn deine Datei dieser Tabelle widerspricht, hat
+        deine Datei recht.
+      </p>
+
+      <h3>Die Plandatei</h3>
+      <ul>
+        <li><code>Month</code> — der Monat, geschrieben wie <code>Aug 2026</code></li>
+        <li><code>Category Group/Category</code> — Gruppe und Kategorie, mit Schrägstrich verbunden</li>
+        <li><code>Category Group</code> — die Gruppe allein</li>
+        <li><code>Category</code> — die Kategorie allein</li>
+        <li><code>Assigned</code> — was du der Kategorie in dem Monat zugewiesen hast</li>
+        <li><code>Activity</code> — was sich in dem Monat bewegt hat; Ausgaben negativ</li>
+        <li><code>Available</code> — was in dem Monat verfügbar war</li>
+      </ul>
+
+      <h3>Die Registerdatei</h3>
+      <ul>
+        <li><code>Account</code> — das Konto des Umsatzes</li>
+        <li><code>Flag</code> — die Flaggenfarbe, falls gesetzt</li>
+        <li><code>Date</code> — das Datum, im geprüften Export Monat zuerst: <code>09/14/2026</code></li>
+        <li><code>Payee</code> — wer bezahlt wurde oder gezahlt hat</li>
+        <li><code>Category Group/Category</code>, <code>Category Group</code>, <code>Category</code></li>
+        <li><code>Memo</code> — deine Notiz, falls vorhanden</li>
+        <li><code>Outflow</code> — Geld raus, als positiver Betrag</li>
+        <li><code>Inflow</code> — Geld rein, als positiver Betrag</li>
+        <li><code>Cleared</code> — der Abgleichstatus</li>
+      </ul>
+
+      <p>
+        <strong>Ein- und Ausgänge stehen in getrennten Spalten.</strong> Eine
+        Ausgabe hat ihren Betrag in <code>Outflow</code> und eine Null in{' '}
+        <code>Inflow</code>. Für eine einzige vorzeichenbehaftete Zahl je Zeile
+        rechne <code>Inflow − Outflow</code>.
+      </p>
+      <p>
+        <strong>Jede Umbuchung steht zweimal drin</strong>, einmal aus jedem
+        Konto, mit einem Empfänger, der <code>Transfer : </code> und den Namen
+        des anderen Kontos trägt. Summen über alle Konten stimmen, weil sich die
+        beiden Hälften aufheben. Ausgabensummen nicht, solange du diese Zeilen
+        nicht weglässt.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Nur einen Teil der Umsätze exportieren</h2>
+      <ol>
+        <li>Öffne ein Konto oder <em>All Accounts</em> in der linken Seitenleiste.</li>
+        <li>
+          Setze das Häkchen neben jedem gewünschten Umsatz — oder such und
+          filtere erst und setze dann das Häkchen in der Kopfzeile der Tabelle.
+        </li>
+        <li>
+          Klicke <em>More</em> in der erscheinenden Leiste und dann{' '}
+          <em>Export # Transactions</em>.
+        </li>
+      </ol>
+      <p>
+        Der Dateiname beginnt mit „Selected Transactions for“ und dem Namen
+        deines Plans.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Die Dateien in Excel oder Google Sheets öffnen</h2>
+      <p>
+        <strong>Importieren statt doppelklicken.</strong> Beim Doppelklick rät
+        die Tabelle Trennzeichen und Datumsformat, und sie kann falsch raten.
+        Nimm <em>Datei → Importieren</em> in Google Sheets oder den
+        Text/CSV-Import im Reiter <em>Daten</em> in Excel.
+      </p>
+      <p>
+        <strong>Landet alles in einer Spalte, ist die Datei tabgetrennt.</strong>{' '}
+        Genau das ist beim Euro der Normalfall: {YNAB.name} schreibt TSV für
+        Währungen mit Dezimalkomma. Wähle <em>Tab</em> als Trennzeichen.
+      </p>
+      <p>
+        <strong>Prüfe, wie herum das Datum steht.</strong> Im geprüften Export
+        stand der Monat vorn. Eine auf Deutschland eingestellte Tabelle liest{' '}
+        <code>03/04/2026</code> als 3. April statt als 4. März — lautlos, bei
+        jedem Datum, in dem beide Zahlen 12 oder kleiner sind. Such ein Datum mit
+        einer Zahl über 12, um sicher zu sein.
+      </p>
+      <p>
+        <strong>An den Beträgen hängt das Währungszeichen.</strong> Im geprüften
+        Dollar-Export hing an jedem Betrag das Dollarzeichen, ohne
+        Tausendertrennung, und ein Minus stand vor dem Zeichen. Eine Tabelle, die
+        auf eine andere Währung eingestellt ist, hält so etwas für Text: Zeichen
+        suchen, durch nichts ersetzen, Spalte als Zahl formatieren.
+      </p>
+      <p>
+        <strong>Nimm <code>Category Group</code> und <code>Category</code>,
+        nicht die verbundene Spalte.</strong> Ein Kategoriename kann selbst einen
+        Schrägstrich enthalten.
+      </p>
+      <p>
+        <strong>Liest du sie mit einem Skript</strong>, rechne mit einem
+        Byte-Order-Mark vor der ersten Überschrift: die erste Spalte heißt dann
+        nicht exakt <code>Account</code> oder <code>Month</code>.
+      </p>
+      <p>
+        <strong>Bewahre eine Kopie außerhalb einer Budget-App auf.</strong> Zwei
+        einfache Textdateien lassen sich in dreißig Jahren noch öffnen. Das kann
+        niemand über ein Konto bei einem Dienst versprechen.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Den Export in eine andere App importieren</h2>
+      <p>
+        Jeder Importer ist jemandes Lesart dieses Formats, unserer
+        eingeschlossen. Die Frage an eine neue App lautet nicht „kann sie YNAB
+        importieren“ — das sagen alle —, sondern: zeigt sie mir, was sie aus
+        meinen Zahlen gemacht hat, <em>bevor</em> sie speichert?
+      </p>
+      <p>
+        {SITE.name} liest beide Dateien, baut Kategorien, Konten und Verlauf
+        nach und zeigt jede Abweichung zwischen den eigenen Salden und denen aus
+        {' '}{YNAB.name}, bevor irgendetwas gespeichert wird —{' '}
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}>mehr dazu für Umsteiger</a>.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>

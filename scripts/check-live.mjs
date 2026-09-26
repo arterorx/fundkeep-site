@@ -56,6 +56,12 @@ const PAGES = [
   ['/fr/meilleures-alternatives-ynab', 'fr/meilleures-alternatives-ynab.html'],
   ['/ja/ynab-kara-norikae', 'ja/ynab-kara-norikae.html'],
   ['/ja/ynab-daitai-apuri', 'ja/ynab-daitai-apuri.html'],
+  ['/de/ynab-preise', 'de/ynab-preise.html'],
+  ['/fr/prix-ynab', 'fr/prix-ynab.html'],
+  ['/ja/ynab-ryokin', 'ja/ynab-ryokin.html'],
+  ['/de/ynab-daten-exportieren', 'de/ynab-daten-exportieren.html'],
+  ['/fr/exporter-donnees-ynab', 'fr/exporter-donnees-ynab.html'],
+  ['/ja/ynab-export', 'ja/ynab-export.html'],
 ];
 
 /** Apple's badge, in each language the site publishes. */

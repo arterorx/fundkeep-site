@@ -1,0 +1,258 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import SavingsCalculator from '../../components/SavingsCalculator.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  SITE,
+  YNAB,
+  YNAB_PRICE_HISTORY,
+  YNAB_PRICE_HISTORY_I18N,
+} from '../../consts';
+import { formatDate } from '../../i18n/config';
+import { BOUGHT_ONCE, EXPORT_GUIDE, LEAVING_YNAB, ynabPricingCluster } from '../../i18n/pages';
+
+/**
+ * YNAB の料金、日本円で。値上げの履歴はドルのまま置く——実際にドルで起きた
+ * ことで、出典も YNAB の英語ページだから。歴史的な金額を円に換算すると、
+ * 誰も払ったことのない数字になる。
+ */
+
+const lang = 'ja' as const;
+const m = MARKETS[lang];
+const first = YNAB_PRICE_HISTORY[0]!;
+const launch = YNAB_PRICE_HISTORY[1]!;
+const firstAmount = first.price.match(/\$[\d.,]+/)![0];
+/* The launch row said in this page's language — otherwise "December 2015"
+   and "$5 a month or $50 a year" sit in English in the middle of the lede. */
+const launchLabel = YNAB_PRICE_HISTORY_I18N[launch.date]![lang];
+
+const title = `${YNAB.name} の料金（2026年）：${m.ynabYear}／年と、これまでの値上げ`;
+const description = `日本の App Store で ${YNAB.name} は ${m.ynabYear}／年、${m.ynabMonth}／月。${firstAmount} からの価格の推移を、${YNAB.name} 自身のページから。`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/ja/ynab-ryokin`,
+    inLanguage: 'ja',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={ynabPricingCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">{YNAB.name} の料金</p>
+      <h1>2026年に {YNAB.name} はいくらか、そしてどう上がってきたか</h1>
+      <p class="lede">
+        <strong>{m.ynabYear}／年、または {m.ynabMonth}／月。</strong>
+        日本の App Store の表示で、
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+        に確認しました。{YNAB.name} 自身のサイトの表示はドルで、
+        <a href={YNAB.source}>ynab.com/pricing</a> は {formatDate(YNAB.checkedOn, lang)} に
+        読んだ時点で {YNAB.price}／年でした。サブスクになったのは{launchLabel.when}、
+        {launchLabel.price} から。それ以前は {firstAmount} で一度買う
+        ソフトウェアでした。
+      </p>
+      <p class="small muted">
+        Apple は地域ごとに価格を決めます。ここにある円の金額はドルの換算では
+        なく、実際に日本で請求される額です。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>積み上がるとどうなるか</h2>
+    </div>
+    <SavingsCalculator lang={lang} />
+    <div class="column">
+      <p class="small muted">
+        この合計は、価格がこのまま変わらないと仮定しています。下の表は、それが
+        どれだけ起きなかったかを示しています。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>YNAB 4 以降のすべての価格</h2>
+      <p>
+        この表の金額は<strong>米ドル</strong>です。値上げはドルで起きた出来事
+        で、各行は {YNAB.name} 自身のページ——多くは Internet Archive に残った
+        写し——から読み取っています。過去のドル価格を円に換算すれば、誰も払った
+        ことのない数字になります。
+        <span class="history__hint">表は横にスクロールします。</span>
+      </p>
+    </div>
+
+    <div
+      class="history"
+      role="region"
+      aria-label={`${YNAB.name} の価格の推移`}
+      tabindex="0"
+    >
+      <table>
+        <caption class="visually-hidden">
+          {YNAB.name} の価格、YNAB 4 から現在まで
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">時期</th>
+            <th scope="col">価格（USD）</th>
+            <th scope="col">出典</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            YNAB_PRICE_HISTORY.map((row) => (
+              <tr>
+                <th scope="row">
+                  <time datetime={row.date}>
+                    {YNAB_PRICE_HISTORY_I18N[row.date]?.[lang].when ?? row.when}
+                  </time>
+                </th>
+                <td class="history__price">
+                  {YNAB_PRICE_HISTORY_I18N[row.date]?.[lang].price ?? row.price}
+                </td>
+                <td>
+                  <a href={row.source.url} hreflang="en" lang="en">
+                    {row.source.label}
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+          <tr class="history__today">
+            <th scope="row">
+              <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+            </th>
+            <td class="history__price">
+              {m.ynabYear}／年、または {m.ynabMonth}／月
+            </td>
+            <td>日本の App Store、現在</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="column">
+      <p class="small muted">
+        アーカイブは一定の間隔で読んでいるため、二つの写しのあいだに短期間だけ
+        出ていたキャンペーンは抜けている可能性があります。値上げは抜けません。
+        どれも数か月から数年にわたって価格ページに載っていました。各行で何が
+        変わったかの詳細は
+        <a href="/ynab-pricing" hreflang="en" lang="en">このページの英語版</a>
+        にあります。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>その対価に何が付くか</h2>
+      <p>
+        プランは一つで、年払いか月払い。残高・目標・取引は端末間でリアルタイムに
+        同期し、targets は支出と貯蓄の目標をカバーし、ローン計算機を含む負債の
+        機能があり、直接取り込みは米国・カナダ・英国・EU の一部の銀行に対応
+        します。1契約で最大6人まで。学生は365日間無料。以上は {YNAB.name} 自身
+        の価格ページの説明どおりです。
+      </p>
+      <p>
+        <strong>日本の銀行はその対象に入っていません。</strong>つまり日本で
+        使うかぎり、料金のうち最も大きな部分にあたる機能は働きません。入力か
+        CSV 取り込みかという作業量は、どのアプリでも変わらないことになります。
+      </p>
+      <p>
+        無料体験は、<a href={YNAB.source}>{YNAB.name} のサイト</a>から直接
+        申し込めばクレジットカードなしで{YNAB.trialDays}日間、App Store 経由で
+        契約した場合は30日間です（
+        <a
+          href="https://support.ynab.com/en_us/your-ynab-trial-ry87vWAc"
+          hreflang="en"
+          lang="en">{YNAB.name} の体験版についてのヘルプページ</a
+        >より）。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>一度で終わらせたいなら</h2>
+      <p>
+        私たちが作っているのはそれです。{SITE.name} は iPhone・iPad・Mac の
+        封筒式家計簿で、{m.full} の買い切り、銀行接続なし。
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}>同じままのものと、なくなるもの</a>
+        にまとめています。買い切りで手に入るアプリは
+        <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}>別のページ</a>に、
+        データを持ち出す手順は
+        <a href={`/${lang}/${EXPORT_GUIDE[lang]}`}>{YNAB.name} の書き出しの手引き</a>
+        にあります。
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .history {
+    overflow-x: auto;
+    margin: var(--space-l) 0;
+  }
+
+  .history__hint {
+    display: none;
+  }
+
+  @media (max-width: 46rem) {
+    .history__hint {
+      display: inline;
+    }
+  }
+
+  .history:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .history table {
+    border-collapse: collapse;
+  }
+
+  .history th,
+  .history td {
+    vertical-align: top;
+  }
+
+  .history th[scope='row'] {
+    white-space: nowrap;
+  }
+
+  .history td {
+    min-width: 11rem;
+  }
+
+  .history__price {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .history__today th,
+  .history__today td {
+    color: var(--text-accent);
+  }
+</style>

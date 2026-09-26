@@ -1,5 +1,7 @@
 ---
-import { CALCULATOR, YNAB, money, savings } from '../consts';
+import { CALCULATOR, MARKETS, SITE, YNAB, money, savings } from '../consts';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/config';
+import { t, tf } from '../i18n/ui';
 
 /**
  * What YNAB costs over the years you expect to keep budgeting, next to one
@@ -14,7 +16,22 @@ import { CALCULATOR, YNAB, money, savings } from '../consts';
  * moves them, reading every rate from the data attributes below — it holds no
  * prices of its own.
  */
-const start = savings(CALCULATOR.defaultYears);
+interface Props {
+  /** Whose storefront the arithmetic is in. */
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+const ui = t(lang);
+const uif = tf(lang);
+const market = MARKETS[lang];
+const start = savings(CALCULATOR.defaultYears, lang);
+/* The word "years" is a string in four languages and a plural rule in three
+   of them, so the script cannot build it out of a number. It gets both forms
+   handed to it, the same way it gets the rates. */
+const yearsLabel = (n: number) =>
+  n === 1 ? ui('calc.yearOne') : uif('calc.yearMany', { n });
+const overLabel = uif('calc.over', { years: yearsLabel(start.years) });
 ---
 
 <script is:inline defer src="/savings-calculator.js"></script>
@@ -23,15 +40,21 @@ const start = savings(CALCULATOR.defaultYears);
   class="calculator"
   data-calculator
   data-static
-  data-annual={YNAB.annual}
-  data-monthly={YNAB.monthly}
+  data-annual={market.ynabAnnual}
+  data-monthly={market.ynabMonthly}
   data-once={start.once}
+  data-intl={market.intl}
+  data-currency={market.currency}
+  data-year-one={ui('calc.yearOne')}
+  data-year-many={ui('calc.yearMany')}
+  data-over={ui('calc.over')}
+  data-difference={ui('calc.difference')}
 >
   <div class="calculator__control">
     <label for="years">
-      How long do you expect to keep budgeting?{' '}
+      {ui('calc.question')}{' '}
       <output class="calculator__years" for="years" data-out-years
-        >{start.years} years</output
+        >{yearsLabel(start.years)}</output
       >
     </label>
     <input
@@ -44,40 +67,42 @@ const start = savings(CALCULATOR.defaultYears);
       data-years-input
     />
     <p class="calculator__ends small muted" aria-hidden="true">
-      <span>{CALCULATOR.minYears} year</span>
-      <span>{CALCULATOR.maxYears} years</span>
+      <span>{yearsLabel(CALCULATOR.minYears)}</span>
+      <span>{yearsLabel(CALCULATOR.maxYears)}</span>
     </p>
   </div>
 
   <table class="calculator__table">
     <caption class="visually-hidden">
-      What each option costs over <span data-out-years>{start.years} years</span>
+      <span data-out-over>{overLabel}</span>
     </caption>
     <thead>
       <tr>
-        <th scope="col">Over <span data-out-years>{start.years} years</span></th>
-        <th scope="col">You pay</th>
+        <th scope="col"><span data-out-over>{overLabel}</span></th>
+        <th scope="col">{ui('calc.pay')}</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <th scope="row">{YNAB.name}, billed annually</th>
-        <td data-out-annual>{money(start.annual)}</td>
+        <th scope="row">{YNAB.name}, {ui('calc.annual')}</th>
+        <td data-out-annual>{money(start.annual, lang)}</td>
       </tr>
       <tr>
-        <th scope="row">{YNAB.name}, billed monthly</th>
-        <td data-out-monthly>{money(start.monthly)}</td>
+        <th scope="row">{YNAB.name}, {ui('calc.monthly')}</th>
+        <td data-out-monthly>{money(start.monthly, lang)}</td>
       </tr>
       <tr class="calculator__ours">
-        <th scope="row">Fundkeep, bought once</th>
-        <td data-out-once>{money(start.once)}</td>
+        <th scope="row">{SITE.name}, {ui('calc.ours')}</th>
+        <td data-out-once>{money(start.once, lang)}</td>
       </tr>
     </tbody>
   </table>
 
   <p class="calculator__result">
-    Difference over <span data-out-years>{start.years} years</span>:{' '}
-    <strong data-out-saved>{money(start.saved)}</strong>
+    <span data-out-difference
+      >{uif('calc.difference', { years: yearsLabel(start.years) })}</span
+    >:{' '}
+    <strong data-out-saved>{money(start.saved, lang)}</strong>
   </p>
 </div>
 

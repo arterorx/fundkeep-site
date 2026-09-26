@@ -10,6 +10,7 @@ import {
   YNAB_PRICE_HISTORY,
   money,
 } from '../consts';
+import { ynabPricingCluster } from '../i18n/pages';
 
 /**
  * What YNAB costs, and how the price got there (штаб, 13.09.2026).
@@ -55,7 +56,13 @@ const schema = [
 ];
 ---
 
-<Base title={title} exactTitle description={description} schema={schema}>
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  alternates={ynabPricingCluster()}
+>
   <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
 
   <!-- ---------------------------------------------------------------- Today -->

@@ -1,6 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { bestAlternativesCluster } from '../../i18n/pages';
+import { bestAlternativesCluster, exportGuideCluster } from '../../i18n/pages';
 import type { GetStaticPaths } from 'astro';
 import Base from '../../layouts/Base.astro';
 import AppStoreCta from '../../components/AppStoreCta.astro';
@@ -84,7 +84,11 @@ const schema = [
    An article with no translation gets no hreflang, which is the right output
    rather than a missing feature. */
 const alternates =
-  post.id === 'ynab-alternatives' ? bestAlternativesCluster() : [];
+  post.id === 'ynab-alternatives'
+    ? bestAlternativesCluster()
+    : post.id === 'ynab-export-guide'
+      ? exportGuideCluster()
+      : [];
 ---
 
 <Base

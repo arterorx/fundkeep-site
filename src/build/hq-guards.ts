@@ -245,7 +245,7 @@ export function hqGuards(): AstroIntegration {
            looks for. Reading only dollars here is what let four correct euro
            figures fail the build on 26.09.2026: they were in src/consts.ts,
            but this never took them out of it. */
-        const MONEY = /\$\d+(?:,\d{3})*(?:\.\d{2})?|\d+(?:\.\d{3})*,\d{2}\s?€|¥\d+(?:,\d{3})*/g;
+        const MONEY = /\$\d+(?:,\d{3})*(?:\.\d{2})?|\d+(?:\.\d{3})*,\d{2}\s?€|[¥￥]\d+(?:,\d{3})*/g;
         const add = (text: string) => {
           for (const amount of text.match(MONEY) ?? []) {
             competitorAmounts.add(amount.replace(/\s?€/, ' €'));
@@ -282,16 +282,21 @@ export function hqGuards(): AstroIntegration {
         // by copying numbers across. A total that this loop cannot produce is
         // a total somebody typed by hand, and that is exactly what should
         // fail.
-        for (
-          let years = CALCULATOR.minYears;
-          years <= CALCULATOR.maxYears;
-          years++
-        ) {
-          const row = savings(years);
-          allowedAmounts.add(money(row.annual));
-          allowedAmounts.add(money(row.monthly));
-          allowedAmounts.add(money(row.saved));
-          allowedAmounts.add(money(row.once));
+        for (const lang of Object.keys(MARKETS) as (keyof typeof MARKETS)[]) {
+          for (
+            let years = CALCULATOR.minYears;
+            years <= CALCULATOR.maxYears;
+            years++
+          ) {
+            const row = savings(years, lang);
+            /* Intl puts a non-breaking space between a French amount and its
+               symbol; the rendered page carries whatever Intl produced, and
+               the scan below normalises the space before comparing. Do the
+               same here, or every euro total fails against itself. */
+            for (const amount of [row.annual, row.monthly, row.saved, row.once]) {
+              allowedAmounts.add(money(amount, lang).replace(/\s?€/, ' €'));
+            }
+          }
         }
 
         for (const page of pages) {
@@ -339,7 +344,7 @@ export function hqGuards(): AstroIntegration {
             ...(text.match(/\d+(?:\.\d{3})*,\d{2}\s?€/g) ?? []).map((raw) =>
               raw.replace(/\s?€/, ' €'),
             ),
-            ...(text.match(/¥\d+(?:,\d{3})*/g) ?? []),
+            ...(text.match(/[¥￥]\d+(?:,\d{3})*/g) ?? []).map((raw) => raw.replace(/￥/, '¥')),
           ];
           for (const amount of amounts) {
             if (!pageAmounts.has(amount)) {

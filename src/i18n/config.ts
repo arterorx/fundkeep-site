@@ -50,3 +50,18 @@ export const clusterFor = (slugs: Partial<Record<Locale, string>>): Alternate[] 
     lang,
     path: localePath(lang, slugs[lang]),
   }));
+
+/**
+ * A date written the way the page's language writes it.
+ *
+ * The constants carry one English rendering of each date ("13 September
+ * 2026"), which is right on the English pages and wrong everywhere else — a
+ * German page saying "am 13 September 2026" reads like a machine. The ISO
+ * value stays the single source; this is only how it is spoken.
+ */
+export const formatDate = (iso: string, lang: Locale): string =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString(LOCALE_TAGS[lang], {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });

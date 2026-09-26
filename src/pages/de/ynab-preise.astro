@@ -1,0 +1,264 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import SavingsCalculator from '../../components/SavingsCalculator.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  RELEASE,
+  SITE,
+  YNAB,
+  YNAB_PRICE_HISTORY,
+  YNAB_PRICE_HISTORY_I18N,
+} from '../../consts';
+import { formatDate } from '../../i18n/config';
+import { BOUGHT_ONCE, EXPORT_GUIDE, LEAVING_YNAB, ynabPricingCluster } from '../../i18n/pages';
+
+/**
+ * Was YNAB kostet — auf Deutsch, mit den Beträgen des deutschen App Stores.
+ *
+ * Die Preisgeschichte bleibt in Dollar, weil sie in Dollar stattgefunden hat:
+ * jede Zeile stammt von einer amerikanischen Seite von YNAB, meist aus dem
+ * Internet Archive. Einen historischen Dollarbetrag in Euro umzurechnen wäre
+ * eine Zahl, die nie jemand bezahlt hat.
+ */
+
+const lang = 'de' as const;
+const m = MARKETS[lang];
+const first = YNAB_PRICE_HISTORY[0]!;
+const launch = YNAB_PRICE_HISTORY[1]!;
+const firstAmount = first.price.match(/\$[\d.,]+/)![0];
+/* The launch row said in this page's language — otherwise "December 2015"
+   and "$5 a month or $50 a year" sit in English in the middle of the lede. */
+const launchLabel = YNAB_PRICE_HISTORY_I18N[launch.date]![lang];
+
+const title = `Was ${YNAB.name} kostet (2026): ${m.ynabYear} im Jahr und jede Preiserhöhung`;
+const description = `${YNAB.name} kostet im deutschen App Store ${m.ynabYear} im Jahr oder ${m.ynabMonth} im Monat. Jeder Preis seit ${firstAmount}, aus ${YNAB.name}s eigenen Seiten.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/de/ynab-preise`,
+    inLanguage: 'de',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={ynabPricingCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">{YNAB.name}-Preise</p>
+      <h1>Was {YNAB.name} 2026 kostet, und wie der Preis dorthin kam</h1>
+      <p class="lede">
+        <strong>{m.ynabYear} im Jahr oder {m.ynabMonth} im Monat</strong> — so
+        steht es im deutschen App Store, gelesen am{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.de}</time>.
+        Auf der eigenen Seite von {YNAB.name} stehen Dollarpreise:{' '}
+        <a href={YNAB.source}>ynab.com/pricing</a> nannte {YNAB.price} im Jahr,
+        als wir sie am {formatDate(YNAB.checkedOn, lang)} gelesen haben. Zum Abo wurde es im{' '}
+        {launchLabel.when} für {launchLabel.price}; davor war es ein Programm,
+        das man einmal kaufte, für {firstAmount}.
+      </p>
+      <p class="small muted">
+        Apple rechnet je Region ab, deshalb sind die Eurobeträge nicht der
+        umgerechnete Dollarpreis, sondern der Preis, der hier abgebucht wird.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was dabei zusammenkommt</h2>
+    </div>
+    <SavingsCalculator lang={lang} />
+    <div class="column">
+      <p class="small muted">
+        Die Summen nehmen an, dass der Preis bleibt, wo er ist — die Tabelle
+        unten zeigt, wie oft das nicht der Fall war.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Jeder Preis seit YNAB 4</h2>
+      <p>
+        Diese Beträge sind in <strong>US-Dollar</strong>, weil die Geschichte
+        in Dollar stattgefunden hat: jede Zeile wurde auf einer eigenen Seite
+        von {YNAB.name} gelesen, die meisten so, wie das Internet Archive sie
+        aufbewahrt hat. Ein historischer Dollarbetrag in Euro wäre eine Zahl,
+        die nie jemand bezahlt hat.{' '}
+        <span class="history__hint">Die Tabelle scrollt seitwärts.</span>
+      </p>
+    </div>
+
+    <div
+      class="history"
+      role="region"
+      aria-label={`Wie sich der Preis von ${YNAB.name} verändert hat`}
+      tabindex="0"
+    >
+      <table>
+        <caption class="visually-hidden">
+          Der Preis von {YNAB.name}, von YNAB 4 bis heute
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Wann</th>
+            <th scope="col">Preis (USD)</th>
+            <th scope="col">Quelle</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            YNAB_PRICE_HISTORY.map((row) => (
+              <tr>
+                <th scope="row">
+                  <time datetime={row.date}>
+                    {YNAB_PRICE_HISTORY_I18N[row.date]?.[lang].when ?? row.when}
+                  </time>
+                </th>
+                <td class="history__price">
+                  {YNAB_PRICE_HISTORY_I18N[row.date]?.[lang].price ?? row.price}
+                </td>
+                <td>
+                  <a href={row.source.url} hreflang="en" lang="en">
+                    {row.source.label}
+                  </a>
+                </td>
+              </tr>
+            ))
+          }
+          <tr class="history__today">
+            <th scope="row">
+              <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.de}</time>
+            </th>
+            <td class="history__price">
+              {m.ynabYear} im Jahr oder {m.ynabMonth} im Monat
+            </td>
+            <td>Deutscher App Store, heute</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="column">
+      <p class="small muted">
+        Das Archiv wurde in Abständen gelesen, eine kurzlebige Aktion zwischen
+        zwei Kopien könnte also fehlen. Eine Preiserhöhung nicht: jede davon
+        stand monate- oder jahrelang auf der Preisseite. Was in den einzelnen
+        Zeilen genau geändert wurde, steht ausführlich auf der{' '}
+        <a href="/ynab-pricing" hreflang="en" lang="en"
+          >englischen Fassung dieser Seite</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was du dafür bekommst</h2>
+      <p>
+        Ein Tarif, jährlich oder monatlich bezahlt. Salden, Ziele und Umsätze
+        gleichen sich in Echtzeit zwischen den Geräten ab; die Targets decken
+        Ausgaben- und Sparziele ab; es gibt Schulden-Werkzeuge mit einem
+        Kreditrechner; und der direkte Import funktioniert mit ausgewählten
+        Banken in den USA, Kanada, Großbritannien und der EU. Ein Abo deckt bis
+        zu sechs Personen ab. Studierende bekommen 365 Tage kostenlos. So
+        beschreibt es die Preisseite von {YNAB.name} selbst.
+      </p>
+      <p>
+        Die kostenlose Testzeit beträgt {YNAB.trialDays} Tage ohne Kreditkarte,
+        wenn du dich direkt bei <a href={YNAB.source}>{YNAB.name}</a>{' '}
+        anmeldest, und 30 Tage, wenn du über den App Store abonnierst — laut{' '}
+        <a
+          href="https://support.ynab.com/en_us/your-ynab-trial-ry87vWAc"
+          hreflang="en"
+          lang="en">der Hilfeseite von {YNAB.name} zur Testzeit</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Wenn du lieber einmal bezahlst</h2>
+      <p>
+        Genau das bauen wir. {SITE.name} ist Umschlag-Budget für{' '}
+        {RELEASE.platforms.replace('iPhone, iPad and Mac', 'iPhone, iPad und Mac')},
+        {' '}{m.full} einmalig, ohne Bankverbindung —{' '}
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >was gleich bleibt und was wegfällt</a
+        >. Die Apps, die man kaufen statt mieten kann, stehen{' '}
+        <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}>auf einer eigenen Seite</a>.
+        Und wenn du deine Daten mitnehmen willst:{' '}
+        <a href={`/${lang}/${EXPORT_GUIDE[lang]}`}
+          >wie der Export aus {YNAB.name} funktioniert</a
+        >.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .history {
+    overflow-x: auto;
+    margin: var(--space-l) 0;
+  }
+
+  .history__hint {
+    display: none;
+  }
+
+  @media (max-width: 46rem) {
+    .history__hint {
+      display: inline;
+    }
+  }
+
+  .history:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .history table {
+    border-collapse: collapse;
+  }
+
+  .history th,
+  .history td {
+    vertical-align: top;
+  }
+
+  .history th[scope='row'] {
+    white-space: nowrap;
+  }
+
+  .history td {
+    min-width: 11rem;
+  }
+
+  .history__price {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .history__today th,
+  .history__today td {
+    color: var(--text-accent);
+  }
+</style>

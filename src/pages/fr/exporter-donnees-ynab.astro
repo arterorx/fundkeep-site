@@ -1,0 +1,299 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { SITE, YNAB } from '../../consts';
+import { exportGuideCluster, LEAVING_YNAB } from '../../i18n/pages';
+
+/**
+ * Sortir ses données de YNAB. Comme en allemand, un point remonte par rapport
+ * à la version anglaise : avec l'euro, YNAB écrit du TSV et non du CSV, parce
+ * que la virgule décimale entrerait en conflit avec le séparateur. C'est la
+ * raison n°1 pour laquelle le premier import dans Excel échoue.
+ *
+ * Les noms de colonnes restent en anglais : c'est ainsi qu'ils sont écrits
+ * dans le fichier.
+ */
+
+const lang = 'fr' as const;
+
+const title = 'Exporter ses données YNAB : plan, opérations, et ce qui manque';
+const description =
+  'Pas à pas : où se cache « Export Plan », ce que contiennent les deux fichiers, pourquoi ils sont en TSV en euros, et comment sauver les targets.';
+
+const steps = [
+  {
+    name: 'Ouvrez YNAB dans un navigateur.',
+    text: 'L’export n’existe que dans la version web de YNAB, pas dans ses applications.',
+  },
+  {
+    name: 'Cliquez sur le nom de votre plan.',
+    text: 'Il se trouve en haut de la barre latérale gauche. C’est un menu, même si cela n’en a pas l’air.',
+  },
+  {
+    name: 'Choisissez « Export Plan ».',
+    text: 'L’entrée se trouve dans le menu déroulant qui s’ouvre sous le nom du plan.',
+  },
+  {
+    name: 'Enregistrez le téléchargement.',
+    text: 'Le nom du fichier commence par « YNAB Export - » suivi du nom de votre plan. Le plan et l’historique des opérations arrivent en deux fichiers séparés : CSV, ou TSV (tabulations) pour les devises à virgule décimale — donc pour l’euro.',
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Exporter son plan et toutes ses opérations depuis YNAB',
+    description,
+    inLanguage: 'fr',
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'fr',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/fr/exporter-donnees-ynab`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={exportGuideCluster()}
+>
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Guide</p>
+      <h1>Exporter ses données {YNAB.name} — et ce qui manque à l'export</h1>
+      <p class="lede">
+        Dans la version web de {YNAB.name}, cliquez sur le nom de votre plan en
+        haut de la barre latérale gauche et choisissez <strong>Export Plan</strong>.
+        Votre plan mois par mois et toutes vos opérations sortent en deux
+        fichiers — en TSV avec l'euro, car la virgule décimale entrerait en
+        conflit avec le séparateur. Les targets et les notes de catégorie n'y
+        sont pas.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>La marche à suivre</h2>
+      <ol>
+        {
+          steps.map((step) => (
+            <li>
+              <strong>{step.name}</strong> {step.text}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce qui n'est pas exporté</h2>
+      <p>
+        <a
+          href="https://support.ynab.com/en_us/how-to-export-plan-data-Sy_CouWA9"
+          hreflang="en"
+          lang="en">La page d'aide de {YNAB.name}</a
+        > le dit en une phrase : l'export ne contient ni les targets ni les
+        notes de catégorie. Les photos non plus — {YNAB.name} ne les télécharge
+        qu'une par une. Si l'un de ces éléments compte pour vous,{' '}
+        <strong>sauvegardez-le avant</strong> de fermer le compte. Ensuite il
+        n'existe plus rien d'où les extraire.
+      </p>
+      <p>
+        <strong>Les targets.</strong> Parcourez le plan catégorie par catégorie
+        et notez ce que chaque target demande : le montant, et la date ou le
+        rythme. Le fichier du plan est un bon endroit pour cela — ouvrez-le dans
+        un tableur, ajoutez une colonne <em>Target</em> et remplissez-la à la
+        main. C'est une séance de travail, et le seul enregistrement de ces
+        décisions qu'il vous restera.
+      </p>
+      <p>
+        <strong>Les notes de catégorie.</strong> Même tableur, une colonne de
+        plus.
+      </p>
+      <p>
+        <strong>Les photos.</strong> Dans le registre d'un compte, cliquez sur
+        la photo d'une opération et choisissez <em>Download Image</em>. Il n'y a
+        pas plus rapide.
+      </p>
+      <p>
+        <strong>Les opérations programmées.</strong> Les pages d'aide de{' '}
+        {YNAB.name} ne disent pas si elles sortent avec le reste, et nous
+        n'avons pas pu le confirmer dans un sens ou dans l'autre. Notez-les
+        avant de partir : bénéficiaire, montant, fréquence, prochaine date.
+      </p>
+      <p>
+        <strong>Les rapports.</strong> Les analyses ont leur propre export dans
+        {' '}{YNAB.name} et ne font pas partie de celui-ci.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce que contiennent les deux fichiers</h2>
+      <p>
+        L'un est votre <strong>plan</strong> : une ligne par catégorie et par
+        mois. L'autre est le <strong>registre</strong> : une ligne par
+        opération. La première colonne les distingue — <code>Month</code> dans
+        le plan, <code>Account</code> dans le registre.
+      </p>
+      <p class="small muted">
+        Les en-têtes sont donnés tels qu'ils figurent dans le fichier :
+        en anglais. Ils viennent d'un export réel d'août 2026. Les pages d'aide
+        de {YNAB.name} ne les listent pas, et ils ont déjà changé — les anciens
+        exports appelaient <code>Assigned</code> la colonne <code>Budgeted</code>.
+        Si votre fichier contredit cette liste, c'est votre fichier qui a raison.
+      </p>
+
+      <h3>Le fichier du plan</h3>
+      <ul>
+        <li><code>Month</code> — le mois, écrit <code>Aug 2026</code></li>
+        <li><code>Category Group/Category</code> — le groupe et la catégorie, réunis par une barre oblique</li>
+        <li><code>Category Group</code> — le groupe seul</li>
+        <li><code>Category</code> — la catégorie seule</li>
+        <li><code>Assigned</code> — ce que vous avez affecté à la catégorie ce mois-là</li>
+        <li><code>Activity</code> — ce qui a bougé ce mois-là ; les dépenses en négatif</li>
+        <li><code>Available</code> — ce qui restait disponible ce mois-là</li>
+      </ul>
+
+      <h3>Le fichier du registre</h3>
+      <ul>
+        <li><code>Account</code> — le compte de l'opération</li>
+        <li><code>Flag</code> — la couleur du drapeau, le cas échéant</li>
+        <li><code>Date</code> — la date, mois d'abord dans l'export vérifié : <code>09/14/2026</code></li>
+        <li><code>Payee</code> — qui a été payé, ou qui vous a payé</li>
+        <li><code>Category Group/Category</code>, <code>Category Group</code>, <code>Category</code></li>
+        <li><code>Memo</code> — votre mémo, s'il y en a un</li>
+        <li><code>Outflow</code> — l'argent sorti, en montant positif</li>
+        <li><code>Inflow</code> — l'argent entré, en montant positif</li>
+        <li><code>Cleared</code> — l'état de rapprochement</li>
+      </ul>
+
+      <p>
+        <strong>Entrées et sorties sont dans deux colonnes séparées.</strong>{' '}
+        Une dépense porte son montant dans <code>Outflow</code> et un zéro dans
+        {' '}<code>Inflow</code>. Pour un seul chiffre signé par ligne, calculez
+        {' '}<code>Inflow − Outflow</code>.
+      </p>
+      <p>
+        <strong>Chaque virement apparaît deux fois</strong>, une fois depuis
+        chaque compte, avec un bénéficiaire qui commence par{' '}
+        <code>Transfer : </code> suivi du nom de l'autre compte. Les totaux tous
+        comptes confondus restent justes, les deux moitiés s'annulant. Les
+        totaux de dépenses, non, sauf à écarter ces lignes.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>N'exporter qu'une partie des opérations</h2>
+      <ol>
+        <li>Ouvrez un compte, ou <em>All Accounts</em>, dans la barre latérale.</li>
+        <li>
+          Cochez la case devant chaque opération voulue — ou filtrez d'abord,
+          puis cochez la case dans l'en-tête du tableau.
+        </li>
+        <li>
+          Cliquez <em>More</em> dans la barre d'actions, puis{' '}
+          <em>Export # Transactions</em>.
+        </li>
+      </ol>
+      <p>
+        Le nom du fichier commence par « Selected Transactions for » suivi du
+        nom de votre plan.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ouvrir les fichiers dans Excel ou Google Sheets</h2>
+      <p>
+        <strong>Importez plutôt que de double-cliquer.</strong> Au
+        double-clic, le tableur devine le séparateur et les dates, et il peut
+        deviner faux. Utilisez <em>Fichier → Importer</em> dans Google Sheets,
+        ou l'import texte/CSV de l'onglet <em>Données</em> d'Excel.
+      </p>
+      <p>
+        <strong>Si tout arrive dans une seule colonne, le fichier est en
+        tabulations.</strong> C'est le cas normal avec l'euro : {YNAB.name}{' '}
+        écrit du TSV pour les devises à virgule décimale. Choisissez{' '}
+        <em>Tabulation</em> comme séparateur.
+      </p>
+      <p>
+        <strong>Vérifiez le sens des dates.</strong> Dans l'export vérifié, le
+        mois venait en premier. Un tableur réglé sur la France lira{' '}
+        <code>03/04/2026</code> comme le 3 avril au lieu du 4 mars — sans rien
+        dire, pour chaque date où les deux nombres valent 12 ou moins. Cherchez
+        une date avec un nombre supérieur à 12 pour en avoir le cœur net.
+      </p>
+      <p>
+        <strong>Les montants portent le signe monétaire.</strong> Dans l'export
+        en dollars vérifié, chacun avait son symbole accolé, sans séparateur de
+        milliers, et le moins se plaçait devant le symbole. Un tableur réglé sur
+        une autre devise prendra cela pour du texte : cherchez le symbole,
+        remplacez-le par rien, formatez la colonne en nombres.
+      </p>
+      <p>
+        <strong>Utilisez <code>Category Group</code> et <code>Category</code>,
+        pas la colonne réunie.</strong> Un nom de catégorie peut contenir une
+        barre oblique.
+      </p>
+      <p>
+        <strong>Si vous les lisez avec un script</strong>, attendez-vous à une
+        marque d'ordre des octets devant le premier en-tête : la première
+        colonne ne s'appellera pas exactement <code>Account</code> ou{' '}
+        <code>Month</code>.
+      </p>
+      <p>
+        <strong>Gardez une copie ailleurs que dans une application de
+        budget.</strong> Deux fichiers texte s'ouvriront encore dans trente ans.
+        Personne ne peut en promettre autant d'un compte sur un service.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Importer l'export dans une autre application</h2>
+      <p>
+        Tout importateur est la lecture que quelqu'un fait de ce format, la
+        nôtre comprise. La question à poser à une nouvelle app n'est pas
+        « sait-elle importer YNAB » — toutes disent oui — mais : me montre-t-elle
+        ce qu'elle a compris de mes chiffres <em>avant</em> d'enregistrer ?
+      </p>
+      <p>
+        {SITE.name} lit les deux fichiers, reconstruit catégories, comptes et
+        historique, et montre chaque écart entre ses soldes et ceux de{' '}
+        {YNAB.name} avant tout enregistrement —{' '}
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >en savoir plus si vous quittez {YNAB.name}</a
+        >.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>

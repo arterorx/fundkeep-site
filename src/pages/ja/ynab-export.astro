@@ -1,0 +1,278 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { SITE, YNAB } from '../../consts';
+import { exportGuideCluster, LEAVING_YNAB } from '../../i18n/pages';
+
+/**
+ * YNAB からデータを書き出す手引き。
+ *
+ * 独仏版と違い、円は小数点にピリオドを使うので出てくるのは CSV。代わりに
+ * 日本語版で前に出すのは日付の順序で、月が先の 09/14/2026 は日本の設定だと
+ * 読み違える。列名は英語のまま——ファイルにそう書かれているから。
+ */
+
+const lang = 'ja' as const;
+
+const title = 'YNAB のデータを書き出す方法と、書き出されないもの';
+const description =
+  '手順と中身：Export Plan の場所、2つのファイルの列、日付の順序でつまずく理由、そして targets を手で残す方法。';
+
+const steps = [
+  {
+    name: 'YNAB をウェブブラウザで開きます。',
+    text: '書き出しはウェブ版だけの機能で、アプリにはありません。',
+  },
+  {
+    name: 'プラン名をクリックします。',
+    text: '左サイドバーのいちばん上にあります。見た目はメニューらしくありませんが、メニューです。',
+  },
+  {
+    name: '「Export Plan」を選びます。',
+    text: 'プラン名の下に開くドロップダウンの中にあります。',
+  },
+  {
+    name: 'ダウンロードを保存します。',
+    text: 'ファイル名は「YNAB Export -」とプラン名で始まります。プランと取引履歴は2つの別々のファイルで出てきます。円の場合は CSV（小数点がピリオドの通貨のため）、小数点にカンマを使う通貨では TSV になります。',
+  },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'YNAB からプランと全取引を書き出す',
+    description,
+    inLanguage: 'ja',
+    step: steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'ja',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/ja/ynab-export`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={exportGuideCluster()}
+>
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">手引き</p>
+      <h1>{YNAB.name} のデータを書き出す——そして書き出されないもの</h1>
+      <p class="lede">
+        {YNAB.name} のウェブ版で、左サイドバー上部のプラン名をクリックし
+        <strong>Export Plan</strong> を選びます。月ごとのプランと全取引が2つの
+        ファイルとして出てきます。targets とカテゴリのメモは含まれません。
+        手で残す方法は下に書きます。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>手順</h2>
+      <ol>
+        {
+          steps.map((step) => (
+            <li>
+              <strong>{step.name}</strong>
+              {step.text}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>書き出されないもの</h2>
+      <p>
+        <a
+          href="https://support.ynab.com/en_us/how-to-export-plan-data-Sy_CouWA9"
+          hreflang="en"
+          lang="en">{YNAB.name} のヘルプページ</a
+        >が一行で書いています。書き出しに targets とカテゴリのメモは含まれま
+        せん。写真も含まれず、{YNAB.name} は1枚ずつしかダウンロードさせません。
+        どれかが必要なら、アカウントを閉じる<strong>前</strong>に保存して
+        ください。閉じたあとは、書き出す元がもうありません。
+      </p>
+      <p>
+        <strong>targets。</strong>プランをカテゴリごとに見て、各 target が何を
+        求めているか——金額と、期日または周期——を書き留めます。書き出した
+        プランのファイルがその置き場所に向いています。表計算で開き、
+        <em>Target</em> 列を足して手で埋めてください。一度座れば終わる作業で、
+        その判断が残る唯一の記録になります。
+      </p>
+      <p>
+        <strong>カテゴリのメモ。</strong>同じ表に、もう一列。
+      </p>
+      <p>
+        <strong>写真。</strong>口座の明細で取引の写真をクリックし、
+        <em>Download Image</em> を選びます。これより速い方法はありません。
+      </p>
+      <p>
+        <strong>予定された取引。</strong>一緒に出てくるかどうか、{YNAB.name} の
+        ヘルプには書かれておらず、こちらでもどちらとも確認できませんでした。
+        去る前に控えてください——支払先、金額、頻度、次の日付。
+      </p>
+      <p>
+        <strong>レポート。</strong>分析系のデータは {YNAB.name} 内で別の書き出し
+        になっていて、こちらには含まれません。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>2つのファイルの中身</h2>
+      <p>
+        一方は<strong>プラン</strong>で、各月の各カテゴリが1行ずつ。もう一方は
+        <strong>明細</strong>で、取引が1行ずつ。最初の列で見分けられます。
+        プランは <code>Month</code>、明細は <code>Account</code> です。
+      </p>
+      <p class="small muted">
+        列名はファイルに書かれているとおり、英語のまま載せます。2026年8月の
+        実際の書き出しから取りました。{YNAB.name} のヘルプは列名を一覧して
+        おらず、過去に変わったこともあります（古い書き出しでは
+        <code>Assigned</code> が <code>Budgeted</code> でした）。手元のファイル
+        とここが食い違うなら、正しいのは手元のファイルです。
+      </p>
+
+      <h3>プランのファイル</h3>
+      <ul>
+        <li><code>Month</code> — 月。<code>Aug 2026</code> の形式</li>
+        <li><code>Category Group/Category</code> — グループとカテゴリをスラッシュでつないだもの</li>
+        <li><code>Category Group</code> — グループだけ</li>
+        <li><code>Category</code> — カテゴリだけ</li>
+        <li><code>Assigned</code> — その月にそのカテゴリへ割り当てた額</li>
+        <li><code>Activity</code> — その月に動いた額。支出はマイナス</li>
+        <li><code>Available</code> — その月に使える状態だった額</li>
+      </ul>
+
+      <h3>明細のファイル</h3>
+      <ul>
+        <li><code>Account</code> — その取引の口座</li>
+        <li><code>Flag</code> — 付けていればフラグの色</li>
+        <li><code>Date</code> — 日付。確認した書き出しでは月が先：<code>09/14/2026</code></li>
+        <li><code>Payee</code> — 支払先、または支払元</li>
+        <li><code>Category Group/Category</code>、<code>Category Group</code>、<code>Category</code></li>
+        <li><code>Memo</code> — 書いていればメモ</li>
+        <li><code>Outflow</code> — 出ていった額。正の数</li>
+        <li><code>Inflow</code> — 入ってきた額。正の数</li>
+        <li><code>Cleared</code> — 照合の状態</li>
+      </ul>
+
+      <p>
+        <strong>入金と出金は別の列です。</strong>支出は <code>Outflow</code> に
+        金額、<code>Inflow</code> は 0 になります。1行につき符号付きの1つの数字
+        が欲しければ <code>Inflow − Outflow</code> を計算してください。
+      </p>
+      <p>
+        <strong>口座間の振替は2回現れます。</strong>それぞれの口座から1回ずつ、
+        支払先が <code>Transfer : </code> に続けて相手口座の名前になります。
+        全口座の合計は両方が打ち消し合うので正しく出ますが、支出の合計は
+        これらの行を除かないかぎり合いません。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>一部の取引だけ書き出す</h2>
+      <ol>
+        <li>左サイドバーから口座、または <em>All Accounts</em> を開きます。</li>
+        <li>
+          欲しい取引のチェックボックスを入れます。先に検索や絞り込みをしてから、
+          表の見出し行のチェックボックスで表示中を全選択してもかまいません。
+        </li>
+        <li>
+          現れた操作バーの <em>More</em> を押し、<em>Export # Transactions</em>{' '}
+          を選びます。
+        </li>
+      </ol>
+      <p>
+        そのファイル名は「Selected Transactions for」とプラン名で始まります。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Excel や Google スプレッドシートで開く</h2>
+      <p>
+        <strong>ダブルクリックせず、読み込み機能を使う。</strong>
+        ダブルクリックだと区切り文字や日付を表計算側が推測し、外すことが
+        あります。Google スプレッドシートなら<em>ファイル → インポート</em>、
+        Excel なら<em>データ</em>タブのテキスト／CSV の読み込みを使ってください。
+      </p>
+      <p>
+        <strong>日付の順序を必ず確かめる。</strong>ここが日本でいちばん危険です。
+        確認した書き出しでは月が先でした。日本の設定の表計算は
+        <code>03/04/2026</code> を3月4日と読みますが、書き出し側は4月3日の
+        つもりかもしれません。どちらの数字も12以下の日付では、何も言わずに
+        入れ替わります。13以上の数字が入った日付を探して確かめ、読み込み設定を
+        合わせるか、列を文字列のまま取り込んでください。
+      </p>
+      <p>
+        <strong>金額には通貨記号が付いています。</strong>確認したドルの書き出し
+        では、各金額にドル記号が付き、桁区切りはなく、マイナスは記号の前に
+        ありました。別の通貨に設定された表計算はこれを文字列とみなします。
+        記号を検索して空に置換し、列を数値として書式設定してください。
+      </p>
+      <p>
+        <strong>つないだ列ではなく <code>Category Group</code> と
+        <code>Category</code> を使う。</strong>カテゴリ名自体にスラッシュが
+        入っていることがあり、区切る位置を間違えます。
+      </p>
+      <p>
+        <strong>スクリプトで読むなら</strong>、最初の見出しの前に BOM が付く
+        ことを想定してください。最初の列名が <code>Account</code> や
+        <code>Month</code> と完全一致しない場合があります。
+      </p>
+      <p>
+        <strong>家計簿アプリの外にも1部保管を。</strong>ただのテキスト
+        ファイル2つなら30年後でも開きます。どこかのサービスのアカウントに
+        ついて、それを約束できる人はいません。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>書き出したものを別のアプリに取り込む</h2>
+      <p>
+        取り込み機能はどれも、この形式に対する誰かの解釈です。私たちのものも
+        含めて。新しいアプリに聞くべきなのは「YNAB を取り込めますか」では
+        ありません——どれも「はい」と答えます——「保存する<em>前</em>に、私の
+        数字をどう解釈したか見せてくれますか」です。
+      </p>
+      <p>
+        {SITE.name} は両方のファイルを読み、カテゴリ・口座・履歴を作り直し、
+        保存の前に自分の残高と {YNAB.name} の残高の差をすべて見せます。
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}>乗り換えを考えている人向けの説明</a>
+        もあります。
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>

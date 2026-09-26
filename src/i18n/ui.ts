@@ -29,6 +29,15 @@ const en = {
   'cta.badgeAlt': 'Download on the App Store',
   'price.checked': 'Prices read on the App Store on',
   'home.trial': 'Free for the first {days} days.',
+  'calc.question': 'How long do you expect to keep budgeting?',
+  'calc.over': 'Over {years}',
+  'calc.pay': 'You pay',
+  'calc.annual': 'billed annually',
+  'calc.monthly': 'billed monthly',
+  'calc.ours': 'bought once',
+  'calc.difference': 'Difference over {years}',
+  'calc.yearOne': '1 year',
+  'calc.yearMany': '{n} years',
 } as const;
 
 export type UIKey = keyof typeof en;
@@ -48,6 +57,15 @@ const de = {
   'cta.badgeAlt': 'Laden im App Store',
   'price.checked': 'Preise im App Store gelesen am',
   'home.trial': 'Die ersten {days} Tage kostenlos.',
+  'calc.question': 'Wie lange willst du budgetieren?',
+  'calc.over': 'Über {years}',
+  'calc.pay': 'Du zahlst',
+  'calc.annual': 'jährlich abgerechnet',
+  'calc.monthly': 'monatlich abgerechnet',
+  'calc.ours': 'einmal gekauft',
+  'calc.difference': 'Unterschied über {years}',
+  'calc.yearOne': '1 Jahr',
+  'calc.yearMany': '{n} Jahre',
 } satisfies Record<UIKey, string>;
 
 const fr = {
@@ -65,6 +83,15 @@ const fr = {
   'cta.badgeAlt': 'Télécharger dans l’App Store',
   'price.checked': 'Prix relevés sur l’App Store le',
   'home.trial': 'Gratuit les {days} premiers jours.',
+  'calc.question': 'Pendant combien de temps comptez-vous tenir un budget ?',
+  'calc.over': 'Sur {years}',
+  'calc.pay': 'Vous payez',
+  'calc.annual': 'facturé à l’année',
+  'calc.monthly': 'facturé au mois',
+  'calc.ours': 'acheté une fois',
+  'calc.difference': 'Écart sur {years}',
+  'calc.yearOne': '1 an',
+  'calc.yearMany': '{n} ans',
 } satisfies Record<UIKey, string>;
 
 const ja = {
@@ -82,6 +109,15 @@ const ja = {
   'cta.badgeAlt': 'App Storeでダウンロード',
   'price.checked': 'App Storeで価格を確認した日',
   'home.trial': '最初の{days}日間は無料です。',
+  'calc.question': '家計簿を何年つけるつもりですか？',
+  'calc.over': '{years}で',
+  'calc.pay': '支払額',
+  'calc.annual': '年額',
+  'calc.monthly': '月額',
+  'calc.ours': '買い切り',
+  'calc.difference': '{years}の差額',
+  'calc.yearOne': '1年間',
+  'calc.yearMany': '{n}年間',
 } satisfies Record<UIKey, string>;
 
 const DICTIONARIES: Record<Locale, Record<UIKey, string>> = { en, de, fr, ja };
