@@ -8,6 +8,7 @@ import {
   COMPETITORS,
   COMPETITORS_CHECKED,
   NO_BANK_LOGIN_APPS,
+  ONE_TIME_APPS,
   NO_BANK_LOGIN_CHECKED,
   YNAB_PRICE_HISTORY,
   DOMAIN,
@@ -229,12 +230,21 @@ export function hqGuards(): AstroIntegration {
          * naming competitors is what it is for.
          */
         const competitorAmounts = new Set<string>();
-        for (const rival of [...COMPETITORS, ...NO_BANK_LOGIN_APPS]) {
-          for (const amount of `${rival.price ?? ''} ${rival.priceNote}`.match(
-            /\$\d+(?:,\d{3})*(?:\.\d{2})?/g,
-          ) ?? []) {
+        const add = (text: string) => {
+          for (const amount of text.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?/g) ?? []) {
             competitorAmounts.add(amount);
           }
+        };
+        for (const rival of [...COMPETITORS, ...NO_BANK_LOGIN_APPS]) {
+          add(`${rival.price ?? ''} ${rival.priceNote}`);
+        }
+        // Apps that appear only in the one-time table — Moneydance and
+        // Moneyspire are not in COMPETITORS, and on 26.09.2026 that alone
+        // blocked the build. An app named in any table on this site has to
+        // feed this set, or the guard punishes adding a row rather than
+        // inventing a number.
+        for (const entry of ONE_TIME_APPS) {
+          add(`${entry.app.price ?? ''} ${entry.app.priceNote} ${entry.priceHere ?? ''} ${entry.priceHereNote ?? ''} ${entry.paidAgain}`);
         }
         // YNAB's past prices, for /ynab-pricing. Same scope as the rest: only
         // on a page that declares it prints another company's prices.

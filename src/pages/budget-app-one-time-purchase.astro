@@ -45,8 +45,8 @@ const over = savings(years);
    without anybody noticing. */
 const priced = (name: string) =>
   ONE_TIME_APPS.find((entry) => entry.app.name === name)!.app;
-const zeroed = priced('Zeroed');
-const envy = priced('Envy');
+const moneyspire = priced('Moneyspire');
+const moneydance = priced('Moneydance');
 
 const schema = [
   {
@@ -69,22 +69,20 @@ const schema = [
       <p class="eyebrow">Bought once</p>
       <h1>Budget apps you buy once</h1>
       <p class="lede">
-        Three of the apps below are a single purchase: {SITE.name} at{' '}
-        {PRICING.full}, {zeroed.name} at {zeroed.price} while its founder price
-        lasts, and {envy.name}'s one unlock at {envy.price}. MoneyCoach sells a
-        lifetime option beside
-        its subscription, and Actual Budget asks for nothing at all. What none
-        of them do is fetch your transactions for you — that is the trade, and
-        it is the whole of it.
+        They run from nothing to {ONE_TIME_APPS[ONE_TIME_APPS.length - 1]
+          .priceHere}, and the number is the least interesting thing about
+        them. What separates them is what the word "once" turns out to mean:
+        two of the apps below sell you this year's version and then sell you
+        next year's. What none of them do is fetch your transactions for you —
+        that is the trade, and it is the whole of it.
       </p>
       <p class="small muted">
         Every figure was read from the company's own page or Apple's own listing
         on{' '}
         <time datetime={COMPETITORS_CHECKED.on}>
           {COMPETITORS_CHECKED.display}</time
-        >. Two well-known desktop apps are missing because their sites would not
-        show us a price that day, and we do not print figures we cannot stand
-        behind. <span class="once__hint">The table scrolls sideways.</span>
+        >. The list is not every app ever sold — it is the ones whose price we could
+        read at the source, ours included. <span class="once__hint">The table scrolls sideways.</span>
       </p>
     </div>
 
@@ -96,26 +94,31 @@ const schema = [
     >
       <table>
         <caption class="visually-hidden">
-          Budget apps sold as a purchase: price, payment and platforms
+          Budget apps sold as a purchase: price, whether you pay again, and platforms
         </caption>
         <thead>
           <tr>
             <th scope="col">App</th>
             <th scope="col">Price</th>
-            <th scope="col">Payment</th>
+            <th scope="col">Paid again?</th>
             <th scope="col">Runs on</th>
           </tr>
         </thead>
         <tbody>
           {
-            ONE_TIME_APPS.map(({ app, payment, runsOn }) => (
+            ONE_TIME_APPS.map(({ app, priceHere, priceHereNote, paidAgain, runsOn }) => (
               <tr class:list={[{ once__ours: app.name === SITE.name }]}>
                 <th scope="row">
                   <a href={app.url}>{app.name}</a>
                   {app.name === SITE.name && <span class="once__tag"> (ours)</span>}
                 </th>
-                <td class="once__price">{app.price ?? '—'}</td>
-                <td>{payment}</td>
+                <td class="once__price">
+                  {priceHere ?? app.price ?? '—'}
+                  {priceHereNote && (
+                    <span class="once__note"> {priceHereNote}</span>
+                  )}
+                </td>
+                <td>{paidAgain}</td>
                 <td>{runsOn}</td>
               </tr>
             ))
@@ -142,6 +145,27 @@ const schema = [
         The honest asterisk is that a purchase buys a version, not a promise —
         a future major version may be a new purchase, and nobody in this
         category can promise otherwise.
+      </p>
+      <h2>Where "once" is not once</h2>
+      <p>
+        Two of the apps above are sold outright and then sold again.{' '}
+        {moneyspire.name}'s own purchase page says a new major version is
+        released every year, optional, at $49.99 — so the {moneyspire.price} on
+        the shelf becomes rather more than that over the {years} years this
+        page keeps talking about, and that page was also showing a sale, down
+        from $99.99. {moneydance.name} sells the current version at{' '}
+        {moneydance.price} the same way. Neither is a trick; both are a
+        different deal from the one the phrase "one-time purchase" puts in your
+        head, and the difference is worth knowing before you compare it with a
+        subscription.
+      </p>
+      <p>
+        The other thing a price hides is what the phone gets. On{' '}
+        {moneydance.name} and {moneyspire.name} the iPhone app is a companion:
+        their own pages say the desktop version is required to use it, so the
+        budget lives on a computer and the phone reaches it. That is a fair
+        design and a long-standing one. It is also the opposite of ours, where
+        the iPhone is the whole app and the Mac is the same app again.
       </p>
     </div>
   </section>
@@ -180,9 +204,9 @@ const schema = [
         free for the first {TRIAL.days} days. It never connects to a bank, it
         reads a {YNAB.name} export and shows every difference before saving, and
         what you entered stays visible for good because the app is bought rather
-        than rented. It is also the most expensive one-time price in the table
-        above, it runs on Apple devices only, and a budget belongs to one
-        person — <a href="/blog/ynab-alternatives">the ranked comparison</a>{' '}
+        than rented. It sits in the middle of the table above —
+        cheaper than the two desktop apps and dearer than the two phone ones —
+        it runs on Apple devices only, and a budget belongs to one person — <a href="/blog/ynab-alternatives">the ranked comparison</a>{' '}
         says where each of the others beats it.
       </p>
       <AppStoreCta />
@@ -203,6 +227,34 @@ const schema = [
 
   .once table {
     border-collapse: collapse;
+    /* Fixed layout, because three of the four columns now hold a clause
+       rather than a word. Left to itself the table sized every column to its
+       longest sentence and ran 1040px wide inside a 728px column — wider than
+       the text it sits under, which reads like a mistake even though nothing
+       was clipped. Fixed layout wraps instead, and the min-width below keeps
+       it legible on a phone, where the wrapper scrolls. */
+    width: 100%;
+    /* The sum of the three fixed columns plus room for the fourth. Percentages
+       were tried first and broke the word "Fundkeep" in half on a phone, where
+       17% of the scroll width is 82px. Rem widths hold the names and the
+       figures whole at any width; the last column takes whatever is left. */
+    min-width: 38rem;
+    table-layout: fixed;
+  }
+
+  .once th:first-child,
+  .once td:first-child {
+    width: 7.5rem;
+  }
+
+  .once th:nth-child(2),
+  .once td:nth-child(2) {
+    width: 8rem;
+  }
+
+  .once th:nth-child(3),
+  .once td:nth-child(3) {
+    width: 11rem;
   }
 
   /* Only where it does — the site's other two tables say the same. */
@@ -219,11 +271,13 @@ const schema = [
   .once th,
   .once td {
     vertical-align: top;
-    min-width: 6rem;
   }
 
-  .once td:last-child {
-    min-width: 13rem;
+  .once__note {
+    display: block;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+    font-weight: 400;
   }
 
   .once__price {

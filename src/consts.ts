@@ -431,6 +431,33 @@ const SKWAD: Competitor = {
   bestFor: 'Transactions arriving by themselves without a bank login',
 };
 
+const MONEYDANCE: Competitor = {
+  name: 'Moneydance',
+  url: 'https://infinitekind.com/moneydance',
+  price: '$49.99',
+  priceNote:
+    'paid once, from their own store. A free trial stops at 100 transactions.',
+  availability:
+    'Mac, Windows and Linux, bought from the company. The iPhone and iPad app is free, and their own App Store listing says the desktop version is required to use it.',
+  source: 'their own product page, and Apple’s App Store listing',
+  bestFor: 'A full desktop ledger, if the computer is where you budget',
+};
+
+const MONEYSPIRE: Competitor = {
+  name: 'Moneyspire',
+  url: 'https://www.moneyspire.com/purchase',
+  price: '$59.99',
+  // Read from their own purchase page on 26.09.2026: "$59.99 Was $99.99",
+  // marked 40% off. The undiscounted figure is the one to watch — a sale
+  // price quoted as the price is the same mistake as quoting an intro price.
+  priceNote:
+    'a sale price on their own purchase page that day, down from $99.99. The same page says a new major version is released every year, optional, at $49.99.',
+  availability:
+    'Mac and Windows, bought from the company. Moneyspire Mobile comes with it, and their own page calls it a companion to the desktop software.',
+  source: 'their own purchase page and mobile page',
+  bestFor: 'Bank download services and business-style reports on a computer',
+};
+
 export const COMPETITORS: readonly Competitor[] = [
   // The order the ranked comparison uses, after Fundkeep: the reader's own
   // case decides, and these are sorted by how many readers each case fits.
@@ -686,37 +713,72 @@ export const NO_BANK_LOGIN_APPS: readonly NoBankLoginApp[] = [
  */
 export interface OneTimeApp {
   app: Competitor;
-  /** What the money actually is, in the company's own terms. */
-  payment: 'One purchase' | 'One purchase, or a subscription' | 'Free';
-  /** Where it runs. */
+  /**
+   * What one purchase costs here, when that is not the app's headline price.
+   * MoneyCoach's headline is "Free" because its free tier is real; the figure
+   * this page is about is the one that buys it outright.
+   */
+  priceHere?: string;
+  /** Why the figure above is that figure, if it needs a word. */
+  priceHereNote?: string;
+  /**
+   * Whether the reader pays again, and for what. This is the column the page
+   * is really about.
+   *
+   * The first version of this table had "Payment" here, which said "One
+   * purchase" for every row and so distinguished nothing — it left price as
+   * the only column that varied, and a page about payment models turned into
+   * a price ladder. Two of the apps below sell a version and then sell the
+   * next one; that is the fact a person choosing between buying and renting
+   * needs, and it is invisible in a price.
+   */
+  paidAgain: string;
+  /** Where it runs — and, where it matters, what the phone app actually is. */
   runsOn: string;
 }
 
 export const ONE_TIME_APPS: readonly OneTimeApp[] = [
+  // Ours first, because this is our site and the row says so. The rest run
+  // from nothing to $199.99, in that order: a rule a reader can check, rather
+  // than an order that flatters us.
   {
     app: FUNDKEEP,
-    payment: 'One purchase',
+    paidAgain: 'No',
     runsOn: RELEASE.platforms,
   },
   {
-    app: ZEROED,
-    payment: 'One purchase',
-    runsOn: 'iPhone, iPad, Mac, Windows and Android',
+    app: ACTUAL_BUDGET,
+    paidAgain: 'No — you run the server instead',
+    runsOn: 'The web, Windows, Mac and Linux',
   },
   {
     app: ENVY,
-    payment: 'One purchase',
+    paidAgain: 'No',
     runsOn: 'iPhone and iPad; on a Mac, as the iPad app',
   },
   {
-    app: MONEYCOACH,
-    payment: 'One purchase, or a subscription',
-    runsOn: 'iPhone, iPad, Mac and Apple Watch',
+    app: ZEROED,
+    paidAgain: 'No',
+    runsOn: 'iPhone, iPad, Mac, Windows and Android',
   },
   {
-    app: ACTUAL_BUDGET,
-    payment: 'Free',
-    runsOn: 'The web, Windows, Mac and Linux',
+    app: MONEYDANCE,
+    paidAgain: 'Not for this version',
+    runsOn: 'Mac, Windows and Linux. The phone app needs the desktop one',
+  },
+  {
+    app: MONEYSPIRE,
+    priceHere: '$59.99',
+    priceHereNote: 'a sale price that day, down from $99.99',
+    paidAgain: 'Yes — a new major version yearly, at $49.99',
+    runsOn: 'Mac and Windows. The phone app is a companion to it',
+  },
+  {
+    app: MONEYCOACH,
+    priceHere: '$199.99',
+    priceHereNote: 'Lifetime Premium; the free tier costs nothing',
+    paidAgain: 'No, at that price. Otherwise a subscription',
+    runsOn: 'iPhone, iPad, Mac and Apple Watch',
   },
 ] as const;
 
