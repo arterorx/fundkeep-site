@@ -1,7 +1,7 @@
 ---
 import { SITE } from '../consts';
 import { DEFAULT_LOCALE, localePath, type Locale } from '../i18n/config';
-import { BEST_ALTERNATIVES, LEAVING_YNAB } from '../i18n/pages';
+import { BEST_ALTERNATIVES, LEAVING_YNAB, PRIVACY, SUPPORT } from '../i18n/pages';
 import { t } from '../i18n/ui';
 import BrandMark from './BrandMark.astro';
 
@@ -33,13 +33,11 @@ const links =
     : [
         { href: `/${lang}/${LEAVING_YNAB[lang]}`, label: ui('nav.leaving') },
         { href: `/${lang}/${BEST_ALTERNATIVES[lang]}`, label: ui('nav.compare') },
-        // Support and Privacy are written in English and are not translated
-        // yet. They keep their English labels and are marked as English, so a
-        // screen reader does not read them in the page's language and nobody
-        // is promised a page in theirs. A translated label on an English page
-        // is the one thing worse than an English label.
-        { href: '/support', label: 'Support', foreign: true },
-        { href: '/privacy', label: 'Privacy', foreign: true },
+        // Both of these exist in every language since 26.09.2026. Until then
+        // they were linked in English with an English label, because a
+        // translated label on an English page is worse than an English label.
+        { href: `/${lang}/${SUPPORT[lang]}`, label: ui('nav.support') },
+        { href: `/${lang}/${PRIVACY[lang]}`, label: ui('nav.privacy') },
       ];
 
 /** Articles mark the Articles tab, not just /blog itself. */
@@ -63,8 +61,6 @@ const isCurrent = (href: string) =>
             <li>
               <a
                 href={link.href}
-                hreflang={'foreign' in link ? 'en' : undefined}
-                lang={'foreign' in link ? 'en' : undefined}
                 aria-current={isCurrent(link.href) ? 'page' : undefined}
               >
                 {link.label}

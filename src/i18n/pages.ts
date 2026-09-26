@@ -62,7 +62,24 @@ export const EXPORT_GUIDE = {
   ja: 'ynab-export',
 } as const;
 
+/** The two pages Apple has on file, in the languages they exist in. */
+export const SUPPORT = {
+  en: 'support',
+  de: 'hilfe',
+  fr: 'assistance',
+  ja: 'support',
+} as const;
+
+export const PRIVACY = {
+  en: 'privacy',
+  de: 'datenschutz',
+  fr: 'confidentialite',
+  ja: 'privacy',
+} as const;
+
 export const homeCluster = () => clusterFor(HOME);
+export const supportCluster = () => clusterFor(SUPPORT);
+export const privacyCluster = () => clusterFor(PRIVACY);
 export const ynabPricingCluster = () => clusterFor(YNAB_PRICING);
 export const exportGuideCluster = () => clusterFor(EXPORT_GUIDE);
 export const leavingYnabCluster = () => clusterFor(LEAVING_YNAB);

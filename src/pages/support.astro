@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import { CONTACT_EMAIL, RELEASE, SITE } from '../consts';
 import { SUPPORT_FAQ } from '../data/support-faq';
+import { supportCluster } from '../i18n/pages';
 
 const title = 'Support';
 const description =
@@ -26,7 +27,12 @@ const schema = [
 ];
 ---
 
-<Base title={title} description={description} schema={schema}>
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  alternates={supportCluster()}
+>
   <div class="section wrap wrap-narrow">
     <h1>Support</h1>
     <p class="lede">

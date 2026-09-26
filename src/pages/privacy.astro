@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { CONTACT_EMAIL, PRIVACY_UPDATED, SITE, TRIAL } from '../consts';
+import { privacyCluster } from '../i18n/pages';
 
 /**
  * Written from the facts the app repository already states about itself and
@@ -41,7 +42,12 @@ const schema = [
 ];
 ---
 
-<Base title={title} description={description} schema={schema}>
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  alternates={privacyCluster()}
+>
   <article class="section wrap wrap-narrow prose">
     <h1>Privacy Policy</h1>
     <p class="muted">

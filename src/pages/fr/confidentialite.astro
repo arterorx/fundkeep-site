@@ -1,0 +1,185 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL, PRIVACY_UPDATED, SITE, TRIAL } from '../../consts';
+import { formatDate } from '../../i18n/config';
+import { privacyCluster } from '../../i18n/pages';
+
+/**
+ * La politique de confidentialité en français.
+ *
+ * Traduite de la version anglaise, qui est celle déposée chez Apple et qui
+ * fait foi — la page le dit en haut. Rien n'est ajouté ni retiré : mêmes
+ * sections, mêmes affirmations, même ordre.
+ */
+
+const lang = 'fr' as const;
+
+const title = 'Politique de confidentialité';
+const description =
+  'Fundkeep ne collecte rien : aucun compte, aucun suivi, aucun identifiant bancaire, aucun serveur chez nous. Votre budget reste sur vos appareils.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${title} — ${SITE.name}`,
+    description,
+    url: `${SITE.url}/fr/confidentialite`,
+    inLanguage: 'fr',
+    dateModified: PRIVACY_UPDATED.machine,
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={privacyCluster()}
+>
+  <article class="section wrap wrap-narrow prose">
+    <h1>Politique de confidentialité</h1>
+    <p class="muted">
+      Dernière mise à jour : <time datetime={PRIVACY_UPDATED.machine}
+        >{formatDate(PRIVACY_UPDATED.machine, lang)}</time
+      >
+    </p>
+    <p class="muted">
+      Ceci est une traduction. La version déposée chez Apple, et celle qui fait
+      foi en cas de doute, est la{' '}
+      <a href="/privacy" hreflang="en" lang="en">version anglaise</a>. Si une
+      formulation diverge ici, c'est une erreur de traduction et non un
+      engagement différent — écrivez-nous et nous la corrigerons.
+    </p>
+
+    <h2>En bref</h2>
+    <p>
+      Fundkeep ne collecte rien à votre sujet. Aucun compte à créer, aucune
+      analyse, aucun suivi, aucun identifiant publicitaire, aucun rapport de
+      plantage, et aucun serveur chez nous où que ce soit. Votre budget, vos
+      opérations, vos comptes et vos rapports restent sur vos propres appareils.
+    </p>
+    <p>
+      Cela compte davantage ici que dans la plupart des applications. Un budget
+      est le relevé de ce que vous gagnez, de ce que vous devez et de ce qui
+      vous inquiète. Ce n'est pas une chose à confier à une entreprise qui garde
+      des données au cas où elles serviraient plus tard.
+    </p>
+
+    <h2>Fundkeep ne se connecte pas à votre banque</h2>
+    <p>
+      Délibérément, et ce n'est pas une fonction en attente. Il n'y a ni Plaid
+      ni équivalent, aucune connexion à un établissement financier, et
+      l'application ne demande aucun identifiant, d'aucune sorte.
+    </p>
+    <p>Les opérations entrent dans Fundkeep de deux façons, et de deux seulement :</p>
+    <ul>
+      <li>Vous les saisissez.</li>
+      <li>
+        Vous exportez un relevé de votre banque au format CSV et choisissez ce
+        fichier vous-même. Il est lu <strong>sur votre appareil</strong>, et
+        vous voyez chaque ligne avant tout enregistrement.
+      </li>
+    </ul>
+    <p>
+      Reprendre un budget venu d'une autre application fonctionne pareil : vous
+      exportez le fichier, Fundkeep le lit sur l'appareil et vous montre un
+      rapport de rapprochement avant que vous ne validiez quoi que ce soit.
+    </p>
+
+    <h2>Ce que Fundkeep stocke, et où</h2>
+    <p>
+      Tout ce que vous saisissez — enveloppes, opérations, comptes,
+      bénéficiaires, mémos, rapports — est stocké sur l'appareil où vous l'avez
+      saisi.
+    </p>
+    <p>
+      Si vous laissez la synchronisation iCloud activée, ces données sont aussi
+      stockées dans <strong>votre</strong> propre base iCloud privée, sous votre
+      compte Apple. Nous ne pouvons pas les voir. Les conditions iCloud d'Apple
+      régissent ce stockage ; nous n'en recevons aucune copie et aucune
+      notification. Désactiver la synchronisation dans les réglages garde tout
+      sur l'appareil.
+    </p>
+    <p>
+      Fundkeep n'a pas de serveur. Il n'y a rien à journaliser puisque rien ne
+      nous parvient. Tenir son budget fonctionne entièrement hors ligne.
+    </p>
+
+    <h2>Intelligence sur l'appareil</h2>
+    <p>
+      Là où Fundkeep utilise les modèles d'Apple, il les utilise <strong
+        >sur l'appareil uniquement</strong
+      >. Private Cloud Compute n'est délibérément pas utilisé, pour que « rien
+      ne quitte votre appareil » n'ait besoin d'aucun astérisque ni d'aucune
+      exception pour une fonction astucieuse.
+    </p>
+
+    <h2>Tiers</h2>
+    <p>
+      Il n'y en a aucun. Fundkeep ne contient aucun code tiers : pas de SDK
+      d'analyse, pas de SDK d'attribution, pas de SDK publicitaire, pas de
+      rapporteur de plantages. L'application a zéro dépendance externe. Sur
+      l'App Store, cela apparaît comme l'étiquette <strong
+        >Aucune donnée collectée</strong
+      >, et c'est exact plutôt qu'optimiste.
+    </p>
+    <p>
+      Ce site s'en tient à la même règle : aucune analyse, aucun cookie, rien
+      d'embarqué, et aucun CDN tiers pour les polices, les scripts ou les
+      images ; le site lui-même est servi par Cloudflare. Chaque requête qu'une
+      page fait ici va vers <code>{SITE.domain}</code> et nulle part ailleurs,
+      et la vérification de build refuse de publier une page qui rompt cette
+      règle. Un site qui parle de confidentialité devrait en être un exemple.
+    </p>
+    <p>
+      Une chose appartient à Apple et non à nous : sur iPhone et iPad, Safari
+      peut afficher en haut de ces pages un bandeau proposant Fundkeep sur l'App
+      Store. Chaque page porte la ligne qui le demande, et c'est Safari qui
+      interroge l'App Store pour décider de l'afficher. Nous n'en recevons rien,
+      et le bandeau fermé reste fermé.
+    </p>
+
+    <h2>Enfants</h2>
+    <p>Fundkeep ne collecte de données auprès de personne, à aucun âge.</p>
+
+    <h2>Ce que vous pouvez faire</h2>
+    <ul>
+      <li>
+        Tout exporter en CSV à tout moment — y compris après la fin des{' '}
+        {TRIAL.days} jours d'essai, et avant même d'avoir acheté l'application.
+        Vos propres écritures ne sont jamais retenues derrière un achat.
+      </li>
+      <li>Supprimer une opération, une enveloppe ou un compte dans l'application.</li>
+      <li>
+        Désactiver la synchronisation iCloud dans les réglages pour tout garder
+        en local.
+      </li>
+      <li>
+        Supprimer l'application pour effacer toutes les données locales. Pour
+        les données synchronisées, supprimez celles de Fundkeep depuis iCloud
+        dans les réglages du système.
+      </li>
+    </ul>
+    <p>
+      Comme nous ne détenons aucune donnée vous concernant, il n'y a rien dont
+      nous puissions vous envoyer une copie, et rien que nous puissions
+      supprimer sur demande.
+    </p>
+
+    <h2>Modifications</h2>
+    <p>
+      Si cette politique change, la nouvelle version paraîtra à cette adresse
+      avec une nouvelle date en haut.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions : <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Le
+      courrier envoyé là est du courrier : une personne le lit et y répond, et
+      il n'est ajouté à aucune liste.
+    </p>
+  </article>
+</Base>

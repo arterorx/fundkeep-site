@@ -62,6 +62,16 @@ const PAGES = [
   ['/de/ynab-daten-exportieren', 'de/ynab-daten-exportieren.html'],
   ['/fr/exporter-donnees-ynab', 'fr/exporter-donnees-ynab.html'],
   ['/ja/ynab-export', 'ja/ynab-export.html'],
+  // The two pages Apple has on file, now in four languages. The English ones
+  // stay the addresses filed with App Review; these are the same text for
+  // readers who would otherwise have to take a policy on trust in a language
+  // they do not read.
+  ['/de/hilfe', 'de/hilfe.html'],
+  ['/de/datenschutz', 'de/datenschutz.html'],
+  ['/fr/assistance', 'fr/assistance.html'],
+  ['/fr/confidentialite', 'fr/confidentialite.html'],
+  ['/ja/support', 'ja/support.html'],
+  ['/ja/privacy', 'ja/privacy.html'],
 ];
 
 /** Apple's badge, in each language the site publishes. */

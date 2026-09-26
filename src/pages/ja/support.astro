@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL, MARKETS, RELEASE, SITE } from '../../consts';
+import { SUPPORT_FAQ_I18N } from '../../data/support-faq.i18n';
+import { PRIVACY, supportCluster } from '../../i18n/pages';
+
+/**
+ * 日本語のサポートページ。価格は日本の App Store のもの——サポートページがドル価格を答えると、いちばん多い質問に誤って答えることになる。
+ */
+
+const lang = 'ja' as const;
+const faq = SUPPORT_FAQ_I18N[lang];
+
+const title = 'サポート';
+const description =
+  'Fundkeep について人に連絡する方法と、インストール後によくある質問への答え：対応機種、体験期間、購入、読み込みと書き出し。';
+
+/** Built from the same array as the visible list, so the two cannot disagree. */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    url: `${SITE.url}/ja/support`,
+    inLanguage: 'ja',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.link ? `${item.a} ${item.link.href}` : item.a,
+      },
+    })),
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={supportCluster()}
+>
+  <div class="section wrap wrap-narrow">
+    <h1>サポート</h1>
+    <p class="lede">
+      Fundkeep は開発者ひとりで作っています。下のアドレス宛のメールは人が読み、人が返します。
+    </p>
+
+    <p class="contact">
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </p>
+
+    {
+      RELEASE.state === 'released' && (
+        <p class="notice">
+          <strong>App Store で配信中</strong> （iPhone・iPad・Mac）：<a href={MARKETS.ja.storeUrl}>Fundkeep をダウンロード</a>。以下の答えはすべて、販売中のバージョンについてのものです。
+        </p>
+      )
+    }
+
+    <h2>よくある質問</h2>
+    <dl class="faq">
+      {
+        faq.map((item) => (
+          <div class="faq__item">
+            <dt>{item.q}</dt>
+            <dd>
+              {item.a}
+              {item.link && (
+                <>
+                  {' '}
+                  <a href={item.link.href}>{item.link.label}</a>
+                </>
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <h2>プライバシー</h2>
+    <p>
+      Fundkeep が何を保存し、何を、誰に送るのかは<a href={`/ja/${PRIVACY[lang]}`}>プライバシーポリシー</a>に全文あります。短く言えば、何も集めず、銀行ログインを尋ねることもなく、何かが届くようなサーバーもこちらにはありません。
+    </p>
+  </div>
+</Base>
+
+<style>
+  .contact {
+    font-size: var(--step-1);
+    font-weight: 600;
+    margin-bottom: var(--space-l);
+  }
+
+  .faq {
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  .faq__item + .faq__item {
+    margin-top: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .faq dt {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-xs);
+  }
+
+  .faq dd {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>
+

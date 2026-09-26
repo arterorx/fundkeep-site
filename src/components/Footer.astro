@@ -7,6 +7,7 @@ import {
   type Locale,
 } from '../i18n/config';
 import { t } from '../i18n/ui';
+import { PRIVACY, SUPPORT } from '../i18n/pages';
 
 interface Props {
   lang?: Locale;
@@ -31,13 +32,13 @@ const others = alternates.filter((entry) => entry.lang !== lang);
     <nav aria-label="Footer">
       <ul class="footer-nav small">
         <li>
-          <a href="/support" hreflang="en" lang={lang === DEFAULT_LOCALE ? undefined : 'en'}
-            >Support</a
+          <a href={`/${lang}/${SUPPORT[lang]}`.replace('/en/', '/')}
+            >{ui('nav.support')}</a
           >
         </li>
         <li>
-          <a href="/privacy" hreflang="en" lang={lang === DEFAULT_LOCALE ? undefined : 'en'}
-            >Privacy</a
+          <a href={`/${lang}/${PRIVACY[lang]}`.replace('/en/', '/')}
+            >{ui('nav.privacy')}</a
           >
         </li>
         <li><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>

@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL, MARKETS, RELEASE, SITE } from '../../consts';
+import { SUPPORT_FAQ_I18N } from '../../data/support-faq.i18n';
+import { PRIVACY, supportCluster } from '../../i18n/pages';
+
+/**
+ * Die Hilfeseite auf Deutsch. Dieselbe Adresse, dieselben Antworten, aber mit dem Preis des deutschen App Stores — eine Support-Seite, die einen Dollarpreis nennt, beantwortet die häufigste Frage falsch.
+ */
+
+const lang = 'de' as const;
+const faq = SUPPORT_FAQ_I18N[lang];
+
+const title = 'Hilfe';
+const description =
+  'Wie du einen Menschen zu Fundkeep erreichst, und Antworten auf die Fragen nach der Installation: Geräte, Testzeit, Kauf, Import und Export.';
+
+/** Built from the same array as the visible list, so the two cannot disagree. */
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    url: `${SITE.url}/de/hilfe`,
+    inLanguage: 'de',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.link ? `${item.a} ${item.link.href}` : item.a,
+      },
+    })),
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={supportCluster()}
+>
+  <div class="section wrap wrap-narrow">
+    <h1>Hilfe</h1>
+    <p class="lede">
+      Fundkeep wird von einem einzelnen Entwickler gemacht. Post an die Adresse unten liest ein Mensch und beantwortet ein Mensch.
+    </p>
+
+    <p class="contact">
+      <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+    </p>
+
+    {
+      RELEASE.state === 'released' && (
+        <p class="notice">
+          <strong>Im App Store</strong> für iPhone, iPad und Mac: <a href={MARKETS.de.storeUrl}>Fundkeep laden</a>. Jede Antwort unten beschreibt die Version, die verkauft wird.
+        </p>
+      )
+    }
+
+    <h2>Häufige Fragen</h2>
+    <dl class="faq">
+      {
+        faq.map((item) => (
+          <div class="faq__item">
+            <dt>{item.q}</dt>
+            <dd>
+              {item.a}
+              {item.link && (
+                <>
+                  {' '}
+                  <a href={item.link.href}>{item.link.label}</a>
+                </>
+              )}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <h2>Datenschutz</h2>
+    <p>
+      Was Fundkeep speichert, was es sendet und an wen, steht vollständig in der <a href={`/de/${PRIVACY[lang]}`}>Datenschutzerklärung</a>. Die Kurzfassung: es sammelt nichts, es fragt nie nach einem Bankzugang, und es gibt keinen Server von uns, den irgendetwas erreichen könnte.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .contact {
+    font-size: var(--step-1);
+    font-weight: 600;
+    margin-bottom: var(--space-l);
+  }
+
+  .faq {
+    max-width: var(--measure);
+    margin: 0;
+  }
+
+  .faq__item + .faq__item {
+    margin-top: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .faq dt {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-xs);
+  }
+
+  .faq dd {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>
+

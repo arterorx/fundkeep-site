@@ -1,0 +1,188 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CONTACT_EMAIL, PRIVACY_UPDATED, SITE, TRIAL } from '../../consts';
+import { formatDate } from '../../i18n/config';
+import { privacyCluster } from '../../i18n/pages';
+
+/**
+ * Die Datenschutzerklärung auf Deutsch.
+ *
+ * Übersetzt aus der englischen Fassung, die bei Apple hinterlegt ist und die
+ * maßgebliche bleibt — das steht auch oben auf der Seite. Eine Übersetzung,
+ * die sich unbemerkt von der hinterlegten Fassung entfernt, wäre genau die
+ * Art von Unschärfe, die eine Datenschutzerklärung nicht haben darf.
+ *
+ * Inhaltlich wird nichts hinzugefügt und nichts weggelassen: dieselben
+ * Abschnitte, dieselben Aussagen, dieselbe Reihenfolge.
+ */
+
+const lang = 'de' as const;
+
+const title = 'Datenschutzerklärung';
+const description =
+  'Fundkeep sammelt nichts über dich: kein Konto, keine Analyse, kein Tracking, keine Bankzugänge, kein Server von uns. Dein Budget bleibt auf deinen Geräten.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `${title} — ${SITE.name}`,
+    description,
+    url: `${SITE.url}/de/datenschutz`,
+    inLanguage: 'de',
+    dateModified: PRIVACY_UPDATED.machine,
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={privacyCluster()}
+>
+  <article class="section wrap wrap-narrow prose">
+    <h1>Datenschutzerklärung</h1>
+    <p class="muted">
+      Zuletzt aktualisiert: <time datetime={PRIVACY_UPDATED.machine}
+        >{formatDate(PRIVACY_UPDATED.machine, lang)}</time
+      >
+    </p>
+    <p class="muted">
+      Dies ist eine Übersetzung. Bei Apple hinterlegt und im Zweifel maßgeblich
+      ist die{' '}
+      <a href="/privacy" hreflang="en" lang="en">englische Fassung</a>. Weicht
+      eine Formulierung hier davon ab, ist das ein Übersetzungsfehler und keine
+      andere Zusage — schreib uns, und wir korrigieren ihn.
+    </p>
+
+    <h2>Die Kurzfassung</h2>
+    <p>
+      Fundkeep sammelt nichts über dich. Es gibt kein Konto anzulegen, keine
+      Analyse, kein Tracking, keine Werbe-ID, keine Absturzberichte und nirgends
+      einen Server von uns. Dein Budget, deine Umsätze, deine Konten und deine
+      Berichte bleiben auf deinen eigenen Geräten.
+    </p>
+    <p>
+      Das wiegt hier schwerer als bei den meisten Apps. Ein Budget ist eine
+      Aufzeichnung dessen, was du verdienst, was du schuldest und worüber du
+      dir Sorgen machst. So etwas gibt man nicht einem Unternehmen, das Daten
+      aufhebt, weil sie später nützlich sein könnten.
+    </p>
+
+    <h2>Fundkeep verbindet sich nicht mit deiner Bank</h2>
+    <p>
+      Mit Absicht, und es ist keine Funktion, die noch kommt. Es gibt kein Plaid
+      oder Vergleichbares, keine Anmeldung bei einem Finanzinstitut, und die App
+      fragt nach keinerlei Zugangsdaten.
+    </p>
+    <p>Umsätze kommen auf genau zwei Wegen in Fundkeep:</p>
+    <ul>
+      <li>Du tippst sie ein.</li>
+      <li>
+        Du exportierst einen Auszug deiner Bank als CSV-Datei und wählst diese
+        Datei selbst aus. Sie wird <strong>auf deinem Gerät</strong> gelesen,
+        und du siehst jede Zeile, bevor etwas gespeichert wird.
+      </li>
+    </ul>
+    <p>
+      Ein Budget aus einer anderen App zu übernehmen funktioniert genauso: du
+      exportierst die Datei, Fundkeep liest sie auf dem Gerät und zeigt dir
+      einen Abgleichbericht, bevor du irgendetwas übernimmst.
+    </p>
+
+    <h2>Was Fundkeep speichert, und wo</h2>
+    <p>
+      Alles, was du einträgst — Umschläge, Umsätze, Konten, Empfänger, Notizen,
+      Berichte — wird auf dem Gerät gespeichert, auf dem du es eingetragen hast.
+    </p>
+    <p>
+      Wenn du die iCloud-Synchronisierung anlässt, liegen diese Daten zusätzlich
+      in <strong>deiner</strong> eigenen privaten iCloud-Datenbank unter deinem
+      Apple-Account. Wir können sie nicht sehen. Für diese Speicherung gelten
+      Apples iCloud-Bedingungen; wir bekommen keine Kopie davon und keine
+      Benachrichtigung darüber. Schaltest du die Synchronisierung in den
+      Einstellungen ab, bleibt alles auf dem Gerät.
+    </p>
+    <p>
+      Fundkeep hat keinen Server. Es gibt nichts, was wir protokollieren
+      könnten, weil uns nichts erreicht. Budgetieren funktioniert vollständig
+      offline.
+    </p>
+
+    <h2>Intelligenz auf dem Gerät</h2>
+    <p>
+      Wo Fundkeep Apples Modelle nutzt, nutzt es sie <strong
+        >ausschließlich auf dem Gerät</strong
+      >. Private Cloud Compute wird bewusst nicht verwendet, damit „nichts
+      verlässt dein Gerät“ ohne Sternchen und ohne Ausnahme für eine clevere
+      Funktion auskommt.
+    </p>
+
+    <h2>Dritte</h2>
+    <p>
+      Es gibt keine. In Fundkeep steckt überhaupt kein fremder Code: kein
+      Analyse-SDK, kein Attributions-SDK, kein Werbe-SDK, kein Absturzmelder.
+      Die App hat null externe Abhängigkeiten. Im App Store erscheint das als
+      Kennzeichnung <strong>Keine Daten erfasst</strong>, und das ist genau so
+      gemeint und nicht optimistisch.
+    </p>
+    <p>
+      Diese Website hält sich an dieselbe Regel: keine Analyse, keine Cookies,
+      nichts Eingebettetes und kein fremdes CDN für Schriften, Skripte oder
+      Bilder; ausgeliefert wird die Seite von Cloudflare. Jede Anfrage, die eine
+      Seite hier stellt, geht an <code>{SITE.domain}</code> und sonst nirgendwo,
+      und die Sicherung beim Bauen weigert sich, eine Seite zu veröffentlichen,
+      die das bricht. Eine Seite, die über Datenschutz spricht, sollte ein
+      Beispiel dafür sein.
+    </p>
+    <p>
+      Eines gehört Apple und nicht uns: auf iPhone und iPad kann Safari oben auf
+      diesen Seiten einen Streifen zeigen, der Fundkeep im App Store anbietet.
+      Jede Seite trägt die eine Zeile, die darum bittet, und Safari fragt beim
+      App Store nach, ob der Streifen erscheinen soll. Wir bekommen daraus
+      nichts, und wer ihn schließt, hat ihn geschlossen.
+    </p>
+
+    <h2>Kinder</h2>
+    <p>Fundkeep erhebt von niemandem Daten, in keinem Alter.</p>
+
+    <h2>Was du tun kannst</h2>
+    <ul>
+      <li>
+        Jederzeit alles als CSV exportieren — auch nach Ablauf der{' '}
+        {TRIAL.days}-tägigen Testzeit und auch, bevor du die App gekauft hast.
+        Deine eigenen Aufzeichnungen liegen nie hinter einem Kauf.
+      </li>
+      <li>Einen Umsatz, einen Umschlag oder ein Konto in der App löschen.</li>
+      <li>
+        Die iCloud-Synchronisierung in den Einstellungen abschalten, damit alles
+        lokal bleibt.
+      </li>
+      <li>
+        Die App löschen, um alle lokalen Daten zu entfernen. Synchronisierte
+        Daten entfernst du, indem du die Fundkeep-Daten in den
+        Systemeinstellungen aus iCloud löschst.
+      </li>
+    </ul>
+    <p>
+      Da wir keine Daten über dich halten, gibt es nichts, wovon wir dir eine
+      Kopie schicken könnten, und nichts, was wir auf Anfrage löschen könnten.
+    </p>
+
+    <h2>Änderungen</h2>
+    <p>
+      Sollte sich diese Erklärung ändern, erscheint die neue Fassung unter
+      dieser Adresse mit einem neuen Datum oben.
+    </p>
+
+    <h2>Kontakt</h2>
+    <p>
+      Fragen: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Post
+      dorthin ist Post — ein Mensch liest sie und antwortet darauf, und sie
+      landet auf keiner Liste.
+    </p>
+  </article>
+</Base>
