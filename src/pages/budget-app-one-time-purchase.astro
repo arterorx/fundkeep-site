@@ -1,0 +1,243 @@
+---
+import Base from '../layouts/Base.astro';
+import AppStoreCta from '../components/AppStoreCta.astro';
+import {
+  CALCULATOR,
+  COMPETITORS_CHECKED,
+  ONE_TIME_APPS,
+  PRICING,
+  RELEASE,
+  SITE,
+  TRIAL,
+  YNAB,
+  money,
+  savings,
+} from '../consts';
+
+/**
+ * Budget apps you buy once (26.09.2026).
+ *
+ * Google's results for "budget app one time purchase" are a MacPowerUsers
+ * thread and a few small blogs — nobody owns the phrase, and it is the whole
+ * pitch of this app. So this page exists to own it.
+ *
+ * It is not another ranking. /blog/ynab-alternatives answers "what do I use
+ * instead of YNAB"; this answers "what do I buy instead of subscribing", which
+ * is a different question with a different list: an app can be a poor YNAB
+ * replacement and still be the right purchase.
+ *
+ * Every figure comes from `ONE_TIME_APPS`, which reuses the same constants the
+ * other comparisons print, so a price that moves is one line to change. Two
+ * well-known desktop apps are deliberately absent: their own sites answered
+ * with an empty page when we tried to read a price, and an app we cannot quote
+ * is an app we do not name.
+ */
+
+const title = 'Budget Apps With a One-Time Purchase, Not a Subscription (2026)';
+const description =
+  'Which budgeting apps you buy once, what each costs, and what you give up when nobody is billing you every year. Prices read 26 September 2026.';
+
+const years = CALCULATOR.defaultYears;
+const over = savings(years);
+
+/* Prices come from the list, never typed into the sentence: the first draft of
+   this page had two of them in prose, which is exactly how a page goes stale
+   without anybody noticing. */
+const priced = (name: string) =>
+  ONE_TIME_APPS.find((entry) => entry.app.name === name)!.app;
+const zeroed = priced('Zeroed');
+const envy = priced('Envy');
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/budget-app-one-time-purchase`,
+    inLanguage: 'en',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base title={title} exactTitle description={description} schema={schema}>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Bought once</p>
+      <h1>Budget apps you buy once</h1>
+      <p class="lede">
+        Three of the apps below are a single purchase: {SITE.name} at{' '}
+        {PRICING.full}, {zeroed.name} at {zeroed.price} while its founder price
+        lasts, and {envy.name}'s one unlock at {envy.price}. MoneyCoach sells a
+        lifetime option beside
+        its subscription, and Actual Budget asks for nothing at all. What none
+        of them do is fetch your transactions for you — that is the trade, and
+        it is the whole of it.
+      </p>
+      <p class="small muted">
+        Every figure was read from the company's own page or Apple's own listing
+        on{' '}
+        <time datetime={COMPETITORS_CHECKED.on}>
+          {COMPETITORS_CHECKED.display}</time
+        >. Two well-known desktop apps are missing because their sites would not
+        show us a price that day, and we do not print figures we cannot stand
+        behind. <span class="once__hint">The table scrolls sideways.</span>
+      </p>
+    </div>
+
+    <div
+      class="once"
+      role="region"
+      aria-label="Budget apps you buy once"
+      tabindex="0"
+    >
+      <table>
+        <caption class="visually-hidden">
+          Budget apps sold as a purchase: price, payment and platforms
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">App</th>
+            <th scope="col">Price</th>
+            <th scope="col">Payment</th>
+            <th scope="col">Runs on</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            ONE_TIME_APPS.map(({ app, payment, runsOn }) => (
+              <tr class:list={[{ once__ours: app.name === SITE.name }]}>
+                <th scope="row">
+                  <a href={app.url}>{app.name}</a>
+                  {app.name === SITE.name && <span class="once__tag"> (ours)</span>}
+                </th>
+                <td class="once__price">{app.price ?? '—'}</td>
+                <td>{payment}</td>
+                <td>{runsOn}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------- What renting costs -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What the subscription costs instead</h2>
+      <p>
+        {YNAB.name} is {YNAB.price} {YNAB.period}. Over the {years} years most
+        people keep budgeting, that is {money(over.annual)} — and it has gone up
+        four times since 2015, which is a habit rather than an accident.{' '}
+        <a href="/ynab-pricing">Every price it has charged, with the sources</a>,
+        and a calculator for your own number, is on its own page here.
+      </p>
+      <p>
+        A purchase has the opposite habit: {PRICING.full} today is{' '}
+        {PRICING.full} for this version of the app for as long as you use it.
+        The honest asterisk is that a purchase buys a version, not a promise —
+        a future major version may be a new purchase, and nobody in this
+        category can promise otherwise.
+      </p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------ The trade-off -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>What you give up when nobody bills you</h2>
+      <p>
+        <strong>Automatic transactions.</strong> A bank connection costs money
+        every month to run, so apps that charge once mostly do not have one. You
+        type what you spend, or import the CSV your bank already gives you. If
+        that sounds like the part you were paying to avoid, a subscription is
+        the honest answer and we are not it.
+      </p>
+      <p>
+        <strong>Shared budgets.</strong> {YNAB.name} covers up to six people on
+        one subscription. Among the apps above, that kind of sharing is the
+        exception rather than the rule — {SITE.name} keeps one person's budget
+        in step across their own devices, and no further.
+      </p>
+      <p>
+        <strong>Somebody else's roadmap.</strong> Subscription money pays for
+        continuous work. A purchase pays for what exists the day you buy it.
+        Read the version history before you buy anything here, ours included.
+      </p>
+    </div>
+  </section>
+
+  <!-- -------------------------------------------------------------- Ours -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>Where {SITE.name} fits</h2>
+      <p>
+        It is the envelope method on {RELEASE.platforms}, {PRICING.full} once,
+        free for the first {TRIAL.days} days. It never connects to a bank, it
+        reads a {YNAB.name} export and shows every difference before saving, and
+        what you entered stays visible for good because the app is bought rather
+        than rented. It is also the most expensive one-time price in the table
+        above, it runs on Apple devices only, and a budget belongs to one
+        person — <a href="/blog/ynab-alternatives">the ranked comparison</a>{' '}
+        says where each of the others beats it.
+      </p>
+      <AppStoreCta />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .once {
+    overflow-x: auto;
+    margin: var(--space-l) 0 var(--space-2xl);
+  }
+
+  .once:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .once table {
+    border-collapse: collapse;
+  }
+
+  /* Only where it does — the site's other two tables say the same. */
+  .once__hint {
+    display: none;
+  }
+
+  @media (max-width: 46rem) {
+    .once__hint {
+      display: inline;
+    }
+  }
+
+  .once th,
+  .once td {
+    vertical-align: top;
+    min-width: 6rem;
+  }
+
+  .once td:last-child {
+    min-width: 13rem;
+  }
+
+  .once__price {
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .once__ours th[scope='row'] a,
+  .once__ours .once__price {
+    color: var(--text-accent);
+  }
+
+  .once__tag {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+</style>

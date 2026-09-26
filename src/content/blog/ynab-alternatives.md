@@ -109,7 +109,9 @@ both, the rows above are the trade you are making.
 ## How to choose
 
 - **Everything you own is Apple, and you want the method, paid once.** That is
-  the case Fundkeep was built for. Take the fourteen days first.
+  the case Fundkeep was built for. Take the fourteen days first, and see
+  [which budget apps you buy once](/budget-app-one-time-purchase) if the payment
+  model is what you are shopping for.
 - **Somebody in the house is on Windows or Android.** Zeroed, and it is cheaper
   until February 2027.
 - **You would rather pay nothing and are happy to run a server.** Actual Budget,

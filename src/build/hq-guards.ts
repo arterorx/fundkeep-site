@@ -506,7 +506,7 @@ export function hqGuards(): AstroIntegration {
           const articles = pages
             .map((page) => page.slice(root.length))
             .filter((name) => name.startsWith('blog/'));
-          for (const required of ['index.html', 'ynab-alternative.html', 'ynab-pricing.html', 'support.html', ...articles]) {
+          for (const required of ['index.html', 'ynab-alternative.html', 'ynab-pricing.html', 'budget-app-one-time-purchase.html', 'support.html', ...articles]) {
             const path = join(root, required);
             if (!existsSync(path)) {
               problems.push(`${required} was not emitted.`);

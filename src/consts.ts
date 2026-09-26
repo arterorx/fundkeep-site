@@ -671,6 +671,55 @@ export const NO_BANK_LOGIN_APPS: readonly NoBankLoginApp[] = [
   },
 ] as const;
 
+/**
+ * Budget apps you buy once — the table on /budget-app-one-time-purchase.
+ *
+ * The search results for "budget app one time purchase" are a forum thread and
+ * a few small blogs: nobody owns the phrase, and it is what this app is. The
+ * page exists for that, and this list is what it may print.
+ *
+ * Rule of entry, the same as everywhere else here: how an app charges has to
+ * come from the company's own page or Apple's own listing, read on the date in
+ * COMPETITORS_CHECKED — these five are the same constants that table prints. Two well-known desktop apps are missing for exactly
+ * that reason — their sites answered with an empty shell on 26.09.2026, and an
+ * app we cannot quote is an app we do not name.
+ */
+export interface OneTimeApp {
+  app: Competitor;
+  /** What the money actually is, in the company's own terms. */
+  payment: 'One purchase' | 'One purchase, or a subscription' | 'Free';
+  /** Where it runs. */
+  runsOn: string;
+}
+
+export const ONE_TIME_APPS: readonly OneTimeApp[] = [
+  {
+    app: FUNDKEEP,
+    payment: 'One purchase',
+    runsOn: RELEASE.platforms,
+  },
+  {
+    app: ZEROED,
+    payment: 'One purchase',
+    runsOn: 'iPhone, iPad, Mac, Windows and Android',
+  },
+  {
+    app: ENVY,
+    payment: 'One purchase',
+    runsOn: 'iPhone and iPad; on a Mac, as the iPad app',
+  },
+  {
+    app: MONEYCOACH,
+    payment: 'One purchase, or a subscription',
+    runsOn: 'iPhone, iPad, Mac and Apple Watch',
+  },
+  {
+    app: ACTUAL_BUDGET,
+    payment: 'Free',
+    runsOn: 'The web, Windows, Mac and Linux',
+  },
+] as const;
+
 /** All of NO_BANK_LOGIN_APPS was read on this date, as one sweep. */
 export const NO_BANK_LOGIN_CHECKED = {
   on: '2026-09-13',
