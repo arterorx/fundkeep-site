@@ -27,8 +27,18 @@ import {
  * figure on this page that its own arithmetic cannot produce.
  */
 
-const title = `${YNAB.name} alternative`;
-const description = `Fundkeep is envelope budgeting for iPhone, iPad and Mac, bought once for ${PRICING.full} instead of ${YNAB.price} ${YNAB.period}. Same method, no bank logins.`;
+/* «for Mac» — потому что по «ynab alternative mac» сайт уже показывается, а по
+   голому «ynab alternative» топ занят фермами. Уточнение — наш шанс.
+
+   Порядок платформ в заголовке считается из RELEASE.platforms, а не набирается
+   второй раз: на этой странице Mac идёт первым, но список остаётся один. */
+const macFirst = (() => {
+  const parts = RELEASE.platforms.split(/,\s*|\s+and\s+/);
+  const rest = parts.filter((name) => name !== 'Mac');
+  return `Mac, ${rest.slice(0, -1).join(', ')} and ${rest[rest.length - 1]}`;
+})();
+const title = `${YNAB.name} Alternative for Mac: Bought Once, No Bank Login (2026)`;
+const description = `On a Mac, ${YNAB.name} is a browser tab — by their own help page. ${SITE.name} is a Mac app with a menu bar, bought once for ${PRICING.full} instead of ${YNAB.price} ${YNAB.period}.`;
 
 /**
  * The headline figure, and the reason this page is shaped the way it is.
@@ -92,17 +102,18 @@ const different = [
 ];
 ---
 
-<Base title={title} description={description} schema={schema}>
+<Base title={title} exactTitle description={description} schema={schema}>
 
   <!-- ------------------------------------------------- Their arithmetic -->
   <section class="section wrap">
     <div class="column">
       <p class="eyebrow">Leaving {YNAB.name}?</p>
-      <h1>{YNAB.price} {YNAB.period}, or {PRICING.full} once</h1>
+      <h1>A {YNAB.name} alternative for {macFirst}</h1>
       <p class="lede">
-        You already know the first number — it leaves your account every year,
+        <strong>{YNAB.price} {YNAB.period}, or {PRICING.full} once.</strong> You
+        already know the first number — it leaves your account every year,
         whether or not you opened the app. Here is what the second one does to
-        it.
+        it, and what changes on a Mac.
       </p>
     </div>
 
@@ -136,6 +147,42 @@ const different = [
 
     <div class="column">
       <AppStoreCta class="hero__cta" />
+    </div>
+  </section>
+
+  <!-- --------------------------------------------------------------- Mac -->
+  <section class="section wrap">
+    <div class="column">
+      <h2>On a Mac, {YNAB.name} is a browser tab</h2>
+      <p>
+        That is not our characterisation, it is theirs. {YNAB.name}'s own help
+        page on its apps says: “There is not a downloadable version of the app on
+        laptop or desktop,” and tells Chrome and Safari users they can “install
+        the page as an app to create a shortcut that makes it feel more like a
+        standalone application”. Their app line-up page lists iPhone, Android and
+        Apple Watch. Read on{' '}
+        <time datetime={YNAB.checkedOn}>{YNAB.checkedOnDisplay}</time>.
+      </p>
+      <p>
+        For plenty of people a browser tab is fine, and saying otherwise would be
+        silly. It stops being fine when the budget is something you open twenty
+        times a week: a tab has no dock icon that remembers where you were, no
+        menu bar, no keyboard shortcuts of its own, and it is one accidental
+        window-close away from being gone.
+      </p>
+      <p>
+        {SITE.name} on a Mac is a Mac app — a menu bar and keyboard shortcuts,
+        not a phone app in a window — and the same purchase covers your iPhone
+        and iPad, kept in step through your own private iCloud.
+      </p>
+      <p class="small muted">
+        Among the alternatives we name, MoneyCoach is also a native Mac app;
+        Envy runs on a Mac as the iPad app; Actual Budget is a desktop download
+        you run yourself; Zeroed ships both an App Store version and a direct
+        download.{' '}
+        <a href="/blog/ynab-alternatives">The ranked comparison</a> says what
+        each costs and where each one beats us.
+      </p>
     </div>
   </section>
 
@@ -216,7 +263,8 @@ const different = [
         you {YNAB.trialDays} when you sign up on its own site, so you can run both
         and see. After the trial
         Fundkeep becomes read-only until you buy it: what you entered stays
-        visible, and exporting keeps working.
+        visible, and exporting keeps working. The other apps you can buy
+        outright are <a href="/budget-app-one-time-purchase">on their own page</a>.
       </p>
       {/* Text, not a second badge: Apple allows one per layout. */}
       <AppStoreCta variant="text" />
