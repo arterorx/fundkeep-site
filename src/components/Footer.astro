@@ -1,19 +1,45 @@
 ---
 import { CONTACT_EMAIL, SITE } from '../consts';
+import {
+  DEFAULT_LOCALE,
+  LOCALE_NAMES,
+  type Alternate,
+  type Locale,
+} from '../i18n/config';
+import { t } from '../i18n/ui';
 
+interface Props {
+  lang?: Locale;
+  /** The page's own language cluster, for the switcher. */
+  alternates?: Alternate[];
+}
+
+const { lang = DEFAULT_LOCALE, alternates = [] } = Astro.props;
+const ui = t(lang);
 const year = new Date().getFullYear();
+
+/* The switcher only ever offers versions of the page the reader is on. A
+   language button that lands everybody on a translated home page is the
+   oldest way to lose them, and it also tells search engines two things that
+   are not the same page. Fewer than two versions, no switcher. */
+const others = alternates.filter((entry) => entry.lang !== lang);
 ---
 
 <footer class="site-footer">
   <div class="wrap site-footer__inner">
-    <p class="small muted site-footer__note">
-      {SITE.name} keeps your budget on your own devices. No account, no bank
-      logins, no server of ours.
-    </p>
+    <p class="small muted site-footer__note">{ui('footer.note')}</p>
     <nav aria-label="Footer">
       <ul class="footer-nav small">
-        <li><a href="/support">Support</a></li>
-        <li><a href="/privacy">Privacy</a></li>
+        <li>
+          <a href="/support" hreflang="en" lang={lang === DEFAULT_LOCALE ? undefined : 'en'}
+            >Support</a
+          >
+        </li>
+        <li>
+          <a href="/privacy" hreflang="en" lang={lang === DEFAULT_LOCALE ? undefined : 'en'}
+            >Privacy</a
+          >
+        </li>
         <li><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
       </ul>
     </nav>
@@ -25,9 +51,23 @@ const year = new Date().getFullYear();
          when a page starts or stops naming one. Once, where the legal line
          already is, rather than on every mention. */
     }
+    {
+      others.length > 0 && (
+        <nav class="site-footer__langs small" aria-label={ui('lang.label')}>
+          <ul class="footer-nav small">
+            {others.map((entry) => (
+              <li>
+                <a href={entry.path} hreflang={entry.lang} lang={entry.lang}>
+                  {LOCALE_NAMES[entry.lang]}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
     <p class="small muted site-footer__legal">
-      Apple, the Apple logo, App Store, Apple Watch, iCloud, iPad, iPadOS,
-      iPhone, Mac, macOS and Safari are trademarks of Apple Inc.
+      {ui('footer.legal')}
     </p>
   </div>
 </footer>
@@ -54,6 +94,10 @@ const year = new Date().getFullYear();
 
   .site-footer__copy {
     margin: 0;
+  }
+
+  .site-footer__langs {
+    flex-basis: 100%;
   }
 
   .site-footer__legal {

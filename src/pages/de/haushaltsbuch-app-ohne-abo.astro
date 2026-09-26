@@ -1,0 +1,159 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  MARKET_RIVALS,
+  RELEASE,
+  SITE,
+  TRIAL,
+  YNAB,
+} from '../../consts';
+import { boughtOnceCluster } from '../../i18n/pages';
+
+/**
+ * „Haushaltsbuch-App ohne Abo“ — die Frage, die auf Deutsch tatsächlich
+ * getippt wird. Das englische Gegenstück ist /budget-app-one-time-purchase;
+ * beide hängen über hreflang zusammen, aber die Seite ist keine Übersetzung:
+ * die Preise sind die des deutschen Stores, und Zeroed steht hier, weil es
+ * hier verkauft wird.
+ */
+
+const lang = 'de' as const;
+const m = MARKETS[lang];
+const rivals = MARKET_RIVALS[lang];
+
+const title = 'Haushaltsbuch-App ohne Abo: einmal kaufen statt jedes Jahr zahlen';
+const description = `Budget-Apps, die man einmal kauft: Preise aus dem deutschen App Store, gelesen am ${MARKETS_CHECKED.display.de}. Was ein Abo in derselben Zeit kostet.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/de/haushaltsbuch-app-ohne-abo`,
+    inLanguage: 'de',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={boughtOnceCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Einmal gekauft</p>
+      <h1>Haushaltsbuch-Apps ohne Abo</h1>
+      <p class="lede">
+        Ein Abo für ein Haushaltsbuch kostet jedes Jahr wieder, ob du die App
+        geöffnet hast oder nicht. Es gibt Apps, die man einmal kauft — hier
+        stehen sie mit dem Preis, den der deutsche App Store an diesem Tag
+        verlangt hat, und daneben das, was ein Abo in derselben Zeit kostet.
+      </p>
+      <p class="small muted">
+        Alle Beträge stammen aus den Store-Einträgen selbst, gelesen am{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.de}</time>.
+        Apple setzt Preise je Region: der amerikanische Preis umgerechnet wäre
+        ein anderer und wäre falsch.
+      </p>
+
+      <ul class="prices">
+        <li>
+          <strong>{SITE.name}</strong> — {m.full} einmalig.{' '}
+          <span class="muted">iPhone, iPad und Mac; {TRIAL.days} Tage frei.</span>
+        </li>
+        {
+          rivals.map((rival) => (
+            <li>
+              <a href={rival.url}>{rival.name}</a> — {rival.price} einmalig.
+            </li>
+          ))
+        }
+        <li>
+          <strong>{YNAB.name}</strong> — {m.ynabYear} <em>im Jahr</em>, oder{' '}
+          {m.ynabMonth} im Monat. <span class="muted">Zum Vergleich.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Wo „einmalig“ nicht einmalig heißt</h2>
+      <p>
+        Zwei bekannte Desktop-Programme werden gekauft und dann wieder
+        verkauft: Moneyspire schreibt auf der eigenen Bestellseite, dass jedes
+        Jahr eine neue Hauptversion erscheint — freiwillig, zum ermäßigten
+        Preis. Moneydance verkauft die jeweils aktuelle Version genauso. Beide
+        rechnen in US-Dollar ab, weil sie nicht über den App Store verkaufen.
+      </p>
+      <p>
+        Das ist kein Trick, aber es ist ein anderes Geschäft als das, was die
+        Worte „einmaliger Kauf“ vermuten lassen. Und der ehrliche Zusatz zu
+        unserer eigenen Seite: ein Kauf kauft eine Version, kein Versprechen.
+        Eine künftige Hauptversion kann wieder Geld kosten, und niemand in
+        dieser Kategorie kann etwas anderes zusichern.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was fehlt, wenn niemand monatlich abrechnet</h2>
+      <p>
+        <strong>Automatische Umsätze.</strong> Eine Bankanbindung kostet jeden
+        Monat Geld im Betrieb, deshalb haben Apps ohne Abo meistens keine. Du
+        trägst ein, was du ausgibst, oder importierst die CSV-Datei deiner
+        Bank. Wenn genau das der Teil war, den du dir sparen wolltest, ist ein
+        Abo die ehrliche Antwort — und wir sind es nicht.
+      </p>
+      <p>
+        <strong>Gemeinsame Budgets.</strong> {YNAB.name} deckt bis zu sechs
+        Personen ab. {SITE.name} hält ein Budget zwischen den Geräten einer
+        Person zusammen, mehr nicht.
+      </p>
+      <p>
+        <strong>Fremde Roadmap.</strong> Abo-Geld bezahlt laufende Arbeit. Ein
+        Kauf bezahlt das, was am Kauftag da ist. Sieh dir den Versionsverlauf
+        an, bevor du etwas kaufst — unseren eingeschlossen.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Wo {SITE.name} steht</h2>
+      <p>
+        Die Umschlagmethode auf {RELEASE.platforms.replace('iPhone, iPad and Mac', 'iPhone, iPad und Mac')},
+        {' '}{m.full} einmalig, die ersten {TRIAL.days} Tage kostenlos. Keine
+        Bankzugänge, kein Konto, kein Server von uns. Teurer als die reinen
+        iPhone-Apps oben, günstiger als die Desktop-Programme — und der Mac ist
+        dieselbe App, keine Begleit-App zu einem Programm auf dem Rechner.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prices {
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prices li {
+    padding-block: var(--space-xs);
+    border-top: 1px solid var(--rule);
+  }
+</style>

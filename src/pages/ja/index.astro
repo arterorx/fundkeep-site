@@ -1,0 +1,122 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, RELEASE, SITE, TRIAL, YNAB } from '../../consts';
+import { BOUGHT_ONCE, homeCluster } from '../../i18n/pages';
+
+/**
+ * 日本語のトップページ。
+ *
+ * 金額は日本のApp Storeのもの（MARKETS.ja）。Appleは地域ごとに価格を決める
+ * ので、米ドルを換算した数字は「その値段ではない」うえに「支払う通貨でも
+ * ない」。¥6,000と¥15,000という差は、日本の店頭で最も分かりやすい事実。
+ */
+
+const lang = 'ja' as const;
+const m = MARKETS[lang];
+
+const title = `${SITE.name} — iPhone・iPad・Mac の封筒家計簿、買い切り`;
+const description = `封筒（エンベロープ）式の家計簿を iPhone・iPad・Mac で。${m.full} の買い切りでサブスクなし、銀行ログインなし。データは自分のデバイスの中だけ。`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: SITE.name,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: RELEASE.requires,
+    url: `${SITE.url}/ja`,
+    inLanguage: 'ja',
+    description,
+    offers: [
+      {
+        '@type': 'Offer',
+        name: `無料ダウンロード、${TRIAL.days}日間の体験`,
+        price: '0',
+        priceCurrency: 'JPY',
+      },
+      {
+        '@type': 'Offer',
+        name: `${SITE.name} Full`,
+        price: m.full.replace(/[^\d]/g, ''),
+        priceCurrency: 'JPY',
+        category: 'one-time purchase',
+      },
+    ],
+    ...(RELEASE.appStoreUrl ? { downloadUrl: m.storeUrl, installUrl: m.storeUrl } : {}),
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={homeCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">封筒家計簿</p>
+      <h1>すべてのお金に役割を。支払いは一度だけ。</h1>
+      <p class="lede">
+        {SITE.name} は iPhone・iPad・Mac で使う封筒式の家計簿です。
+        <strong>{m.full} の買い切り</strong>で、サブスクリプションも銀行ログイン
+        もありません。入力した内容は自分のデバイスに残り、iCloud を通じて自分の
+        端末どうしの間だけを行き来します。
+      </p>
+      <AppStoreCta lang={lang} />
+      <p class="small muted">
+        最初の{TRIAL.days}日間は無料です。その後は読み取り専用になり、入力した
+        ものはそのまま見られ、CSV 書き出しも使えます。
+      </p>
+    </div>
+
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>同じ期間にサブスクがかかる金額</h2>
+      <p>
+        日本の App Store で {YNAB.name} は <strong>{m.ynabYear}</strong>／年、
+        または {m.ynabMonth}／月です。{SITE.name} は {m.full}、一度きり。
+        年額で払った場合、およそ5か月分で買い切りの金額に並びます。その先は
+        すべて差額です。
+      </p>
+      <p class="small muted">
+        どちらも App Store の掲載自体から、
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+        に読み取った金額です。
+      </p>
+      <p>
+        <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}>買い切りの家計簿アプリと、その価格</a>
+        ——「買い切り」が毎年の出費になっている例も含めて。
+      </p>
+      <p class="small muted">
+        アプリのスクリーンショットは今のところ英語版しかありません。ユーロや円の
+        価格を示した直後にドル表示の英語画面を並べると、受け取るものについて
+        誤った印象を与えます。日本語のものができるまでは載せません。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>銀行につながりません。足りない機能ではなく、設計です。</h2>
+      <p>
+        {SITE.name} は銀行のログイン情報を尋ねません。必要がないからです。使った
+        金額を自分で入力するか、銀行がすでに配っている CSV を読み込みます。
+        その手間こそお金を払って省きたかった部分なら、正直に言ってサブスクの方が
+        合っています。そのときの答えは私たちではありません。
+      </p>
+      <p>
+        アカウントも登録もなく、こちらのサーバーもありません。データは利用者
+        自身の iCloud にあり、そこにあるものを私たちは読めません。
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>

@@ -13,6 +13,7 @@ import {
   money,
   savings,
 } from '../consts';
+import { boughtOnceCluster } from '../i18n/pages';
 
 /**
  * Budget apps you buy once (26.09.2026).
@@ -61,7 +62,13 @@ const schema = [
 ];
 ---
 
-<Base title={title} exactTitle description={description} schema={schema}>
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  alternates={boughtOnceCluster()}
+>
   <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
 
   <section class="section wrap">

@@ -1,0 +1,169 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  MARKET_RIVALS,
+  SITE,
+  TRIAL,
+  YNAB,
+} from '../../consts';
+import { boughtOnceCluster } from '../../i18n/pages';
+
+/**
+ * « application budget sans abonnement » — la formulation réellement tapée en
+ * français. Équivalent de /budget-app-one-time-purchase, relié par hreflang,
+ * mais ce n'est pas une traduction : les prix sont ceux du store français, et
+ * Zeroed n'y figure pas parce qu'Apple ne le vend pas en France.
+ */
+
+const lang = 'fr' as const;
+const m = MARKETS[lang];
+const rivals = MARKET_RIVALS[lang];
+
+const title = 'Application de budget sans abonnement : acheter une fois, pas chaque année';
+const description = `Les applis de budget qu'on achète une fois : prix relevés sur l'App Store français le ${MARKETS_CHECKED.display.fr}, et ce qu'un abonnement coûte en face.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/fr/application-budget-sans-abonnement`,
+    inLanguage: 'fr',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={boughtOnceCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Acheté une fois</p>
+      <h1>Applications de budget sans abonnement</h1>
+      <p class="lede">
+        Un abonnement pour tenir un budget se représente chaque année, que vous
+        ayez ouvert l'app ou non. Certaines applications s'achètent une fois :
+        les voici, au prix que l'App Store français affichait ce jour-là, et en
+        face ce qu'un abonnement coûte sur la même période.
+      </p>
+      <p class="small muted">
+        Tous les montants viennent des fiches App Store elles-mêmes, relevées le{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.fr}</time>.
+        Apple fixe un prix par région : le prix américain converti serait un
+        autre chiffre, et un chiffre faux.
+      </p>
+
+      <ul class="prices">
+        <li>
+          <strong>{SITE.name}</strong> — {m.full} une fois.{' '}
+          <span class="muted">iPhone, iPad et Mac ; {TRIAL.days} jours libres.</span>
+        </li>
+        {
+          rivals.map((rival) => (
+            <li>
+              <a href={rival.url}>{rival.name}</a> — {rival.price} une fois.
+            </li>
+          ))
+        }
+        <li>
+          <strong>{YNAB.name}</strong> — {m.ynabYear} <em>par an</em>, ou{' '}
+          {m.ynabMonth} par mois. <span class="muted">Pour comparaison.</span>
+        </li>
+      </ul>
+
+      <p class="small muted">
+        La liste est courte pour une raison vérifiable : parmi les applications
+        de ce type vendues ailleurs, plusieurs ne sont pas au catalogue
+        français. Zeroed, par exemple, figure sur les stores allemand,
+        américain et japonais, et la recherche d'Apple ne le renvoie pas sur le
+        store français. Une app qu'on ne peut pas installer n'est pas une
+        alternative, quel que soit son prix ailleurs.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Quand « une fois » n'est pas une fois</h2>
+      <p>
+        Deux logiciels de bureau connus se vendent, puis se revendent :
+        Moneyspire écrit sur sa propre page de commande qu'une nouvelle version
+        majeure sort chaque année, facultative, à prix réduit. Moneydance vend
+        de la même façon la version en cours. Les deux facturent en dollars
+        américains, car ils ne passent pas par l'App Store.
+      </p>
+      <p>
+        Ce n'est pas une ruse, mais ce n'est pas le marché que les mots « achat
+        unique » laissent imaginer. L'astérisque honnête vaut aussi pour nous :
+        un achat achète une version, pas une promesse. Une future version
+        majeure peut être payante, et personne dans cette catégorie ne peut
+        promettre l'inverse.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce qu'on perd quand personne ne prélève</h2>
+      <p>
+        <strong>Les opérations automatiques.</strong> Une connexion bancaire
+        coûte de l'argent tous les mois à faire tourner ; les applis sans
+        abonnement n'en ont donc généralement pas. Vous saisissez vos dépenses,
+        ou vous importez le CSV que votre banque fournit déjà. Si c'est
+        justement ce que vous vouliez éviter, l'abonnement est la réponse
+        honnête, et ce n'est pas nous.
+      </p>
+      <p>
+        <strong>Les budgets partagés.</strong> {YNAB.name} couvre jusqu'à six
+        personnes. {SITE.name} garde un budget cohérent entre les appareils
+        d'une seule personne, et rien de plus.
+      </p>
+      <p>
+        <strong>La feuille de route d'un autre.</strong> L'argent d'un
+        abonnement paie un travail continu. Un achat paie ce qui existe le jour
+        où vous achetez. Lisez l'historique des versions avant d'acheter quoi
+        que ce soit — le nôtre compris.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Où se situe {SITE.name}</h2>
+      <p>
+        La méthode des enveloppes sur iPhone, iPad et Mac, {m.full} une fois,
+        gratuit les {TRIAL.days} premiers jours. Aucun identifiant bancaire,
+        aucun compte, aucun serveur chez nous. Plus cher que les applis
+        uniquement iPhone ci-dessus, moins cher que les logiciels de bureau — et
+        sur Mac c'est la même application, pas un compagnon d'un logiciel
+        installé sur l'ordinateur.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prices {
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prices li {
+    padding-block: var(--space-xs);
+    border-top: 1px solid var(--rule);
+  }
+</style>

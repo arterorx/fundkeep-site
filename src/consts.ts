@@ -494,6 +494,115 @@ export const COMPETITORS_CHECKED = {
   recheckBy: '2026-12-26',
 } as const;
 
+/**
+ * What this app and YNAB actually cost on each storefront the site is
+ * published in.
+ *
+ * WHY THESE ARE NOT CONVERTED. Apple does not convert; it sets a price per
+ * region, and the numbers are not a translation of the American one — the app
+ * is $39.99 in the United States and 44,99 € in Germany, and YNAB is $109 a
+ * year there and 119,00 € here. A German page that printed "$39.99" would
+ * be wrong twice: it is not the price, and it is not the currency the reader
+ * is charged in. Every figure below was read on the storefront itself, in the
+ * App Store's own listing, on 26.09.2026:
+ *
+ *   ours     apps.apple.com/{us,de,fr,jp}/app/id6801904284 → "Fundkeep Full"
+ *   YNAB     apps.apple.com/{us,de,fr,jp}/app/id1010865877 → "YNAB Subscription"
+ *
+ * Apple shows the two YNAB amounts without a period against them. They are
+ * named here as the year and the month because the American pair, $109.00 and
+ * $14.99, is exactly what ynab.com/pricing publishes as annual and monthly —
+ * the same two products, priced per region.
+ *
+ * A price that moves is one line here, and `src/build/hq-guards.ts` fails any
+ * page printing a money amount that is not in this file.
+ */
+export interface Market {
+  /** What one purchase costs on this storefront. */
+  full: string;
+  /** What YNAB charges there, as the App Store lists it. */
+  ynabYear: string;
+  ynabMonth: string;
+  /** The storefront the figures were read on. */
+  storeUrl: string;
+}
+
+export const MARKETS: Record<'en' | 'de' | 'fr' | 'ja', Market> = {
+  en: {
+    full: '$39.99',
+    ynabYear: '$109',
+    ynabMonth: '$14.99',
+    storeUrl: 'https://apps.apple.com/us/app/id6801904284',
+  },
+  de: {
+    full: '44,99 €',
+    ynabYear: '119,00 €',
+    ynabMonth: '15,49 €',
+    storeUrl: 'https://apps.apple.com/de/app/id6801904284',
+  },
+  fr: {
+    full: '44,99 €',
+    ynabYear: '119,00 €',
+    ynabMonth: '15,49 €',
+    storeUrl: 'https://apps.apple.com/fr/app/id6801904284',
+  },
+  ja: {
+    full: '¥6,000',
+    ynabYear: '¥15,000',
+    ynabMonth: '¥1,700',
+    storeUrl: 'https://apps.apple.com/jp/app/id6801904284',
+  },
+} as const;
+
+/**
+ * The other App Store apps a translated page names, priced on that page's own
+ * storefront. Read the same day and the same way as MARKETS, from each app's
+ * listing:
+ *
+ *   Envy    id1569230951 → "Envy All Access"
+ *   Zeroed  id6804301133 → "Zeroed - Offline Budget Planner"
+ *
+ * Zeroed is absent from the French list because it is absent from the French
+ * store: Apple's own lookup returns nothing for it on `fr`, while `de`, `us`
+ * and `jp` all return the app. An app somebody cannot install is not an
+ * alternative to them, whatever it costs somewhere else.
+ *
+ * The desktop apps (Moneydance, Moneyspire) are sold by their makers in US
+ * dollars rather than through the App Store, so their prices are the same
+ * figure everywhere and stay in COMPETITORS. Where a translated page names
+ * them, it says the amount is in dollars.
+ */
+export interface MarketRival {
+  name: string;
+  price: string;
+  url: string;
+}
+
+export const MARKET_RIVALS: Record<'en' | 'de' | 'fr' | 'ja', readonly MarketRival[]> = {
+  en: [
+    { name: 'Envy', price: '$6.99', url: 'https://apps.apple.com/us/app/id1569230951' },
+    { name: 'Zeroed', price: '$19.99', url: 'https://apps.apple.com/us/app/id6804301133' },
+  ],
+  de: [
+    { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/de/app/id1569230951' },
+    { name: 'Zeroed', price: '22,99 €', url: 'https://apps.apple.com/de/app/id6804301133' },
+  ],
+  fr: [
+    { name: 'Envy', price: '7,99 €', url: 'https://apps.apple.com/fr/app/id1569230951' },
+  ],
+  ja: [
+    { name: 'Envy', price: '¥1,100', url: 'https://apps.apple.com/jp/app/id1569230951' },
+    { name: 'Zeroed', price: '¥3,000', url: 'https://apps.apple.com/jp/app/id6804301133' },
+  ],
+} as const;
+
+/** The day every figure in MARKETS was read on its own storefront. */
+export const MARKETS_CHECKED = {
+  on: '2026-09-26',
+  display: { en: '26 September 2026', de: '26. September 2026', fr: '26 septembre 2026', ja: '2026年9月26日' },
+  recheckBy: '2026-12-26',
+} as const;
+
 /** The range the savings calculator offers, and where it starts. */
 export const CALCULATOR = {
   minYears: 1,

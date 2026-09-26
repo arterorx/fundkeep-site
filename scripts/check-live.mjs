@@ -41,6 +41,23 @@ const PAGES = [
   ['/blog/ynab-alternatives', 'blog/ynab-alternatives.html'],
   ['/blog/envelope-budgeting-without-a-subscription', 'blog/envelope-budgeting-without-a-subscription.html'],
   ['/blog/budget-app-without-bank-sync', 'blog/budget-app-without-bank-sync.html'],
+  // The translated pages, from 26.09.2026. They carry prices in euros and yen
+  // that no English page can check, and a badge and a storefront link of their
+  // own — three more things the edge could silently change.
+  ['/de', 'de.html'],
+  ['/de/haushaltsbuch-app-ohne-abo', 'de/haushaltsbuch-app-ohne-abo.html'],
+  ['/fr', 'fr.html'],
+  ['/fr/application-budget-sans-abonnement', 'fr/application-budget-sans-abonnement.html'],
+  ['/ja', 'ja.html'],
+  ['/ja/kakeibo-apuri-kaikiri', 'ja/kakeibo-apuri-kaikiri.html'],
+];
+
+/** Apple's badge, in each language the site publishes. */
+const BADGES = [
+  'app-store-black.svg',
+  'app-store-black-de.svg',
+  'app-store-black-fr.svg',
+  'app-store-black-ja.svg',
 ];
 
 /** `--resolve IP` forces the address, for a machine whose DNS is behind. */
@@ -182,27 +199,27 @@ for (const path of ['/privacy', '/support']) {
 // Apple's badge, served as it was downloaded. A missing or altered file is a
 // call to action that is not there, and Apple's guidelines forbid modifying
 // the artwork, so the check is byte for byte against the file in public/.
-try {
+for (const badge of BADGES) try {
   const args = ['-s', '--max-time', '20', '-D', '-'];
   if (resolveAt) args.push('--resolve', `fundkeep.app:443:${resolveAt}`);
-  const { stdout } = await run('curl', [...args, `${ORIGIN}/badges/app-store-black.svg`], {
+  const { stdout } = await run('curl', [...args, `${ORIGIN}/badges/${badge}`], {
     encoding: 'buffer',
     maxBuffer: 5_000_000,
   });
   const split = stdout.indexOf('\r\n\r\n');
   const head = stdout.subarray(0, split).toString();
   const body = stdout.subarray(split + 4);
-  const local = await readFile(new URL('../public/badges/app-store-black.svg', import.meta.url));
+  const local = await readFile(new URL(`../public/badges/${badge}`, import.meta.url));
   const sha = (buffer) => createHash('sha256').update(buffer).digest('hex');
   if (!/^HTTP\/\S+ 200/m.test(head)) {
-    note('/badges/app-store-black.svg', `answers ${head.split('\r\n')[0]}`);
+    note(`/badges/${badge}`, `answers ${head.split('\r\n')[0]}`);
   } else if (!/content-type:\s*image\/svg\+xml/i.test(head)) {
-    note('/badges/app-store-black.svg', 'is not served as image/svg+xml');
+    note(`/badges/${badge}`, 'is not served as image/svg+xml');
   } else if (sha(body) !== sha(local)) {
-    note('/badges/app-store-black.svg', 'differs from public/badges/app-store-black.svg');
+    note(`/badges/${badge}`, `differs from public/badges/${badge}`);
   }
 } catch (error) {
-  note('/badges/app-store-black.svg', `could not be checked — ${error.message}`);
+  note(`/badges/${badge}`, `could not be checked — ${error.message}`);
 }
 
 // The address people guess for the sitemap, sent to the one Astro writes.

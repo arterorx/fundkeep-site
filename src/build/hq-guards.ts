@@ -7,6 +7,8 @@ import {
   CALCULATOR,
   COMPETITORS,
   COMPETITORS_CHECKED,
+  MARKETS,
+  MARKET_RIVALS,
   NO_BANK_LOGIN_APPS,
   ONE_TIME_APPS,
   NO_BANK_LOGIN_CHECKED,
@@ -216,6 +218,15 @@ export function hqGuards(): AstroIntegration {
           YNAB.price,
           money(YNAB.monthly),
         ]);
+        /* Euro and yen, on the translated pages. Without this the guard read
+           only dollars, so a German page could print any figure it liked and
+           the build would say "prices match src/consts.ts" — the check would
+           have been decorative exactly where prices are hardest to verify by
+           eye. Every amount comes from MARKETS and MARKET_RIVALS, which were
+           read on each storefront. */
+        for (const market of Object.values(MARKETS)) {
+          allowedAmounts.add(market.full);
+        }
         if (LAUNCH_PRICE) allowedAmounts.add(LAUNCH_PRICE.amount);
 
         /**
@@ -230,9 +241,14 @@ export function hqGuards(): AstroIntegration {
          * naming competitors is what it is for.
          */
         const competitorAmounts = new Set<string>();
+        /* Dollars, euros and yen — the same three forms the page scan below
+           looks for. Reading only dollars here is what let four correct euro
+           figures fail the build on 26.09.2026: they were in src/consts.ts,
+           but this never took them out of it. */
+        const MONEY = /\$\d+(?:,\d{3})*(?:\.\d{2})?|\d+(?:\.\d{3})*,\d{2}\s?€|¥\d+(?:,\d{3})*/g;
         const add = (text: string) => {
-          for (const amount of text.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?/g) ?? []) {
-            competitorAmounts.add(amount);
+          for (const amount of text.match(MONEY) ?? []) {
+            competitorAmounts.add(amount.replace(/\s?€/, ' €'));
           }
         };
         for (const rival of [...COMPETITORS, ...NO_BANK_LOGIN_APPS]) {
@@ -243,6 +259,12 @@ export function hqGuards(): AstroIntegration {
         // blocked the build. An app named in any table on this site has to
         // feed this set, or the guard punishes adding a row rather than
         // inventing a number.
+        for (const market of Object.values(MARKETS)) {
+          add(`${market.ynabYear} ${market.ynabMonth}`);
+        }
+        for (const list of Object.values(MARKET_RIVALS)) {
+          for (const rival of list) add(rival.price);
+        }
         for (const entry of ONE_TIME_APPS) {
           add(`${entry.app.price ?? ''} ${entry.app.priceNote} ${entry.priceHere ?? ''} ${entry.priceHereNote ?? ''} ${entry.paidAgain}`);
         }
@@ -307,7 +329,19 @@ export function hqGuards(): AstroIntegration {
           // settlement or a company's figures. Carved out narrowly and in the
           // open, so that nobody has to write "58 million dollars" to get a
           // true sentence past a price check.
-          for (const amount of text.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?(?!\d|\s*(?:million|billion)\b)/g) ?? []) {
+          /* Three currencies, because the site is published in four
+             languages and Apple prices per region: "$39.99" in the United
+             States is "44,99 €" in Germany and "¥6,000" in Japan. The euro
+             form is written after the number with a non-breaking space, which
+             is how Apple writes it and how MARKETS stores it. */
+          const amounts = [
+            ...(text.match(/\$\d+(?:,\d{3})*(?:\.\d{2})?(?!\d|\s*(?:million|billion)\b)/g) ?? []),
+            ...(text.match(/\d+(?:\.\d{3})*,\d{2}\s?€/g) ?? []).map((raw) =>
+              raw.replace(/\s?€/, ' €'),
+            ),
+            ...(text.match(/¥\d+(?:,\d{3})*/g) ?? []),
+          ];
+          for (const amount of amounts) {
             if (!pageAmounts.has(amount)) {
               problems.push(
                 `${name}: price ${amount} is not in src/consts.ts` +
@@ -356,12 +390,23 @@ export function hqGuards(): AstroIntegration {
           // actually reached the page.
           if (RELEASE.state === 'released' && RELEASE.appStoreUrl) {
             const ctas = html.match(/<div class="cta[\s"]/g)?.length ?? 0;
-            const links = html.split(`href="${RELEASE.appStoreUrl}"`).length - 1;
+            /* Any address of OUR listing counts, not one exact string: the
+               translated pages send the reader to their own storefront
+               (apps.apple.com/de/app/id…), which is the same app and the
+               storefront whose price the page just printed. The id is what is
+               checked, so a button pointing at somebody else's app still
+               fails. */
+            const id = RELEASE.appStoreUrl.match(/\/id(\d+)/)?.[1];
+            const links = id
+              ? (html.match(
+                  new RegExp(`href="https://apps\\.apple\\.com/[^"]*id${id}\\b[^"]*"`, 'g'),
+                )?.length ?? 0)
+              : 0;
             if (links < ctas) {
               problems.push(
                 `${name}: ${ctas} call-to-action block(s) but ${links} link(s) ` +
-                  `to ${RELEASE.appStoreUrl}. RELEASE says the app is on sale, ` +
-                  `so every call to action has to lead to it.`,
+                  `to a storefront address for id${id}. RELEASE says the app ` +
+                  `is on sale, so every call to action has to lead to it.`,
               );
             }
           }

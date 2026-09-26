@@ -1,0 +1,125 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, RELEASE, SITE, TRIAL, YNAB } from '../../consts';
+import { BOUGHT_ONCE, homeCluster } from '../../i18n/pages';
+
+/**
+ * La page d'accueil française. Les montants sont ceux de l'App Store français
+ * (MARKETS.fr) : Apple fixe un prix par région, et convertir le prix américain
+ * donnerait un chiffre faux dans une monnaie que le lecteur ne paie pas.
+ */
+
+const lang = 'fr' as const;
+const m = MARKETS[lang];
+
+const title = `${SITE.name} — Budget par enveloppes pour iPhone, iPad et Mac, acheté une fois`;
+const description = `La méthode des enveloppes sur iPhone, iPad et Mac. ${m.full} une fois, sans abonnement, sans identifiants bancaires. Votre budget reste sur vos appareils.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: SITE.name,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: RELEASE.requires,
+    url: `${SITE.url}/fr`,
+    inLanguage: 'fr',
+    description,
+    offers: [
+      {
+        '@type': 'Offer',
+        name: `Téléchargement gratuit, ${TRIAL.days} jours d’essai`,
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      {
+        '@type': 'Offer',
+        name: `${SITE.name} Full`,
+        price: m.full.replace(/[^\d,]/g, '').replace(',', '.'),
+        priceCurrency: 'EUR',
+        category: 'one-time purchase',
+      },
+    ],
+    ...(RELEASE.appStoreUrl ? { downloadUrl: m.storeUrl, installUrl: m.storeUrl } : {}),
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={homeCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Budget par enveloppes</p>
+      <h1>Chaque euro reçoit une tâche. Payé une seule fois.</h1>
+      <p class="lede">
+        {SITE.name}, c'est la méthode des enveloppes sur iPhone, iPad et Mac :{' '}
+        <strong>{m.full} une fois</strong>, sans abonnement et sans identifiants
+        bancaires. Ce que vous saisissez reste sur vos appareils et ne circule,
+        via iCloud, qu'entre les vôtres.
+      </p>
+      <AppStoreCta lang={lang} />
+      <p class="small muted">
+        Gratuit les {TRIAL.days} premiers jours. Ensuite l'app passe en lecture
+        seule : tout ce que vous avez saisi reste visible et l'export CSV
+        continue de fonctionner.
+      </p>
+    </div>
+
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce qu'un abonnement coûte pendant le même temps</h2>
+      <p>
+        Sur l'App Store français, {YNAB.name} coûte <strong>{m.ynabYear}</strong>{' '}
+        par an, ou {m.ynabMonth} par mois. {SITE.name} coûte {m.full}, une fois.
+        L'achat est amorti en un peu plus de quatre mois d'abonnement ; tout ce
+        qui suit est la différence.
+      </p>
+      <p class="small muted">
+        Les deux montants viennent des fiches App Store elles-mêmes, relevées le{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.fr}</time>.
+      </p>
+      <p>
+        <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}
+          >Les applications de budget sans abonnement, avec leurs prix</a
+        > — et les cas où « achat unique » veut dire chaque année.
+      </p>
+      <p class="small muted">
+        Les captures d'écran de l'app n'existent pour l'instant qu'en anglais.
+        Une capture en anglais, avec des montants en dollars, sur une page qui
+        vient d'annoncer un prix en euros, dirait au lecteur quelque chose de
+        faux sur ce qu'il va obtenir — il n'y en a donc pas ici tant qu'il n'y
+        en a pas en français.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Aucune connexion bancaire. Ce n'est pas une fonction manquante.</h2>
+      <p>
+        {SITE.name} ne demande pas vos identifiants bancaires parce qu'il n'en a
+        pas besoin : vous saisissez vos dépenses, ou vous importez le fichier
+        CSV que votre banque fournit déjà. Si c'est précisément ce que vous
+        vouliez éviter, un abonnement est la réponse honnête, et ce n'est pas
+        nous.
+      </p>
+      <p>
+        Pas de compte, pas d'inscription, aucun serveur chez nous. Les données
+        vivent dans votre propre iCloud, et ce qui s'y trouve, nous ne pouvons
+        pas le lire.
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>

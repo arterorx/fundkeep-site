@@ -1,5 +1,7 @@
 ---
-import { RELEASE } from '../consts';
+import { MARKETS, RELEASE } from '../consts';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
 
 /**
  * The way to the App Store — or the truth, while there is nothing to link to.
@@ -29,31 +31,55 @@ import { RELEASE } from '../consts';
  *
  * The text label is Apple's wording too, the words on the badge. "Get it on"
  * is Google Play's phrase.
+ *
+ * FOUR BADGES, ONE SOURCE. Apple publishes the badge in each language, and
+ * the guidelines ask for the one that matches the page. The German, French
+ * and Japanese files were fetched on 26.09.2026 from the same place as the
+ * English one — toolbox.marketingtools.apple.com — and the English file that
+ * came back was byte for byte the one already in public/badges/, which is how
+ * we know the other three are the same artwork and not somebody's copy. Their
+ * intrinsic widths differ (the German wordmark is shorter than the French
+ * one), so each carries its own, or the browser reserves the wrong box and
+ * the page shifts as it loads.
  */
+const BADGES: Record<Locale, { file: string; width: number }> = {
+  en: { file: '/badges/app-store-black.svg', width: 120 },
+  de: { file: '/badges/app-store-black-de.svg', width: 120 },
+  fr: { file: '/badges/app-store-black-fr.svg', width: 127 },
+  ja: { file: '/badges/app-store-black-ja.svg', width: 109 },
+};
 interface Props {
   class?: string;
   /** `badge` for the first call to action on a page, `text` for any after it. */
   variant?: 'badge' | 'text';
+  /** The page's language: picks Apple's badge and the right storefront. */
+  lang?: Locale;
 }
 
-const { class: className, variant = 'badge' } = Astro.props;
+const { class: className, variant = 'badge', lang = DEFAULT_LOCALE } = Astro.props;
+const ui = t(lang);
+const badge = BADGES[lang];
+/* A reader on the German page goes to the German storefront. Apple forwards
+   people to their own country either way, but the localised address is the
+   one whose price matches the price this page just printed. */
+const href = lang === DEFAULT_LOCALE ? RELEASE.appStoreUrl : MARKETS[lang].storeUrl;
 ---
 
 <div class:list={['cta', className]}>
   {
     RELEASE.state === 'released' && RELEASE.appStoreUrl ? (
       variant === 'badge' ? (
-        <a class="cta__badge" href={RELEASE.appStoreUrl}>
+        <a class="cta__badge" href={href}>
           <img
-            src="/badges/app-store-black.svg"
-            alt="Download on the App Store"
-            width="120"
+            src={badge.file}
+            alt={ui('cta.badgeAlt')}
+            width={badge.width}
             height="40"
           />
         </a>
       ) : (
-        <a class="cta__button" href={RELEASE.appStoreUrl}>
-          Download on the App Store
+        <a class="cta__button" href={href}>
+          {ui('cta.badgeAlt')}
         </a>
       )
     ) : (

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import AppStoreCta from '../components/AppStoreCta.astro';
 import Screenshot from '../components/Screenshot.astro';
 import { PRICING, RELEASE, SITE, TRIAL } from '../consts';
+import { homeCluster } from '../i18n/pages';
 
 /**
  * The home page (SPEC §4, phase 2). It carries the five things that phase
@@ -91,7 +92,12 @@ const steps = [
 ];
 ---
 
-<Base title={title} description={description} schema={schema}>
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  alternates={homeCluster()}
+>
   <!-- The board is the largest thing above the fold, so it is what Largest
        Contentful Paint measures. Without this the browser only learns it
        exists after the HTML is parsed. `imagesizes` has to match the img's

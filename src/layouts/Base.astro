@@ -1,5 +1,12 @@
 ---
 import { INDEXABLE, RELEASE, SITE } from '../consts';
+import {
+  DEFAULT_LOCALE,
+  LOCALE_TAGS,
+  type Alternate,
+  type Locale,
+} from '../i18n/config';
+import { t } from '../i18n/ui';
 import { canonicalPath } from '../utils/canonical';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -21,6 +28,14 @@ interface Props {
    * name would push the words that matter past the cut-off.
    */
   exactTitle?: boolean;
+  /** The language this page is written in. Sets `<html lang>` and og:locale. */
+  lang?: Locale;
+  /**
+   * Every language version of this page, including itself. Fewer than two
+   * means there is no cluster and no hreflang, which is the correct output
+   * for a page that exists in one language.
+   */
+  alternates?: Alternate[];
 }
 
 const {
@@ -30,7 +45,17 @@ const {
   schema = [],
   noindex = false,
   exactTitle = false,
+  lang = DEFAULT_LOCALE,
+  alternates = [],
 } = Astro.props;
+
+const ui = t(lang);
+
+/* hreflang only for a real cluster, and only on an indexable page. x-default
+   goes to English; if a page has no English version it gets no x-default,
+   which is what Google asks for rather than a guess. */
+const showAlternates = INDEXABLE && !noindex && alternates.length > 1;
+const xDefault = alternates.find((entry) => entry.lang === DEFAULT_LOCALE);
 
 const canonical = new URL(canonicalPath(Astro.url.pathname), Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
@@ -74,7 +99,7 @@ const robots = !INDEXABLE
 ---
 
 <!doctype html>
-<html lang={SITE.locale}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -82,6 +107,25 @@ const robots = !INDEXABLE
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {
+      showAlternates &&
+        alternates.map((entry) => (
+          <link
+            rel="alternate"
+            hreflang={entry.lang}
+            href={new URL(entry.path, Astro.site).href}
+          />
+        ))
+    }
+    {
+      showAlternates && xDefault && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(xDefault.path, Astro.site).href}
+        />
+      )
+    }
     {robots && <meta name="robots" content={robots} />}
     {
       RELEASE.state === 'released' && appStoreId && (
@@ -111,7 +155,7 @@ const robots = !INDEXABLE
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content={SITE.ogLocale} />
+    <meta property="og:locale" content={LOCALE_TAGS[lang].replace('-', '_')} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
@@ -135,11 +179,11 @@ const robots = !INDEXABLE
   </head>
 
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
+    <a class="skip-link" href="#main">{ui('skipLink')}</a>
+    <Header lang={lang} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} alternates={alternates} />
   </body>
 </html>

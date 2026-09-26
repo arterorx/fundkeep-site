@@ -1,0 +1,153 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import {
+  MARKETS,
+  MARKETS_CHECKED,
+  MARKET_RIVALS,
+  SITE,
+  TRIAL,
+  YNAB,
+} from '../../consts';
+import { boughtOnceCluster } from '../../i18n/pages';
+
+/**
+ * 「家計簿アプリ 買い切り」——日本語で実際に打たれる言い方。
+ * 英語版は /budget-app-one-time-purchase で、hreflang でつながっているが
+ * 翻訳ではない。価格は日本の App Store のもの。
+ */
+
+const lang = 'ja' as const;
+const m = MARKETS[lang];
+const rivals = MARKET_RIVALS[lang];
+
+const title = '買い切りの家計簿アプリ：毎年払うのをやめる';
+const description = `一度買えば終わりの家計簿アプリを、日本の App Store の価格で。${MARKETS_CHECKED.display.ja}に掲載から読み取った金額と、同じ期間のサブスクの金額。`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: `${SITE.url}/ja/kakeibo-apuri-kaikiri`,
+    inLanguage: 'ja',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={boughtOnceCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">買い切り</p>
+      <h1>買い切りの家計簿アプリ</h1>
+      <p class="lede">
+        家計簿のサブスクは、アプリを開いても開かなくても毎年請求されます。一度
+        買えば終わるアプリもあります。その日、日本の App Store が表示していた
+        価格で並べ、同じ期間にサブスクがかかる金額を隣に置きました。
+      </p>
+      <p class="small muted">
+        金額はすべて App Store の掲載自体から、
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+        に読み取ったものです。Apple は地域ごとに価格を決めるため、米ドルを
+        換算した数字は実際の日本の価格とは違います。
+      </p>
+
+      <ul class="prices">
+        <li>
+          <strong>{SITE.name}</strong> — {m.full} の買い切り。{' '}
+          <span class="muted">iPhone・iPad・Mac、最初の{TRIAL.days}日間は無料。</span>
+        </li>
+        {
+          rivals.map((rival) => (
+            <li>
+              <a href={rival.url}>{rival.name}</a> — {rival.price} の買い切り。
+            </li>
+          ))
+        }
+        <li>
+          <strong>{YNAB.name}</strong> — {m.ynabYear}<em>／年</em>、または{' '}
+          {m.ynabMonth}／月。<span class="muted">比較のために。</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>「買い切り」が一度で終わらないとき</h2>
+      <p>
+        よく知られたデスクトップの家計ソフトには、売ったあとにもう一度売るもの
+        があります。Moneyspire は自社の購入ページで、毎年新しいメジャー版が出る
+        こと、それは任意で割引価格になることを書いています。Moneydance も同じ
+        ように、その時点の版を販売しています。どちらも App Store を通さないため、
+        請求は米ドルです。
+      </p>
+      <p>
+        だましているわけではありません。ただ「買い切り」という言葉から想像する
+        取引とは別物です。そして同じ注釈は私たちにも当てはまります。購入で手に
+        入るのは版であって、約束ではありません。将来のメジャー版が有料になる
+        可能性はあり、この分野の誰もそれを否定できません。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>毎月請求されない代わりに、失うもの</h2>
+      <p>
+        <strong>明細の自動取得。</strong> 銀行との接続は運用に毎月お金がかかる
+        ため、買い切りのアプリはたいてい持っていません。使った金額を自分で入力
+        するか、銀行がすでに出している CSV を読み込みます。まさにそこを省く
+        ためにお金を払いたいのなら、正直な答えはサブスクで、それは私たちでは
+        ありません。
+      </p>
+      <p>
+        <strong>共有の家計。</strong> {YNAB.name} は最大6人まで使えます。
+        {SITE.name} が揃えるのは一人の家計を自分の端末どうしの間で、それだけです。
+      </p>
+      <p>
+        <strong>他人のロードマップ。</strong> サブスクのお金は続く開発を支えます。
+        買い切りは、買った日にあるものへの支払いです。何を買うにせよ——私たちの
+        ものも含めて——更新履歴を見てからにしてください。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>{SITE.name} の位置</h2>
+      <p>
+        iPhone・iPad・Mac で使う封筒式の家計簿、{m.full} の買い切り、最初の
+        {TRIAL.days}日間は無料。銀行ログインなし、アカウントなし、こちらの
+        サーバーもなし。上の iPhone 専用アプリより高く、デスクトップのソフトより
+        安く、そして Mac 版は同じアプリそのものです——パソコンのソフトに付属する
+        コンパニオンではありません。
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prices {
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prices li {
+    padding-block: var(--space-xs);
+    border-top: 1px solid var(--rule);
+  }
+</style>

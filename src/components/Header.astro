@@ -1,16 +1,43 @@
 ---
 import { SITE } from '../consts';
+import { DEFAULT_LOCALE, localePath, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
 import BrandMark from './BrandMark.astro';
 
+interface Props {
+  lang?: Locale;
+}
+
+const { lang = DEFAULT_LOCALE } = Astro.props;
+const ui = t(lang);
 const path = Astro.url.pathname;
 
-/** Every page the navigation links to, in one array rather than per template. */
-const links = [
-  { href: '/ynab-alternative', label: 'Leaving YNAB?' },
-  { href: '/blog', label: 'Articles' },
-  { href: '/support', label: 'Support' },
-  { href: '/privacy', label: 'Privacy' },
-];
+/**
+ * Every page the navigation links to, in one array rather than per template.
+ *
+ * A translated page links to the pages that exist in its own language and
+ * back to its own home, never to an English page with a German label. Until
+ * the long comparison pages are translated, the three shorter languages get
+ * a navigation of one item, which is honest; a link that changes language
+ * without warning is worse than a link that is not there.
+ */
+const links =
+  lang === DEFAULT_LOCALE
+    ? [
+        { href: '/ynab-alternative', label: ui('nav.leaving') },
+        { href: '/blog', label: ui('nav.articles') },
+        { href: '/support', label: ui('nav.support') },
+        { href: '/privacy', label: ui('nav.privacy') },
+      ]
+    : [
+        // Support and Privacy are written in English and are not translated
+        // yet. They keep their English labels and are marked as English, so a
+        // screen reader does not read them in the page's language and nobody
+        // is promised a page in theirs. A translated label on an English page
+        // is the one thing worse than an English label.
+        { href: '/support', label: 'Support', foreign: true },
+        { href: '/privacy', label: 'Privacy', foreign: true },
+      ];
 
 /** Articles mark the Articles tab, not just /blog itself. */
 const isCurrent = (href: string) =>
@@ -21,7 +48,7 @@ const isCurrent = (href: string) =>
 
 <header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="brand" href="/" aria-label={`${SITE.name} home`}>
+    <a class="brand" href={localePath(lang)} aria-label={SITE.name}>
       <BrandMark size={30} id="brand-header" class="brand__mark" />
       <span class="brand__name">{SITE.name}</span>
     </a>
@@ -33,6 +60,8 @@ const isCurrent = (href: string) =>
             <li>
               <a
                 href={link.href}
+                hreflang={'foreign' in link ? 'en' : undefined}
+                lang={'foreign' in link ? 'en' : undefined}
                 aria-current={isCurrent(link.href) ? 'page' : undefined}
               >
                 {link.label}

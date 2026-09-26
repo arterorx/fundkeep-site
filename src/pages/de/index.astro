@@ -1,0 +1,131 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, RELEASE, SITE, TRIAL, YNAB } from '../../consts';
+import { homeCluster } from '../../i18n/pages';
+import { BOUGHT_ONCE } from '../../i18n/pages';
+
+/**
+ * Die deutsche Startseite.
+ *
+ * Nicht die Übersetzung der englischen: die Preise sind die des deutschen
+ * Stores (MARKETS.de), und der Vergleich mit YNAB rechnet in Euro, weil der
+ * Leser in Euro bezahlt. Dollarbeträge auf einer deutschen Seite lesen sich
+ * wie eine nicht übersetzte Seite und stimmen obendrein nicht.
+ */
+
+const lang = 'de' as const;
+const m = MARKETS[lang];
+
+const title = `${SITE.name} — Umschlag-Budget für iPhone, iPad und Mac, einmal gekauft`;
+const description = `Umschlagmethode auf iPhone, iPad und Mac. ${m.full} einmalig statt Abo, keine Bankzugänge, dein Budget bleibt auf deinen Geräten.`;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: SITE.name,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: RELEASE.requires,
+    url: `${SITE.url}/de`,
+    inLanguage: 'de',
+    description,
+    offers: [
+      {
+        '@type': 'Offer',
+        name: `Kostenloser Download, ${TRIAL.days} Tage Testzeit`,
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      {
+        '@type': 'Offer',
+        name: `${SITE.name} Full`,
+        price: m.full.replace(/[^\d,]/g, '').replace(',', '.'),
+        priceCurrency: 'EUR',
+        category: 'one-time purchase',
+      },
+    ],
+    ...(RELEASE.appStoreUrl ? { downloadUrl: m.storeUrl, installUrl: m.storeUrl } : {}),
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={homeCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Umschlag-Budget</p>
+      <h1>Jeder Euro bekommt eine Aufgabe. Einmal bezahlt.</h1>
+      <p class="lede">
+        {SITE.name} ist die Umschlagmethode auf iPhone, iPad und Mac:{' '}
+        <strong>{m.full} einmalig</strong>, kein Abo, keine Bankzugänge. Was du
+        einträgst, bleibt auf deinen Geräten und geht über iCloud nur zwischen
+        deinen eigenen hin und her.
+      </p>
+      <AppStoreCta lang={lang} />
+      <p class="small muted">
+        Die ersten {TRIAL.days} Tage kostenlos. Danach wird die App
+        schreibgeschützt: alles Eingetragene bleibt sichtbar, und der
+        CSV-Export funktioniert weiter.
+      </p>
+    </div>
+
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was ein Abo in derselben Zeit kostet</h2>
+      <p>
+        {YNAB.name} kostet im deutschen App Store <strong>{m.ynabYear}</strong>{' '}
+        im Jahr oder {m.ynabMonth} im Monat. {SITE.name} kostet {m.full} — ein
+        Mal. Nach gut vier Monaten Abo ist der Kaufpreis erreicht; alles danach
+        ist der Unterschied.
+      </p>
+      <p class="small muted">
+        Beide Beträge stammen aus den Store-Einträgen selbst, gelesen am{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.de}</time>.
+        Apple setzt Preise je Region, deshalb steht hier der deutsche Preis und
+        nicht der umgerechnete amerikanische.
+      </p>
+      <p>
+        <a href={`/${lang}/${BOUGHT_ONCE[lang]}`}
+          >Welche Budget-Apps es ohne Abo gibt, mit Preisen</a
+        > — und wo „einmalig“ in Wahrheit jedes Jahr wieder etwas kostet.
+      </p>
+      <p class="small muted">
+        Die Bildschirmfotos der App stehen bisher nur auf Englisch zur
+        Verfügung. Ein englischer Screenshot mit Dollarbeträgen auf einer
+        Seite, die gerade einen Europreis genannt hat, sagt dem Leser etwas
+        Falsches über das, was er bekommt — deshalb steht hier keiner, bis es
+        deutsche gibt.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Keine Bankverbindung. Das ist kein fehlendes Feature.</h2>
+      <p>
+        {SITE.name} fragt nicht nach Zugangsdaten deiner Bank, weil es sie nicht
+        braucht: du trägst ein, was du ausgibst, oder importierst die CSV-Datei,
+        die deine Bank ohnehin liefert. Wer dafür bezahlt, dass Umsätze von
+        allein erscheinen, ist mit einem Abo besser bedient — wir sind dann
+        nicht die richtige App, und das sagen wir lieber vorher.
+      </p>
+      <p>
+        Es gibt kein Konto, keine Registrierung und keinen Server von uns. Die
+        Daten liegen in deiner eigenen iCloud, und was dort liegt, können wir
+        nicht lesen.
+      </p>
+      <AppStoreCta lang={lang} variant="text" />
+    </div>
+  </section>
+</Base>
