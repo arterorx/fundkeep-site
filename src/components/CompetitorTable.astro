@@ -1,11 +1,12 @@
 ---
-import { COMPETITORS, COMPETITORS_CHECKED, PRICING, SITE, TRIAL } from '../consts';
+import { COMPETITORS, COMPETITORS_CHECKED, FUNDKEEP } from '../consts';
 
 /** Worked out from the data. The sentence below used to say "Two rows". */
 const unpriced = COMPETITORS.filter((rival) => rival.price === null).length;
 
 /**
- * The named comparison, built from `COMPETITORS` in src/consts.ts.
+ * The ranked comparison, built from `FUNDKEEP` and `COMPETITORS` in
+ * src/consts.ts, in the order the article argues them.
  *
  * It exists as a component rather than as a table typed into the article so
  * that **no price is ever written into prose**. The article discusses these
@@ -31,7 +32,8 @@ const unpriced = COMPETITORS.filter((rival) => rival.price === null).length;
   >
     <table>
       <caption>
-        What each one costs, checked against first-party sources on{' '}
+        Ranked, ours first and said so. Every figure checked against a
+        first-party source on{' '}
         <time datetime={COMPETITORS_CHECKED.on}>
           {COMPETITORS_CHECKED.display}</time
         >. <span class="rivals__hint">Scrolls sideways.</span>
@@ -40,16 +42,18 @@ const unpriced = COMPETITORS.filter((rival) => rival.price === null).length;
       <tr>
         <th scope="col">App</th>
         <th scope="col">Price</th>
+        <th scope="col">Best for</th>
         <th scope="col">How it is charged, and where you get it</th>
       </tr>
     </thead>
     <tbody>
       <tr class="rivals__ours">
-        <th scope="row">{SITE.name}</th>
-        <td>{PRICING.full}</td>
-        <td>
-          {PRICING.note}. {TRIAL.days}-day trial. <em>Ours — see below.</em>
-        </td>
+        <th scope="row">
+          <a href={FUNDKEEP.url}>{FUNDKEEP.name}</a> <em>(ours)</em>
+        </th>
+        <td>{FUNDKEEP.price}</td>
+        <td>{FUNDKEEP.bestFor}</td>
+        <td>{FUNDKEEP.priceNote} {FUNDKEEP.availability}</td>
       </tr>
       {
         COMPETITORS.map((rival) => (
@@ -58,6 +62,7 @@ const unpriced = COMPETITORS.filter((rival) => rival.price === null).length;
               <a href={rival.url}>{rival.name}</a>
             </th>
             <td>{rival.price ?? <span class="rivals__none">Not printed</span>}</td>
+            <td>{rival.bestFor}</td>
             <td>
               {rival.priceNote} <strong>{rival.availability}</strong>
             </td>
@@ -125,14 +130,25 @@ const unpriced = COMPETITORS.filter((rival) => rival.price === null).length;
     padding-bottom: var(--space-s);
   }
 
+  /* Four columns now. The minimums add up to less than the article column
+     (592 px on a desktop) so the whole table sits on the page there; on a
+     phone it scrolls inside its own region and the caption says so. */
   .rivals td,
   .rivals th {
-    min-width: 8rem;
+    min-width: 5rem;
     vertical-align: top;
   }
 
+  .rivals th[scope='row'] {
+    min-width: 6rem;
+  }
+
+  .rivals td:nth-child(3) {
+    min-width: 9.5rem;
+  }
+
   .rivals td:last-child {
-    min-width: 18rem;
+    min-width: 15rem;
     white-space: normal;
   }
 

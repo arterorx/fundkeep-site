@@ -1,178 +1,135 @@
 ---
-title: 'YNAB alternatives in 2026: five apps, named'
-description: 'YNAB, Envy, Zeroed, MoneyCoach, Actual Budget and ours — what each charges, what each is actually for, and where we lose.'
-standfirst: 'We make one of these, so read us accordingly. What we can offer is that every price here was read off a first-party source, and anything we could not verify is marked rather than guessed.'
+title: 'The best YNAB alternatives on Apple devices in 2026'
+seoTitle: '5 Best YNAB Alternatives for iPhone, iPad and Mac (2026)'
+description: 'Ranked, with ours first and said so: what each app costs, who each one is really for, and where we are the wrong answer. Prices read 26 September 2026.'
+standfirst: 'Fundkeep is ours and it is first here, so read this accordingly — every price and platform below was read from the company’s own page or Apple’s listing on 26 September 2026. Staying on Apple devices, Fundkeep is the closest match to how YNAB works. Using Windows or Android too, Zeroed is. Willing to run a server, Actual Budget costs nothing.'
 published: 2026-08-16
-updated: 2026-09-13
-sourcesCheckedOn: 2026-08-16
+updated: 2026-09-26
+sourcesCheckedOn: 2026-09-26
 namesCompetitors: true
 ---
 
-A review of budgeting apps written by somebody who sells one is a conflict of
-interest, not a service. So here is how we have handled ours, and you can judge
-whether it is enough.
+A ranking written by somebody who sells one of the apps is worth nothing unless
+every other row gets its real case. So each app below has a case where it beats
+ours, and ours says plainly where it loses. Follow the links and check the
+figures yourself — that is what they are there for.
 
-**Every price in the table above came from a first-party source** — the
-company's own pricing page, or Apple's own App Store listing — read on the date
-the caption gives. Not from a review site, not from a comparison blog, and not
-from our own internal notes, which turned out to be wrong about two of these
-when we checked. Where a price cannot be confirmed first-hand, the table says so
-rather than printing one, because an admission is worth more than a number.
+## Fundkeep — best for the YNAB method on iPhone, iPad and Mac
 
-**Availability was checked against Apple's own catalogue**, by identifier and by
-developer, rather than against anybody's marketing. That check changed this
-article after it was written: one of the five is not on the App Store at all.
+Ours. It is the envelope method as YNAB teaches it — money gets a job before it
+gets spent, envelopes hold what is left rather than what you hoped — on iPhone,
+iPad and Mac, bought once instead of subscribed to. It reads a YNAB export and
+rebuilds your categories, accounts and history, then shows every difference
+between its balances and YNAB's before anything is saved. There is no bank
+connection at all: you type transactions or import the CSV your own bank gives
+you. Envelopes take a monthly goal, and what you entered stays visible for ever,
+because the app is bought, not rented.
 
-**Every figure on this page lives in one file** in the site's source, with the
-date it was read and a build that complains when it goes stale. That is not a
-courtesy to these companies. It is the only way a page like this stays true
-after the week it was written.
+Where it loses, and these are not small:
 
-**And the section at the end is where we lose.** If a roundup by a vendor does
-not have one, it is an advertisement wearing a lab coat.
+- **It is the most expensive one-time price here.** Zeroed is a founder price
+  away at less than half, and Envy's unlock is a fraction of it.
+- **Apple only.** No Android, no Windows, no web. A mixed household decides
+  against us on this line alone.
+- **One person's budget.** It syncs across your own devices through your private
+  iCloud; sharing a budget with a partner is not in this version, and YNAB and
+  Goodbudget both do it.
+- **The trial is 14 days.** Zeroed gives 34, YNAB gives 34 on its own site.
+- **No bank connection, ever.** If automatic import is the thing you are paying
+  for, we are the wrong answer and no privacy argument changes that.
 
-## YNAB
+## Zeroed — best if you also use Windows or Android
 
-The one most people are leaving, and the reason this page exists. It is the
-reference implementation of zero-based envelope budgeting: if you learned the
-method anywhere, you probably learned it here, and the vocabulary everyone else
-borrows — give every dollar a job, to be assigned — is theirs.
+[Zeroed](https://apps.apple.com/us/app/zeroed-offline-budget-planner/id6804301133)
+is the closest thing here to our own argument, made by somebody else: offline,
+pay once, no subscription, privacy as the headline. Since 14 September 2026 it is
+on the App Store for iPhone, iPad and Macs with Apple silicon, and it is also on
+Google Play, the Microsoft Store and as a direct download for Mac and Windows —
+one purchase covers the lot. It imports CSV and PDF statements rather than
+connecting to a bank, and its licence travels through your own Google Drive.
 
-It is a subscription, and the most expensive thing on the list by a distance
-once you run it for a few years. It connects to banks, so transactions arrive
-on their own. It is web-first with capable phone apps, which is either fine or
-the whole problem depending on where you actually sit down to budget. Its trial
-is the longest here, which is genuinely to their credit — it is long enough to
-watch a month roll over, and watching a month roll over is the only real test of
-a budgeting app.
+For a household that is not all Apple, this is the answer, and at a founder price
+until February 2027 it undercuts us badly. Two things to weigh: the price rises
+afterwards to what we charge today, and the licence key living in Google Drive is
+a third party in a story about having none.
 
-If the subscription does not bother you, there is no case for switching. It
-works, and it invented most of what the rest of us do.
+## Actual Budget — best if you will run it yourself
 
-If you are leaving, take your data first: we wrote up
-[exactly what comes out of a YNAB export and what every column
-means](/blog/ynab-export-guide).
+[Actual Budget](https://actualbudget.org) is free and open source, and it is the
+only app here besides ours that names YNAB's own export formats: its site
+advertises built-in YNAB4 and nYNAB importers that keep your history. It runs on
+Windows, macOS, Linux and in a browser, and bank connection is optional — off
+until you set it up with a data provider of your own, and it never fetches
+without being asked.
 
-## Envy
+The price of free is that syncing between your devices means running a server —
+your own, or a paid host. If that sentence sounds like a weekend rather than a
+chore, nothing here will serve you better, and it will cost you nothing.
 
-The one that should worry us most, and the one we would point a friend at before
-we would point them at ourselves in some cases.
+## Envy — best if you want the cheapest unlock
 
-It is free to download with a single unlock — a fraction of what we charge — and
-it is a properly made envelope app: real envelope balances, widgets on the home
-and lock screens, receipt scanning that fills in the amount and date for you.
-Apple's listing shows Data Not Collected. It runs on iPhone and iPad, and on a
-Mac it runs as the iPad app rather than as a Mac app, which matters only if the
-Mac is where you work.
+[Envy](https://apps.apple.com/us/app/envy-envelope-budget-planner/id1569230951)
+is the cash-envelope idea on iPhone and iPad, free to download with a single
+in-app purchase called Envy All Access. It never connects to a bank — its
+developer says so plainly — and it syncs between your own devices through iCloud.
 
-The honest position: if you want envelope budgeting on a phone for the least
-money, this is the first thing to try, and you should try it before you pay us
-several times more. Our answer to it is a native Mac app, the migration path,
-and no third-party anything — not a claim to be tidier, because it is not.
+We charge several times what Envy charges for something that, from the outside,
+does the same job. Our case is the Mac app, the YNAB migration with a
+reconciliation report you read before anything is saved, and no third-party code
+anywhere in the app. Whether that is worth the difference is genuinely your call,
+and our fourteen days are free precisely so you can make it without taking our
+word for anything.
 
-## Zeroed
+## MoneyCoach — best if you want bank sync in Europe
 
-The closest thing on this list to our own argument, made by somebody else.
-Offline, local storage, a one-time purchase, no subscription, and privacy as the
-headline rather than a footnote — the same pitch, delivered first. Their licence
-key travels through Google Drive, which is a reasonable engineering choice and
-is also a third party in a story about having none.
+[MoneyCoach](https://moneycoach.ai) is the most polished Apple citizen in this
+list: iPhone, iPad, Mac and Apple Watch, and years of work behind it. Its most
+used features are free, with a Premium subscription above them — Apple's US
+listing shows Premium at several different prices, and a Lifetime Premium at
+$199.99. Bank connection is optional and Premium-only, and it covers European
+banks; UK banks are not supported.
 
-**But if you are reading this on an iPhone, you cannot buy it today.** Apple's
-catalogue returns nothing for Zeroed — not by its identifier, not by its
-developer, in any storefront we checked, and their own page lists iOS as coming
-soon. It is on Google Play and the Microsoft Store, and downloads directly for
-Mac. Their site markets a licence that unlocks iPhone alongside Android, Mac and
-Windows, so the intention is plainly there; the App Store listing is not, and an
-app you cannot install is not an alternative, whatever it costs.
+If you want your transactions to arrive by themselves and you bank in Europe,
+this is the app on this page that does it. It is also the only one here that asks
+for a subscription rather than a purchase, which is the thing you are probably
+leaving YNAB to avoid.
 
-Their site now prints two prices: a founder price with the date it ends, and the
-price after it. The table gives both, with that date, because quoting a
-promotional price as though it were the standing price is how comparison pages
-become wrong.
+## YNAB — best if what you pay for is bank sync and sharing
 
-If you have an Android phone, a Windows laptop or a Mac in the house, they are
-worth a look. If your budget lives on an iPhone, check back rather than plan
-around them.
+Worth saying out loud: staying is a real option. YNAB is $109 a year or $14.99 a
+month — [what it costs, and every price it has charged since 2012](/ynab-pricing)
+— and for that you get direct import from selected US, Canadian, UK and EU banks,
+targets with dates and refill rules, and one subscription covering up to six
+people. None of the apps above does all three.
 
-## MoneyCoach
+If you are leaving because the method stopped fitting, none of this list will
+help. If you are leaving because of the yearly bill, the bank connection, or
+both, the rows above are the trade you are making.
 
-The most polished Apple citizen here: Apple's catalogue lists it for iPhone,
-iPad, Mac and Apple Watch, and it has been at it for years. If what you want is
-a personal-finance app that feels like it belongs on the platform, this is the
-bar.
+## How to choose
 
-It is free to download, with the most used features free and a Premium
-subscription above them. Their own site shows no prices. Apple's listing shows
-Premium at several different amounts, so the table gives only the one clear
-figure, for Lifetime Premium, and says so — check the listing before deciding.
+- **Everything you own is Apple, and you want the method, paid once.** That is
+  the case Fundkeep was built for. Take the fourteen days first.
+- **Somebody in the house is on Windows or Android.** Zeroed, and it is cheaper
+  until February 2027.
+- **You would rather pay nothing and are happy to run a server.** Actual Budget,
+  which will also read your YNAB export.
+- **You want the smallest possible bill on an iPhone.** Envy's one unlock.
+- **You want transactions to arrive on their own and you bank in Europe.**
+  MoneyCoach's Premium.
+- **You want them to arrive on their own anywhere else, and to share the budget.**
+  Stay on YNAB. Nothing on this page replaces that.
 
-One warning that cost us an hour: there is a **second, unrelated app also called
-MoneyCoach** by a different developer. Make sure the listing you are looking at
-is the one by MoneyCoach UG, or you will be comparing the wrong product — as we
-briefly were.
+## How these figures were checked
 
-The question to ask it is not about price but about method: find out whether its
-budgeting is genuinely zero-based envelopes, where money is assigned before it
-is spent and an empty envelope stops you, or category limits with reporting.
-Both are useful. Only one of them is the thing you came here for, and the words
-used to sell them are nearly identical.
+Every price came from the company's own page or Apple's own listing on
+26 September 2026, never from a review site or our own notes. Where a figure could
+not be confirmed first-hand, the table says so instead of printing one. The
+check that day caught our own mistake: we had been saying Zeroed was not on the
+App Store, because Apple's search does not return it for the word "zeroed" — the
+link on Zeroed's own site does.
 
-## Actual Budget
-
-Free, open source, envelope-method, local-first, and the only one here you can
-read the source of. If you are technical and you want no vendor at all — not us,
-not anyone — this is the honest end of the spectrum, and nothing on this page
-beats it on price.
-
-The cost is in your time. Syncing between devices means running a server, which
-means being the person who keeps it running, patched and backed up. Some people
-enjoy that. If reading that sentence made you tired, it is not for you, and that
-is not a criticism of the software.
-
-## Where we lose
-
-Three places, and they are not small.
-
-**No bank connections, ever.** YNAB will fetch your transactions. We will not,
-and this is deliberate rather than unfinished — no aggregator holds a key to
-your accounts, and in exchange you type transactions or import a CSV you
-exported yourself. If automatic import is what you are paying for, we are the
-wrong answer and no amount of privacy argument changes that.
-
-**Apple devices only.** iPhone, iPad and Mac, one purchase for all three, and
-nothing on Android, Windows or the web. Zeroed covers Android, Windows and Mac;
-we cover three Apple ones properly. If your household is mixed, that decides it.
-
-**Price against Envy.** We charge several times what Envy charges for something
-that, from the outside, does the same job. Our case is the native Mac app, the
-YNAB migration with a reconciliation report you read before anything is saved,
-and no third-party code anywhere in the app. Whether that is worth the
-difference is genuinely your call, and the fourteen days are free precisely so
-you can make it without taking our word for anything.
-
-## What to check, whichever way you go
-
-Six questions that separate these apps faster than any feature list:
-
-1. **Is it really zero-based?** Enter income and see whether the app insists you
-   assign all of it. If nothing drives the unassigned pile to zero, it is a
-   spending tracker with folders.
-2. **What happens when you stop paying?** Read-only, export-only, or locked out?
-   The answer is rarely on the pricing page and it is always somewhere.
-3. **Does it need a bank login?** A real convenience and a real liability. Make
-   the trade knowingly rather than by default.
-4. **Can you get your data out, and is the file any use?** Export on day one,
-   before you have anything to lose, and open it.
-5. **Do credit cards work properly?** Spend on a card and see whether money
-   moves into that card's payment envelope. If it does not, you will spend the
-   same money twice and notice a month later.
-6. **Can you see a month roll over inside the trial?** That is where budgeting
-   apps either hold up or annoy you forever.
-
-Take those to all six apps, ours included. If the answers point somewhere else,
-go there — and take your export with you.
-
-If they point here, [the page for people leaving YNAB](/ynab-alternative) has
-the rest: what stays the same, what the switch costs over the years you were
-going to keep budgeting anyway, and the same list of what you give up.
+If you are moving in either direction, [the YNAB export guide](/blog/ynab-export-guide)
+covers what comes out of YNAB and what it leaves behind, and
+[budget apps that don't need a bank login](/blog/budget-app-without-bank-sync)
+covers the wider list, including apps that never touch a bank at all.

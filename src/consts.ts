@@ -327,6 +327,14 @@ export interface Competitor {
   availability: string;
   /** Where the figure was read, named on the page so it can be audited. */
   source: string;
+  /**
+   * Who this one is the right answer for — one line, in the ranked comparison.
+   *
+   * A ranking by the company that sells one of the apps is worth nothing
+   * unless every other row is given its real case. So each of these says what
+   * the app genuinely beats us at, and ours says what it does not.
+   */
+  bestFor: string;
 }
 
 /*
@@ -343,6 +351,7 @@ const ENVY: Competitor = {
   availability:
     'On the App Store. iPhone and iPad; on a Mac it runs as the iPad app.',
   source: "Apple's App Store listing",
+  bestFor: 'The cheapest unlock on the App Store',
 };
 
 const ACTUAL_BUDGET: Competitor = {
@@ -353,21 +362,24 @@ const ACTUAL_BUDGET: Competitor = {
   availability:
     'Not an App Store app. You run it yourself, which is the whole idea.',
   source: 'the project itself',
+  bestFor: 'Paying nothing, if you are willing to run it yourself',
 };
 
 const ZEROED: Competitor = {
   name: 'Zeroed',
-  url: 'https://www.stillwareltd.com/zeroed',
-  // Null until 13.09.2026, when the only figure on their site was a founder's
-  // offer. The page now prints the price that follows it as well, with the
-  // date the offer ends — a promotional price with an end date and the price
-  // after it is a price we can print.
+  url: 'https://apps.apple.com/us/app/zeroed-offline-budget-planner/id6804301133',
   price: '$19.99',
   priceNote:
-    'a founder price until 14 February 2027, then $39.99, paid once after a 34-day trial.',
+    'a founder price until 14 February 2027, then $39.99, paid once after a 34-day trial. Free to download, with the purchase inside.',
+  // Until 26.09.2026 this row said Zeroed was not on the App Store. It is:
+  // "Zeroed: Offline Budget Planner", Stillware Ltd, released 14.09.2026.
+  // Apple's search does not return it for the word "zeroed" even now, which is
+  // how we missed it — the link on the company's own page does. Look a product
+  // up by the identifier it publishes, not by its name.
   availability:
-    'Not on the App Store: Apple’s catalogue returns nothing for it in any storefront we checked, and its own page says iOS is coming soon. On Google Play and the Microsoft Store, and as a download for Mac and Windows.',
-  source: 'their own site, and Apple’s catalogue for availability',
+    'On the App Store since 14 September 2026 — iPhone, iPad and Macs with Apple silicon. Also on Google Play and the Microsoft Store, and as a direct download for Mac and Windows.',
+  source: 'their own site, and Apple’s App Store listing',
+  bestFor: 'One payment that also covers Windows and Android',
 };
 
 const MONEYCOACH: Competitor = {
@@ -383,6 +395,7 @@ const MONEYCOACH: Competitor = {
     'the most used features are free. Premium is a subscription that Apple’s US listing shows at several prices; Lifetime Premium is $199.99.',
   availability: 'On the App Store. iPhone, iPad, Mac and Apple Watch.',
   source: 'their own site, and Apple’s App Store listing',
+  bestFor: 'Bank sync in Europe, in an Apple-native app',
 };
 
 const GOODBUDGET: Competitor = {
@@ -393,6 +406,7 @@ const GOODBUDGET: Competitor = {
     'a free plan with 10 regular and 10 more envelopes and one account. Plus is $8 a month or $70 a year; Premium, the plan with bank sync, is $10 a month or $80 a year. Prices from its own website.',
   availability: 'On the App Store for iPhone, and on Android and the web.',
   source: 'its own website and help pages',
+  bestFor: 'Sharing envelopes with somebody on Android or the web',
 };
 
 const PENNIES: Competitor = {
@@ -403,6 +417,7 @@ const PENNIES: Competitor = {
     'free to download. Apple’s US listing shows annual subscriptions at several prices, and we could not find what a subscription adds, so we print none.',
   availability: 'On the App Store. iPhone, iPad and Apple Watch.',
   source: 'its own website, and Apple’s App Store listing',
+  bestFor: 'A daily spending number, not a full plan',
 };
 
 const SKWAD: Competitor = {
@@ -413,9 +428,16 @@ const SKWAD: Competitor = {
     'for DIY, which syncs from your bank’s email alerts; LINK, with bank linking, is $65 a year. Billed monthly they are $6 and $8. No free plan.',
   availability: 'On the App Store for iPhone and iPad, on Android, and on the web.',
   source: 'its own pricing page, and Apple’s App Store listing',
+  bestFor: 'Transactions arriving by themselves without a bank login',
 };
 
 export const COMPETITORS: readonly Competitor[] = [
+  // The order the ranked comparison uses, after Fundkeep: the reader's own
+  // case decides, and these are sorted by how many readers each case fits.
+  ZEROED,
+  ACTUAL_BUDGET,
+  ENVY,
+  MONEYCOACH,
   {
     name: YNAB.name,
     url: YNAB.source,
@@ -427,11 +449,8 @@ export const COMPETITORS: readonly Competitor[] = [
     priceNote: `${YNAB.period}, or ${money(YNAB.monthly)} a month. ${YNAB.trialDays}-day trial.`,
     availability: 'On the App Store, free to download; the subscription is inside.',
     source: "YNAB's own pricing page",
+    bestFor: 'Staying put, if bank sync and sharing are what you pay for',
   },
-  ENVY,
-  ACTUAL_BUDGET,
-  ZEROED,
-  MONEYCOACH,
 ] as const;
 
 /**
@@ -440,12 +459,12 @@ export const COMPETITORS: readonly Competitor[] = [
  * separate dates would rot at five different speeds.
  */
 export const COMPETITORS_CHECKED = {
-  // Re-read as one on 13.09.2026. Zeroed now prints the price after its
-  // founder offer, and MoneyCoach's note claimed Apple publishes no in-app
-  // purchase prices, which it does; both were corrected in the same sweep.
-  on: '2026-09-13',
-  display: '13 September 2026',
-  recheckBy: '2026-12-13',
+  // Re-read as one on 26.09.2026, before the comparison became a ranked one.
+  // What changed since 13.09: Zeroed reached the App Store. Prices for YNAB,
+  // Envy, Actual Budget, Zeroed and MoneyCoach were all confirmed unchanged.
+  on: '2026-09-26',
+  display: '26 September 2026',
+  recheckBy: '2026-12-26',
 } as const;
 
 /** The range the savings calculator offers, and where it starts. */
@@ -588,6 +607,20 @@ export interface NoBankLoginApp extends Competitor {
   ours?: true;
 }
 
+/**
+ * Ours, in the shape the comparison tables print. One constant, so the ranked
+ * comparison and the no-bank-login table cannot describe us differently.
+ */
+export const FUNDKEEP: Competitor = {
+  name: SITE.name,
+  url: RELEASE.appStoreUrl ?? '/',
+  price: PRICING.full,
+  priceNote: `${PRICING.note}. Free for the first ${TRIAL.days} days.`,
+  availability: `On the App Store. ${RELEASE.platforms}.`,
+  source: 'our own App Store listing',
+  bestFor: 'Keeping the envelope method on iPhone, iPad and Mac, bought once',
+};
+
 export const NO_BANK_LOGIN_APPS: readonly NoBankLoginApp[] = [
   {
     ...ACTUAL_BUDGET,
@@ -603,12 +636,7 @@ export const NO_BANK_LOGIN_APPS: readonly NoBankLoginApp[] = [
     runsOn: 'iPhone and iPad; on a Mac, as the iPad app',
   },
   {
-    name: SITE.name,
-    url: '/',
-    price: PRICING.full,
-    priceNote: `${PRICING.note}. Free for the first ${TRIAL.days} days.`,
-    availability: `On the App Store. ${RELEASE.platforms}.`,
-    source: 'our own App Store listing',
+    ...FUNDKEEP,
     ours: true,
     bank: 'never',
     bankNote: 'You type transactions, or import the CSV file your bank gives you.',
