@@ -1,0 +1,210 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, SITE, YNAB } from '../../consts';
+import { LEAVING_YNAB, noSubscriptionCluster, YNAB_PRICING } from '../../i18n/pages';
+
+/** Pourquoi presque toutes ces applications sont des abonnements — en euros. */
+
+const lang = 'fr' as const;
+const m = MARKETS[lang];
+
+const title = 'Le budget par enveloppes sans abonnement : ce que paie la mensualité';
+const description =
+  'Pourquoi presque toutes les applications d’enveloppes sont des abonnements, ce que la mensualité achète réellement, et ce qui change si vous l’arrêtez.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'fr',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/fr/budget-enveloppes-sans-abonnement`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={noSubscriptionCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Article</p>
+      <h1>Le budget par enveloppes sans abonnement</h1>
+      <p class="lede">
+        La méthode est plus ancienne que le logiciel. L'abonnement paie quelque
+        chose de précis — et il vaut la peine de savoir quoi, avant de décider
+        si vous le voulez.
+      </p>
+      <p>
+        Le budget par enveloppes n'est pas un produit. C'est une habitude
+        centenaire : décider à quoi sert chaque euro <strong>avant</strong>{' '}
+        de le dépenser, le mettre là où il ne peut servir qu'à cela, et quand
+        une enveloppe est vide, elle est vide. On le faisait avec des espèces et
+        des enveloppes en papier bien avant que quiconque facture un abonnement
+        pour ça.
+      </p>
+      <p>
+        La question est donc légitime : pourquoi presque toutes les
+        applications qui le font correctement sont-elles des abonnements ? La
+        réponse n'est pas la cupidité, et elle mérite d'être comprise, car elle
+        dit exactement ce à quoi vous renoncez en cessant d'en payer un.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce que la mensualité achète vraiment</h2>
+      <p>Trois choses, à peu près dans l'ordre de leur coût.</p>
+      <p>
+        <strong>Les connexions bancaires.</strong> C'est le gros poste. Une app
+        ne se connecte pas elle-même à votre banque : elle paie un agrégateur
+        pour le faire, et celui-ci facture par compte connecté, chaque mois,
+        indéfiniment. Ces connexions cassent aussi sans arrêt : les banques
+        changent leurs parcours de connexion, ajoutent des étapes, refont leurs
+        sites. Quelqu'un doit réparer en continu. C'est un coût récurrent, et un
+        coût récurrent se paie avec un revenu récurrent. Il n'y a pas
+        d'échappatoire.
+      </p>
+      <p>
+        <strong>Les serveurs.</strong> Si votre budget vit dans un compte auquel
+        vous vous connectez, quelqu'un paie le stockage, les sauvegardes et les
+        gens qu'on réveille quand cela tombe en panne.
+      </p>
+      <p>
+        <strong>Le développement continu.</strong> Réel, mais généralement le
+        plus petit des trois — et celui qu'on invoque le plus souvent pour
+        justifier les deux autres.
+      </p>
+      <p>
+        Retirez les deux premiers et l'économie change. Une application sans
+        connexions bancaires et sans serveurs a des coûts de logiciel plutôt que
+        de service — c'est pourquoi elle peut se vendre comme un logiciel.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce que vous perdez</h2>
+      <p>
+        Tout, côté confort. C'est l'échange honnête, et il n'y a pas de tour de
+        passe-passe.
+      </p>
+      <p>
+        Sans connexion bancaire, les opérations n'apparaissent pas toutes
+        seules. Vous les saisissez — quelques secondes chacune, et certains y
+        voient justement l'intérêt, parce que taper un montant est le moment où
+        on le remarque — ou vous exportez un CSV de votre banque quand cela vous
+        arrange et vous les importez d'un coup.
+      </p>
+      <p>
+        Vous perdez aussi le fait que l'app connaisse votre solde. Elle connaît
+        ce que <em>vous</em> lui avez dit. Un montant mal tapé reste faux
+        jusqu'au rapprochement avec votre relevé — une chose que vous devez
+        désormais faire exprès au lieu qu'elle soit faite pour vous.
+      </p>
+      <p>
+        C'est un coût réel. Quiconque prétend le contraire est en train de vous
+        vendre quelque chose.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce que vous gagnez</h2>
+      <p>
+        <strong>Personne ne détient une clé de vos comptes.</strong> Une
+        connexion bancaire signifie qu'un tiers a un accès permanent, en
+        lecture, à votre historique d'opérations, et cet accès vaut la peine
+        d'être volé. Pas de connexion : rien à voler, rien à faire fuiter, et
+        aucune entreprise qui déciderait plus tard que les « données de dépense
+        anonymisées » sont un marché.
+      </p>
+      <p>
+        <strong>Votre budget ne s'arrête pas quand vous arrêtez de
+        payer.</strong> C'est ce qui surprend le plus. Quand un abonnement
+        expire, qu'advient-il des années d'historique que vous avez saisies ?
+        Parfois lecture seule. Parfois export seulement. Parfois rien. Cette
+        réponse vaut la peine d'être cherchée pour ce que vous utilisez
+        aujourd'hui — elle existe quelque part, et rarement sur la page des
+        tarifs.
+      </p>
+      <p>
+        <strong>L'arithmétique change.</strong> Un abonnement est une décision
+        que vous reprenez sans cesse. Un achat est une décision prise une fois.
+        Sur toute durée qui compte, l'écart n'est pas petit : {YNAB.name} coûte
+        {' '}{m.ynabYear} par an, {SITE.name} {m.full} une fois.{' '}
+        <a href={`/${lang}/${YNAB_PRICING[lang]}`}
+          >Un curseur met de vrais chiffres là-dessus</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>La question gênante sur l'achat unique</h2>
+      <p>
+        Si l'on ne paie qu'une fois, qu'est-ce qui pousse le développeur à
+        continuer ?
+      </p>
+      <p>
+        La réponse honnête : les nouveaux clients. C'est le modèle.
+        L'application doit rester assez bonne pour qu'on la recommande, et un
+        jour une version majeure doit valoir un nouvel achat. C'est ainsi que se
+        vendait la plupart des logiciels avant les abonnements, et ce modèle a
+        un défaut évident : une app abandonnée en silence.
+      </p>
+      <p>
+        La parade n'est pas une promesse, parce que les promesses ne coûtent
+        rien. C'est qu'il n'y a rien à éteindre. Une application sans serveur ne
+        cesse pas de fonctionner quand l'entreprise se désintéresse d'elle : elle
+        continue de tourner sur votre appareil, avec vos données sur votre
+        appareil, exportables en CSV quand vous voulez. C'est une réponse
+        structurelle plutôt que rassurante, et le structurel, cela se vérifie.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>La méthode fonctionne-t-elle toujours ?</h2>
+      <p>
+        Sans changement. Donnez une tâche à chaque unité d'argent, gardez la
+        pile non affectée à zéro, regardez ce qui reste dans chaque enveloppe
+        plutôt que ce que vous comptiez dépenser, et quand vous en dépassez une,
+        prenez la différence sur une autre et sentez-la. Les cartes de crédit
+        demandent d'être bien traitées — l'argent va dans l'enveloppe de
+        paiement de la carte au moment de la dépense, donc avant l'arrivée de la
+        facture — mais c'est un détail de la méthode, pas de l'abonnement.
+      </p>
+      <p>
+        Rien de tout cela n'exige une connexion bancaire. Cela ne l'a jamais
+        exigé. La connexion est un confort qu'on a fini par vendre avec la
+        méthode jusqu'à ce que les deux semblent ne faire qu'un.
+      </p>
+      <p>
+        Ce n'est pas le cas — et c'est à vous de choisir ce que vous payez.{' '}
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >Ce que le changement veut dire concrètement</a
+        > est juste à côté.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>

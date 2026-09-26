@@ -1,0 +1,111 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../consts';
+import {
+  ARTICLES,
+  BEST_ALTERNATIVES,
+  BOUGHT_ONCE,
+  EXPORT_GUIDE,
+  LEAVING_YNAB,
+  NO_BANK_LOGIN,
+  NO_SUBSCRIPTION,
+  YNAB_PRICING,
+  articlesCluster,
+} from '../../i18n/pages';
+
+/**
+ * The index of what exists in this language.
+ *
+ * Deliberately not a copy of the English /blog: it lists the pages that exist
+ * in ja, and nothing that would send the reader to a language they did not
+ * ask for. When a page is translated it is added here.
+ */
+
+const lang = 'ja' as const;
+
+const title = '記事';
+const description =
+  'サブスクなし・銀行連携なしの家計管理について書いたもの。比較、価格、手引き。数字はすべて一次情報で確認しています。';
+
+const PAGES = {
+  BEST_ALTERNATIVES,
+  LEAVING_YNAB,
+  YNAB_PRICING,
+  BOUGHT_ONCE,
+  NO_SUBSCRIPTION,
+  NO_BANK_LOGIN,
+  EXPORT_GUIDE,
+};
+
+const items: { key: keyof typeof PAGES; title: string; blurb: string }[] = [
+  { key: 'BEST_ALTERNATIVES', title: 'YNAB の代替になる封筒家計簿アプリ', blurb: '5つを比較し、自社のものを1番目に置いたうえで、負ける場所も書いています。価格は日本のストアのもの。' },
+  { key: 'LEAVING_YNAB', title: 'YNAB から乗り換えるなら', blurb: '同じままのもの、なくなるもの、そして Mac では YNAB がブラウザのタブである理由。' },
+  { key: 'YNAB_PRICING', title: 'YNAB の料金と、その上がり方', blurb: '日本の App Store での現在の価格と、YNAB 4 以降のすべての値上げ。出典は同社のページ。' },
+  { key: 'BOUGHT_ONCE', title: '買い切りの家計簿アプリ', blurb: '本当に一度で終わるのはどれか、言葉だけなのはどれか、そして同じ期間のサブスクの額。' },
+  { key: 'NO_SUBSCRIPTION', title: 'サブスクなしの封筒家計簿', blurb: 'この種のアプリがほぼすべてサブスクなのはなぜか、月額は何を買っているのか、やめると何が変わるのか。' },
+  { key: 'NO_BANK_LOGIN', title: '銀行連携なしで使える家計簿アプリ', blurb: '銀行のログイン情報なしで使える7つ。まったくつながらないものと、設定すればつながるもの。' },
+  { key: 'EXPORT_GUIDE', title: 'YNAB のデータを書き出す', blurb: 'Export Plan の場所、2つのファイルの中身、そして書き出されないもの。' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description,
+    url: `${SITE.url}/ja/kiji`,
+    inLanguage: 'ja',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={articlesCluster()}
+>
+  <div class="section wrap wrap-narrow">
+    <h1>記事</h1>
+    <p class="lede">ここにあるものはすべて一次情報で確かめ、日付を付けています。確認できなかった数字は載せていません。</p>
+
+    <ul class="index">
+      {
+        items.map((item) => (
+          <li>
+            <h2>
+              <a href={`/${lang}/${PAGES[item.key][lang]}`}>{item.title}</a>
+            </h2>
+            <p class="muted">{item.blurb}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .index {
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+
+  .index li + li {
+    margin-top: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .index h2 {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .index p {
+    margin: 0;
+  }
+</style>

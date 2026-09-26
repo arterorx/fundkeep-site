@@ -72,6 +72,15 @@ const PAGES = [
   ['/fr/confidentialite', 'fr/confidentialite.html'],
   ['/ja/support', 'ja/support.html'],
   ['/ja/privacy', 'ja/privacy.html'],
+  ['/de/artikel', 'de/artikel.html'],
+  ['/fr/articles', 'fr/articles.html'],
+  ['/ja/kiji', 'ja/kiji.html'],
+  ['/de/umschlagmethode-ohne-abo', 'de/umschlagmethode-ohne-abo.html'],
+  ['/fr/budget-enveloppes-sans-abonnement', 'fr/budget-enveloppes-sans-abonnement.html'],
+  ['/ja/fuutou-kakeibo-sabusuku-nashi', 'ja/fuutou-kakeibo-sabusuku-nashi.html'],
+  ['/de/budget-app-ohne-bankzugang', 'de/budget-app-ohne-bankzugang.html'],
+  ['/fr/application-budget-sans-connexion-bancaire', 'fr/application-budget-sans-connexion-bancaire.html'],
+  ['/ja/ginko-renkei-nashi-kakeibo-apuri', 'ja/ginko-renkei-nashi-kakeibo-apuri.html'],
 ];
 
 /** Apple's badge, in each language the site publishes. */

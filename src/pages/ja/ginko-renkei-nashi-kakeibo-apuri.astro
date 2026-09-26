@@ -1,0 +1,238 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, MARKET_RIVALS, SITE, YNAB } from '../../consts';
+import { LEAVING_YNAB, noBankLoginCluster, NO_SUBSCRIPTION } from '../../i18n/pages';
+
+/**
+ * 銀行連携なしで使える家計簿アプリ。
+ *
+ * 三つの根拠（Mint・Plaid・CFPB）はいずれも米国の文書で、引用は原文のまま
+ * 置く。訳した引用は引用ではない。そして日本語版では最後に一つ足す：
+ * ここに挙げた連携はどれも日本の銀行を対象にしていない。
+ */
+
+const lang = 'ja' as const;
+const m = MARKETS[lang];
+const envy = MARKET_RIVALS[lang].find((rival) => rival.name === 'Envy')!;
+const moneycoach = MARKET_RIVALS[lang].find((rival) => rival.name === 'MoneyCoach')!;
+
+const title = '銀行連携なしで使える家計簿アプリ7つ（2026年）';
+const description =
+  '銀行のログイン情報を渡さずに使える家計簿アプリ7つ。まったくつながらないもの、設定すればつながるもの、そして連携なしで何を手放すことになるか。';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'ja',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/ja/ginko-renkei-nashi-kakeibo-apuri`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={noBankLoginCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">記事</p>
+      <h1>銀行につながらなくていい家計簿アプリ</h1>
+      <p class="lede">
+        家計簿アプリに銀行のログイン情報を渡す必要はありません。以下の7つの
+        うち3つは銀行にまったくつながらず、4つは自分で設定したときだけ——多くは
+        有料プランで、対象の国も限られます——つながります。連携がなければ、
+        取引は自分で入力するか、銀行から落としたファイルを読み込みます。自動
+        更新を手放す代わりに、口座の鍵を誰も持ちません。
+      </p>
+      <p class="small muted">
+        価格は
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.ja}</time>
+        に App Store で確認したものです。下のサブスク系サービスは米ドルで請求し、
+        自社ページでもドル表示です。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>銀行連携から離れる理由</h2>
+      <p>
+        背景には三つあります。いずれも各組織自身の文書へリンクしています。原文は
+        英語で、引用部分は訳しません。訳した引用は引用ではないからです。
+      </p>
+      <p>
+        <strong>家計を握っているのは銀行ではなくアプリです。</strong>
+        2023年10月、Intuit の Credit Karma は、同社の家計簿アプリ Mint を
+        Credit Karma に統合すると
+        <a
+          href="https://web.archive.org/web/20231107195404/https://www.creditkarma.com/about/releases/intuit-credit-karma-welcomes-all-minters"
+          hreflang="en"
+          lang="en">発表しました</a
+        >。
+        <a
+          href="https://web.archive.org/web/20231109015511/https://mint.intuit.com/support/en-us/help-article/export-transactions/need-know-mint-moving-credit-karma/L30uqxD8W_US_en_US"
+          hreflang="en"
+          lang="en">Mint 自身のヘルプページ</a
+        >は、残高・純資産の履歴・3年分の取引は引き継げるが、Credit Karma は
+        「doesn't offer the ability to set monthly and category budgets」と
+        利用者に伝えていました。
+      </p>
+      <p>
+        <strong>接続はたいてい第三者を経由します。</strong>
+        Goodbudget と Skwad の銀行接続はどちらも Plaid を通ります。2022年7月、
+        連邦裁判所は
+        <a
+          href="https://www.govinfo.gov/content/pkg/USCOURTS-cand-4_20-cv-03056/pdf/USCOURTS-cand-4_20-cv-03056-4.pdf"
+          hreflang="en"
+          lang="en">5,800万ドルの和解</a
+        >を承認しました。集団訴訟で原告は、Plaid が「uses consumers' banking
+        login credentials to harvest and sell detailed financial data without
+        their consent」と主張していました。Plaid は責任を否認しています。和解は
+        運用の変更を求めており、その中には「minimizing the data Plaid stores
+        from users' financial accounts」が含まれます。
+      </p>
+      <p>
+        <strong>銀行のパスワードを渡す方式は、ゆっくり減っています。</strong>
+        米国の消費者金融保護局（CFPB）が2024年10月に
+        <a
+          href="https://web.archive.org/web/20251229115723/https://www.consumerfinance.gov/about-us/newsroom/cfpb-finalizes-personal-financial-data-rights-rule-to-boost-competition-protect-privacy-and-give-families-more-choice-in-financial-services/"
+          hreflang="en"
+          lang="en">規則を確定</a
+        >した際、スクリーンスクレイピングを「a still common but risky practice
+        that typically involves consumers providing their account passwords to
+        third parties」と呼びました。同局の数字では、調査対象のアグリゲーターに
+        おいてこの方式はアクセス試行の2019年80%から2022年50%へ減っています（
+        <a
+          href="https://www.federalregister.gov/documents/2024/11/18/2024-25079/required-rulemaking-on-personal-financial-data-rights"
+          hreflang="en"
+          lang="en">89 FR 90838</a
+        >）。2025年10月に連邦裁判所が適用期日を
+        <a
+          href="https://web.archive.org/web/20260824202244/https://www.consumerfinance.gov/compliance/compliance-resources/other-applicable-requirements/personal-financial-data-rights/"
+          hreflang="en"
+          lang="en">停止</a
+        >し、CFPB は
+        <a
+          href="https://www.federalregister.gov/documents/2025/08/22/2025-16139/personal-financial-data-rights-reconsideration"
+          hreflang="en"
+          lang="en">規則を再検討中</a
+        >です。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>7つのアプリ</h2>
+      <ul class="apps">
+        <li>
+          <strong>Actual Budget</strong> — 無料でオープンソース。銀行接続は任意で、
+          自分でデータ提供元を設定するまで無効です。ウェブ・Windows・Mac・Linux。
+        </li>
+        <li>
+          <strong><a href={envy.url}>{envy.name}</a></strong> — 日本のストアで
+          {envy.price} の買い切り。銀行には決してつながりません。iPhone と iPad、
+          Mac では iPad アプリとして。
+        </li>
+        <li>
+          <strong>{SITE.name}</strong>（私たちのもの）— {m.full} の買い切り。
+          つながりません。iPhone・iPad・Mac。
+        </li>
+        <li>
+          <strong>Goodbudget</strong> — 無料プランの上に Plus と Premium。価格は
+          自社サイトに米ドルで出ています。銀行連携は Premium のみ、対象は米国の
+          銀行のみで、Plaid 経由。iPhone・Android・ウェブ。
+        </li>
+        <li>
+          <strong><a href={moneycoach.url}>{moneycoach.name}</a></strong> —
+          よく使う機能は無料で、上に Premium のサブスク。Lifetime Premium は
+          {moneycoach.price}。銀行連携は Premium 限定かつ欧州の銀行のみ（英国は
+          対象外）。iPhone・iPad・Mac・Apple Watch。
+        </li>
+        <li>
+          <strong>Pennies</strong> — ダウンロードは無料。Apple の掲載には年額の
+          サブスクが複数の価格で並び、サブスクで何が増えるのかを確認できなかった
+          ため、金額は載せません。銀行接続なし。iPhone・iPad・Apple Watch。
+        </li>
+        <li>
+          <strong>Skwad</strong> — サブスクで、自社の価格ページは米ドル表示。
+          銀行連携は LINK プランのみ、Plaid 経由。iPhone・iPad・Android・ウェブ。
+        </li>
+      </ul>
+      <p>
+        <strong>日本から見ると、この一覧はもっと単純になります。</strong>
+        ここで連携できると書いた4つのうち、Goodbudget は米国の銀行、MoneyCoach は
+        欧州の銀行が対象で、Actual Budget と Skwad はそれぞれ自分で設定する提供元と
+        Plaid に依存します。日本の銀行を正面から対象にしているものはありません。
+        つまり日本では、どれを選んでも入力か CSV 取り込みになります。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>連携がないと何を手放すか</h2>
+      <p>
+        何も勝手には入ってきません。すべての取引は、自分で打ったものか、銀行から
+        自分で落として取り込んだファイルの中のものです。残高は、最後にそれをした
+        時点のものになります。
+      </p>
+      <p>
+        引き換えに得るのは、同じ事実の裏側です。誰もあなたの代わりに銀行へ
+        ログインせず、切れたり再認証が要る接続もなく、口座に関する情報が、その
+        データを持つことを商売にしている会社に届くこともありません。
+      </p>
+      <p>
+        それでもこの種のアプリがほぼすべてサブスクなのはなぜか、は
+        <a href={`/${lang}/${NO_SUBSCRIPTION[lang]}`}>隣のページ</a>に書きました。
+        銀行接続はその中で最も高い項目です。
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>{SITE.name} の位置</h2>
+      <p>
+        私たちのアプリなので、そのつもりで読んでください。{SITE.name} は
+        iPhone・iPad・Mac の封筒式家計簿で、{m.full} の買い切りです。銀行には
+        決してつながりません。取引は自分で入力するか、銀行がくれる CSV を
+        読み込み、保存の前にすべての行を確認できます。Android・Windows・ウェブでは
+        動かず、家計は一人分で、その人の端末のあいだだけで揃います。
+        {YNAB.name} から来る場合は
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}>同じままのものと、なくなるもの</a>
+        をどうぞ。
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apps {
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+
+  .apps li + li {
+    margin-top: var(--space-m);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+  }
+</style>

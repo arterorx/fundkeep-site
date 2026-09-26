@@ -1,0 +1,242 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, MARKETS_CHECKED, MARKET_RIVALS, SITE, YNAB } from '../../consts';
+import { LEAVING_YNAB, noBankLoginCluster, NO_SUBSCRIPTION } from '../../i18n/pages';
+
+/**
+ * Les applications de budget sans connexion bancaire.
+ * Les trois pièces (Mint, Plaid, CFPB) sont des documents américains : les
+ * citations restent dans leur langue, une citation traduite n'en est plus une.
+ */
+
+const lang = 'fr' as const;
+const m = MARKETS[lang];
+const envy = MARKET_RIVALS[lang].find((rival) => rival.name === 'Envy')!;
+const moneycoach = MARKET_RIVALS[lang].find((rival) => rival.name === 'MoneyCoach')!;
+
+const title = 'Applications de budget sans connexion bancaire : sept qui ne demandent rien';
+const description =
+  'Sept applis de budget qui marchent sans vos identifiants bancaires : celles qui ne se connectent jamais, celles qui le peuvent, et ce que vous perdez.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'fr',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/fr/application-budget-sans-connexion-bancaire`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={noBankLoginCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Article</p>
+      <h1>Des applications de budget qui n'ont pas besoin de votre banque</h1>
+      <p class="lede">
+        Vous n'êtes pas obligé de confier vos identifiants bancaires à une
+        application de budget. Sur les sept ci-dessous, trois ne se connectent
+        jamais à une banque, et quatre ne le font que si vous le configurez —
+        généralement sur une formule payante, et seulement dans certains pays.
+        Sans connexion, vous saisissez les opérations ou importez un fichier de
+        votre banque : vous perdez la mise à jour automatique, et personne ne
+        détient de clé de vos comptes.
+      </p>
+      <p class="small muted">
+        Prix relevés sur l'App Store le{' '}
+        <time datetime={MARKETS_CHECKED.on}>{MARKETS_CHECKED.display.fr}</time> ;
+        les services par abonnement ci-dessous facturent en dollars américains
+        et affichent ainsi leurs prix sur leurs propres pages.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Pourquoi on quitte la synchronisation bancaire</h2>
+      <p>
+        Trois raisons, chacune liée au document de l'organisation concernée. Ce
+        sont des textes en anglais : nous n'en traduisons pas les formulations,
+        car une citation traduite n'est plus une citation.
+      </p>
+      <p>
+        <strong>C'est l'app, pas la banque, qui détient votre budget.</strong>{' '}
+        En octobre 2023, Credit Karma (Intuit){' '}
+        <a
+          href="https://web.archive.org/web/20231107195404/https://www.creditkarma.com/about/releases/intuit-credit-karma-welcomes-all-minters"
+          hreflang="en"
+          lang="en">a annoncé</a
+        > l'absorption de Mint, l'application de budget d'Intuit.{' '}
+        <a
+          href="https://web.archive.org/web/20231109015511/https://mint.intuit.com/support/en-us/help-article/export-transactions/need-know-mint-moving-credit-karma/L30uqxD8W_US_en_US"
+          hreflang="en"
+          lang="en">La page d'aide de Mint</a
+        > indiquait qu'on pouvait transférer les soldes, l'historique du
+        patrimoine net et trois ans d'opérations, et que Credit Karma
+        « doesn't offer the ability to set monthly and category budgets ».
+      </p>
+      <p>
+        <strong>La connexion passe généralement par un tiers.</strong>{' '}
+        Goodbudget et Skwad passent tous deux par Plaid. En juillet 2022, un
+        tribunal fédéral a{' '}
+        <a
+          href="https://www.govinfo.gov/content/pkg/USCOURTS-cand-4_20-cv-03056/pdf/USCOURTS-cand-4_20-cv-03056-4.pdf"
+          hreflang="en"
+          lang="en">approuvé un accord de 58 millions de dollars</a
+        > dans des recours collectifs où les plaignants soutenaient que Plaid
+        « uses consumers' banking login credentials to harvest and sell detailed
+        financial data without their consent ». Plaid a nié toute
+        responsabilité. L'accord imposait des changements de pratiques, dont
+        « minimizing the data Plaid stores from users' financial accounts ».
+      </p>
+      <p>
+        <strong>Donner son mot de passe bancaire disparaît, lentement.</strong>{' '}
+        Quand le CFPB américain a{' '}
+        <a
+          href="https://web.archive.org/web/20251229115723/https://www.consumerfinance.gov/about-us/newsroom/cfpb-finalizes-personal-financial-data-rights-rule-to-boost-competition-protect-privacy-and-give-families-more-choice-in-financial-services/"
+          hreflang="en"
+          lang="en">finalisé une règle</a
+        > en octobre 2024, il a qualifié le screen scraping de « a still common
+        but risky practice that typically involves consumers providing their
+        account passwords to third parties ». Ses propres chiffres montrent le
+        recul : chez les agrégateurs étudiés, la pratique est passée de 80 % des
+        tentatives d'accès en 2019 à 50 % en 2022 (
+        <a
+          href="https://www.federalregister.gov/documents/2024/11/18/2024-25079/required-rulemaking-on-personal-financial-data-rights"
+          hreflang="en"
+          lang="en">89 FR 90838</a
+        >). Un tribunal fédéral a{' '}
+        <a
+          href="https://web.archive.org/web/20260824202244/https://www.consumerfinance.gov/compliance/compliance-resources/other-applicable-requirements/personal-financial-data-rights/"
+          hreflang="en"
+          lang="en">suspendu les échéances</a
+        > en octobre 2025, et le CFPB{' '}
+        <a
+          href="https://www.federalregister.gov/documents/2025/08/22/2025-16139/personal-financial-data-rights-reconsideration"
+          hreflang="en"
+          lang="en">réexamine la règle</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Les sept</h2>
+      <ul class="apps">
+        <li>
+          <strong>Actual Budget</strong> — gratuit et open source. La connexion
+          bancaire est facultative et désactivée tant que vous ne la configurez
+          pas avec votre propre fournisseur. Web, Windows, Mac et Linux.
+        </li>
+        <li>
+          <strong><a href={envy.url}>{envy.name}</a></strong> — {envy.price} une
+          fois sur l'App Store français. Ne se connecte jamais à une banque.
+          iPhone et iPad ; sur Mac, en app iPad.
+        </li>
+        <li>
+          <strong>{SITE.name}</strong> (la nôtre) — {m.full} une fois. Ne se
+          connecte jamais. iPhone, iPad et Mac.
+        </li>
+        <li>
+          <strong>Goodbudget</strong> — une offre gratuite, puis Plus et
+          Premium ; les prix sont affichés en dollars sur leur propre site.
+          Synchronisation bancaire réservée à Premium, uniquement avec des
+          banques américaines, via Plaid. iPhone, Android et web.
+        </li>
+        <li>
+          <strong><a href={moneycoach.url}>{moneycoach.name}</a></strong> — les
+          fonctions les plus utilisées sont gratuites, avec un abonnement
+          au-dessus ; le Lifetime Premium coûte {moneycoach.price}. Connexion
+          bancaire réservée à Premium et aux banques européennes, les
+          britanniques exclues. iPhone, iPad, Mac et Apple Watch.
+        </li>
+        <li>
+          <strong>Pennies</strong> — téléchargement gratuit ; la fiche d'Apple
+          montre plusieurs abonnements annuels à des prix différents et nous
+          n'avons pas pu établir ce que l'abonnement ajoute, donc aucun chiffre
+          ici. Aucune connexion bancaire. iPhone, iPad et Apple Watch.
+        </li>
+        <li>
+          <strong>Skwad</strong> — abonnement, en dollars sur sa propre page de
+          tarifs. Connexion bancaire seulement sur la formule LINK, via Plaid.
+          iPhone, iPad, Android et web.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Ce que vous perdez sans connexion</h2>
+      <p>
+        Rien n'arrive tout seul. Chaque opération est une que vous avez saisie,
+        ou une qui venait d'un fichier téléchargé chez votre banque et importé
+        par vous. Un solde est donc à jour de la dernière fois où vous l'avez
+        fait.
+      </p>
+      <p>
+        En échange, vous obtenez l'autre face de la même réalité : personne ne
+        se connecte à votre banque à votre place, il n'y a pas de connexion à
+        casser ni à ré-autoriser, et rien de vos comptes ne parvient à une
+        entreprise dont le métier est de détenir ces données.
+      </p>
+      <p>
+        Pourquoi presque toutes ces applications restent malgré tout des
+        abonnements :{' '}
+        <a href={`/${lang}/${NO_SUBSCRIPTION[lang]}`}>c'est juste à côté</a> — la
+        connexion bancaire en est le poste le plus cher.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Où se situe {SITE.name}</h2>
+      <p>
+        C'est la nôtre, lisez ce paragraphe en conséquence. {SITE.name}, c'est
+        le budget par enveloppes sur iPhone, iPad et Mac, acheté une fois à{' '}
+        {m.full}. Il ne se connecte jamais à une banque : vous saisissez les
+        opérations ou importez le CSV que votre banque vous donne, et vous voyez
+        chaque ligne avant tout enregistrement. Il ne tourne ni sur Android, ni
+        sur Windows, ni sur le web, et un budget appartient à une personne,
+        synchronisé entre ses propres appareils. Si vous venez de {YNAB.name} :{' '}
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >ce qui reste pareil et ce que vous perdez</a
+        >.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .apps {
+    margin: var(--space-l) 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+
+  .apps li + li {
+    margin-top: var(--space-m);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--rule);
+  }
+</style>

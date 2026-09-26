@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { articlesCluster } from '../i18n/pages';
 import Base from '../layouts/Base.astro';
 import { SITE, YNAB } from '../consts';
 import { displayDate, machineDate } from '../utils/dates';
@@ -30,7 +31,12 @@ const schema = [
 ];
 ---
 
-<Base title={title} description={description} schema={schema}>
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  alternates={articlesCluster()}
+>
   <div class="section wrap wrap-narrow">
     <h1>Articles</h1>
     <p class="lede">

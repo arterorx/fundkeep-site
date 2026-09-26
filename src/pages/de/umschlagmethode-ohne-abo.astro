@@ -1,0 +1,209 @@
+---
+import Base from '../../layouts/Base.astro';
+import AppStoreCta from '../../components/AppStoreCta.astro';
+import { MARKETS, SITE, YNAB } from '../../consts';
+import { LEAVING_YNAB, noSubscriptionCluster, YNAB_PRICING } from '../../i18n/pages';
+
+/** Warum fast jede Umschlag-App ein Abo ist — auf Deutsch, mit Europreisen. */
+
+const lang = 'de' as const;
+const m = MARKETS[lang];
+
+const title = 'Umschlagmethode ohne Abo: wofür die Monatsgebühr wirklich bezahlt wird';
+const description =
+  'Warum fast jede App für die Umschlagmethode ein Abo ist, was die Gebühr tatsächlich kauft, und was sich ändert, wenn du sie streichst.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    inLanguage: 'de',
+    datePublished: '2026-09-26',
+    dateModified: '2026-09-26',
+    author: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url },
+    mainEntityOfPage: `${SITE.url}/de/umschlagmethode-ohne-abo`,
+  },
+];
+---
+
+<Base
+  title={title}
+  exactTitle
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={noSubscriptionCluster()}
+>
+  <meta slot="head" name="fundkeep:competitor-prices" content="yes" />
+
+  <section class="section wrap">
+    <div class="column">
+      <p class="eyebrow">Artikel</p>
+      <h1>Umschlagmethode ohne Abo</h1>
+      <p class="lede">
+        Die Methode ist älter als die Software. Das Abo bezahlt etwas ganz
+        Bestimmtes — und es lohnt sich zu wissen, was, bevor du entscheidest, ob
+        du es willst.
+      </p>
+      <p>
+        Umschlag-Budgetieren ist kein Produkt. Es ist eine hundert Jahre alte
+        Gewohnheit: entscheide, wofür jeder Euro da ist, <strong>bevor</strong>{' '}
+        du ihn ausgibst, leg ihn dorthin, wo er nur dafür ausgegeben werden
+        kann, und wenn ein Umschlag leer ist, ist er leer. Menschen haben das
+        mit Bargeld und Papierumschlägen gemacht, lange bevor jemand eine
+        Monatsgebühr dafür verlangte.
+      </p>
+      <p>
+        Es ist also eine faire Frage, warum fast jede App, die das ordentlich
+        macht, ein Abo ist. Die Antwort ist nicht Gier, und sie ist es wert,
+        verstanden zu werden: sie sagt dir genau, worauf du verzichtest, wenn du
+        aufhörst, eines zu bezahlen.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was die Monatsgebühr wirklich kauft</h2>
+      <p>Drei Dinge, ungefähr in der Reihenfolge ihrer Kosten.</p>
+      <p>
+        <strong>Bankverbindungen.</strong> Das ist der große Posten. Eine App
+        verbindet sich nicht selbst mit deiner Bank — sie bezahlt einen
+        Aggregator dafür, und der rechnet pro verbundenem Konto ab, jeden Monat,
+        dauerhaft. Diese Verbindungen brechen außerdem ständig: Banken ändern
+        ihre Anmeldeverfahren, fügen Schritte hinzu, bauen ihre Seiten um.
+        Jemand muss das laufend reparieren. Das sind wiederkehrende Kosten, und
+        wiederkehrende Kosten müssen aus wiederkehrenden Einnahmen bezahlt
+        werden. Daran führt kein Weg vorbei.
+      </p>
+      <p>
+        <strong>Server.</strong> Wenn dein Budget in einem Konto liegt, bei dem
+        du dich anmeldest, bezahlt jemand Speicher, Sicherungen und die
+        Menschen, die nachts geweckt werden, wenn es nicht mehr läuft.
+      </p>
+      <p>
+        <strong>Weiterentwicklung.</strong> Real, aber meist der kleinste der
+        drei Posten — und derjenige, mit dem die anderen beiden am häufigsten
+        begründet werden.
+      </p>
+      <p>
+        Streicht man die ersten beiden, ändert sich die Rechnung. Eine App ohne
+        Bankverbindungen und ohne eigene Server hat Kosten, die nach Software
+        aussehen statt nach Dienstleistung — und deshalb kann sie wie Software
+        verkauft werden.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was du verlierst</h2>
+      <p>
+        Alles, was Bequemlichkeit angeht. Das ist der ehrliche Tausch, und es
+        gibt keinen schlauen Weg daran vorbei.
+      </p>
+      <p>
+        Ohne Bankverbindung erscheinen Umsätze nicht von allein. Du trägst sie
+        ein — was je Eintrag Sekunden dauert und was manche gerade für den Sinn
+        der Sache halten, weil das Tippen einer Zahl der Moment ist, in dem man
+        sie bemerkt — oder du exportierst eine CSV aus dem Online-Banking, wann
+        es dir passt, und bringst alles auf einmal herüber.
+      </p>
+      <p>
+        Du verlierst außerdem, dass die App deinen Kontostand kennt. Sie kennt,
+        was <em>du</em> ihr gesagt hast. Eine vertippte Zahl bleibt falsch, bis
+        du gegen deinen Auszug abgleichst — etwas, das du jetzt absichtlich tun
+        musst, statt es erledigt zu bekommen.
+      </p>
+      <p>Das ist ein echter Preis. Wer etwas anderes behauptet, verkauft etwas.</p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Was du bekommst</h2>
+      <p>
+        <strong>Niemand hält einen Schlüssel zu deinen Konten.</strong> Eine
+        Bankverbindung heißt, dass ein Dritter dauerhaften Lesezugriff auf deine
+        Umsatzhistorie hat, und dieser Zugriff ist es wert, gestohlen zu werden.
+        Keine Verbindung: nichts zu stehlen, nichts zu erbeuten, und kein
+        Unternehmen, das später beschließt, „anonymisierte Ausgabedaten“ seien
+        ein Geschäft.
+      </p>
+      <p>
+        <strong>Dein Budget hört nicht auf zu funktionieren, wenn du aufhörst zu
+        zahlen.</strong> Das überrascht die meisten. Wenn ein Abo ausläuft, was
+        passiert mit den Jahren an Verlauf, die du eingetragen hast? Manchmal
+        nur noch lesbar. Manchmal nur noch exportierbar. Manchmal weg. Es lohnt
+        sich, diese Antwort für das nachzulesen, was du gerade benutzt — sie
+        steht irgendwo, und selten auf der Preisseite.
+      </p>
+      <p>
+        <strong>Die Rechnung ändert sich.</strong> Ein Abo ist eine
+        Entscheidung, die du immer wieder triffst. Ein Kauf ist eine, die du
+        einmal getroffen hast. Über jeden Zeitraum, der zählt, ist der
+        Unterschied nicht klein: {YNAB.name} kostet {m.ynabYear} im Jahr,{' '}
+        {SITE.name} {m.full} einmal.{' '}
+        <a href={`/${lang}/${YNAB_PRICING[lang]}`}
+          >Ein Schieberegler setzt echte Zahlen darunter</a
+        >.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Die unangenehme Frage an Einmalkäufe</h2>
+      <p>
+        Wenn nur einmal bezahlt wird — was bringt die Entwicklerin dazu,
+        weiterzuarbeiten?
+      </p>
+      <p>
+        Die ehrliche Antwort lautet: neue Kundschaft. Das ist das Modell. Die
+        App muss gut genug bleiben, um empfohlen zu werden, und irgendwann muss
+        eine neue Hauptversion es wert sein, noch einmal gekauft zu werden. So
+        wurde Software vor den Abos meistens verkauft, und das Modell hat einen
+        offensichtlichen Fehlermodus: eine App, die still aufgegeben wird.
+      </p>
+      <p>
+        Die Absicherung dagegen ist kein Versprechen, denn Versprechen kosten
+        nichts. Sie ist, dass es nichts abzuschalten gibt. Eine App ohne Server
+        hört nicht auf zu laufen, wenn das Unternehmen das Interesse verliert —
+        sie läuft weiter auf deinem Gerät, mit deinen Daten auf deinem Gerät,
+        jederzeit als CSV exportierbar. Das ist eine strukturelle Antwort statt
+        einer beruhigenden, und strukturelle kann man nachprüfen.
+      </p>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="column">
+      <h2>Funktioniert die Methode weiterhin?</h2>
+      <p>
+        Unverändert. Gib jeder Geldeinheit eine Aufgabe, halte den nicht
+        zugewiesenen Rest bei null, schau auf das, was in jedem Umschlag übrig
+        ist, statt auf das, was du ausgeben wolltest, und wenn du einen
+        überziehst, nimm die Differenz aus einem anderen und spür es.
+        Kreditkarten wollen richtig behandelt werden — beim Ausgeben wandert
+        Geld in den Zahlungsumschlag der Karte, es liegt also beiseite, bevor
+        die Abrechnung kommt — aber das ist ein Detail der Methode, nicht des
+        Abos.
+      </p>
+      <p>
+        Nichts davon braucht eine Bankverbindung. Es hat sie nie gebraucht. Die
+        Verbindung ist eine Bequemlichkeit, die so lange mit der Methode
+        gebündelt wurde, bis beides wie eine Sache aussah.
+      </p>
+      <p>
+        Ist es nicht — und du darfst wählen, wofür du bezahlst.{' '}
+        <a href={`/${lang}/${LEAVING_YNAB[lang]}`}
+          >Was der Wechsel konkret bedeutet</a
+        >, steht nebenan.
+      </p>
+      <AppStoreCta lang={lang} />
+    </div>
+  </section>
+</Base>

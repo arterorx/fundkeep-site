@@ -77,7 +77,34 @@ export const PRIVACY = {
   ja: 'privacy',
 } as const;
 
+/** The index of everything written, per language. */
+export const ARTICLES = {
+  en: 'blog',
+  de: 'artikel',
+  fr: 'articles',
+  ja: 'kiji',
+} as const;
+
+/** Why nearly every envelope app is a subscription, and what the fee buys. */
+export const NO_SUBSCRIPTION = {
+  en: 'blog/envelope-budgeting-without-a-subscription',
+  de: 'umschlagmethode-ohne-abo',
+  fr: 'budget-enveloppes-sans-abonnement',
+  ja: 'fuutou-kakeibo-sabusuku-nashi',
+} as const;
+
+/** The apps that do not need a bank login. */
+export const NO_BANK_LOGIN = {
+  en: 'blog/budget-app-without-bank-sync',
+  de: 'budget-app-ohne-bankzugang',
+  fr: 'application-budget-sans-connexion-bancaire',
+  ja: 'ginko-renkei-nashi-kakeibo-apuri',
+} as const;
+
 export const homeCluster = () => clusterFor(HOME);
+export const articlesCluster = () => clusterFor(ARTICLES);
+export const noSubscriptionCluster = () => clusterFor(NO_SUBSCRIPTION);
+export const noBankLoginCluster = () => clusterFor(NO_BANK_LOGIN);
 export const supportCluster = () => clusterFor(SUPPORT);
 export const privacyCluster = () => clusterFor(PRIVACY);
 export const ynabPricingCluster = () => clusterFor(YNAB_PRICING);

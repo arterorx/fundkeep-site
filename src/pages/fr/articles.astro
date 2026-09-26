@@ -1,0 +1,111 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../consts';
+import {
+  ARTICLES,
+  BEST_ALTERNATIVES,
+  BOUGHT_ONCE,
+  EXPORT_GUIDE,
+  LEAVING_YNAB,
+  NO_BANK_LOGIN,
+  NO_SUBSCRIPTION,
+  YNAB_PRICING,
+  articlesCluster,
+} from '../../i18n/pages';
+
+/**
+ * The index of what exists in this language.
+ *
+ * Deliberately not a copy of the English /blog: it lists the pages that exist
+ * in fr, and nothing that would send the reader to a language they did not
+ * ask for. When a page is translated it is added here.
+ */
+
+const lang = 'fr' as const;
+
+const title = 'Articles';
+const description =
+  'Ce que nous avons écrit sur le budget sans abonnement et sans connexion bancaire : comparatifs, prix et guides, chaque chiffre vérifié à la source.';
+
+const PAGES = {
+  BEST_ALTERNATIVES,
+  LEAVING_YNAB,
+  YNAB_PRICING,
+  BOUGHT_ONCE,
+  NO_SUBSCRIPTION,
+  NO_BANK_LOGIN,
+  EXPORT_GUIDE,
+};
+
+const items: { key: keyof typeof PAGES; title: string; blurb: string }[] = [
+  { key: 'BEST_ALTERNATIVES', title: 'Les meilleures alternatives à YNAB sur les appareils Apple', blurb: 'Quatre applications comparées, la nôtre en premier et c’est dit — aux prix du store français, avec les endroits où nous perdons.' },
+  { key: 'LEAVING_YNAB', title: 'Une alternative à YNAB pour Mac, iPhone et iPad', blurb: 'Ce qui reste pareil, ce que vous perdez, et pourquoi YNAB sur Mac est un onglet de navigateur.' },
+  { key: 'YNAB_PRICING', title: 'Ce que coûte YNAB, et comment on en est arrivé là', blurb: 'Le prix du jour sur l’App Store français et toutes les hausses depuis YNAB 4, tirées de leurs propres pages.' },
+  { key: 'BOUGHT_ONCE', title: 'Applications de budget sans abonnement', blurb: 'Qui vend une fois, qui se contente de le dire, et ce qu’un abonnement coûte sur la même période.' },
+  { key: 'NO_SUBSCRIPTION', title: 'Le budget par enveloppes sans abonnement', blurb: 'Pourquoi presque toutes ces applications sont des abonnements, ce que paie vraiment la mensualité, et ce qui change sans elle.' },
+  { key: 'NO_BANK_LOGIN', title: 'Applications de budget sans connexion bancaire', blurb: 'Sept applications qui fonctionnent sans vos identifiants bancaires — celles qui ne se connectent jamais et celles qui le peuvent.' },
+  { key: 'EXPORT_GUIDE', title: 'Exporter ses données YNAB', blurb: 'Où se cache « Export Plan », ce que contiennent les deux fichiers, et ce que l’export laisse derrière lui.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description,
+    url: `${SITE.url}/fr/articles`,
+    inLanguage: 'fr',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={articlesCluster()}
+>
+  <div class="section wrap wrap-narrow">
+    <h1>Articles</h1>
+    <p class="lede">Tout ici est vérifié de première main et daté. Là où un chiffre n’a pas pu être confirmé, il n’y en a pas.</p>
+
+    <ul class="index">
+      {
+        items.map((item) => (
+          <li>
+            <h2>
+              <a href={`/${lang}/${PAGES[item.key][lang]}`}>{item.title}</a>
+            </h2>
+            <p class="muted">{item.blurb}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .index {
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+
+  .index li + li {
+    margin-top: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .index h2 {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .index p {
+    margin: 0;
+  }
+</style>

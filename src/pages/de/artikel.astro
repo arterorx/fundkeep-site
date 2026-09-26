@@ -1,0 +1,111 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../consts';
+import {
+  ARTICLES,
+  BEST_ALTERNATIVES,
+  BOUGHT_ONCE,
+  EXPORT_GUIDE,
+  LEAVING_YNAB,
+  NO_BANK_LOGIN,
+  NO_SUBSCRIPTION,
+  YNAB_PRICING,
+  articlesCluster,
+} from '../../i18n/pages';
+
+/**
+ * The index of what exists in this language.
+ *
+ * Deliberately not a copy of the English /blog: it lists the pages that exist
+ * in de, and nothing that would send the reader to a language they did not
+ * ask for. When a page is translated it is added here.
+ */
+
+const lang = 'de' as const;
+
+const title = 'Artikel';
+const description =
+  'Was wir über Budgetieren ohne Abo und ohne Bankzugang geschrieben haben: Vergleiche, Preise und Anleitungen, alle Zahlen an der Quelle geprüft.';
+
+const PAGES = {
+  BEST_ALTERNATIVES,
+  LEAVING_YNAB,
+  YNAB_PRICING,
+  BOUGHT_ONCE,
+  NO_SUBSCRIPTION,
+  NO_BANK_LOGIN,
+  EXPORT_GUIDE,
+};
+
+const items: { key: keyof typeof PAGES; title: string; blurb: string }[] = [
+  { key: 'BEST_ALTERNATIVES', title: 'Die besten YNAB-Alternativen auf Apple-Geräten', blurb: 'Fünf Apps im Vergleich, unsere zuerst und offen gesagt — mit den Preisen des deutschen Stores und den Stellen, an denen wir verlieren.' },
+  { key: 'LEAVING_YNAB', title: 'Eine YNAB-Alternative für Mac, iPhone und iPad', blurb: 'Was beim Wechsel gleich bleibt, was wegfällt, und warum YNAB auf dem Mac ein Browser-Tab ist.' },
+  { key: 'YNAB_PRICING', title: 'Was YNAB kostet, und wie der Preis dorthin kam', blurb: 'Der heutige Preis im deutschen App Store und jede Erhöhung seit YNAB 4, aus ihren eigenen Seiten.' },
+  { key: 'BOUGHT_ONCE', title: 'Haushaltsbuch-Apps ohne Abo', blurb: 'Wer einmal verkauft, wer es nur so nennt, und was ein Abo in derselben Zeit kostet.' },
+  { key: 'NO_SUBSCRIPTION', title: 'Umschlagmethode ohne Abo', blurb: 'Warum fast jede App dieser Art ein Abo ist, wofür die Monatsgebühr wirklich bezahlt wird, und was sich ohne sie ändert.' },
+  { key: 'NO_BANK_LOGIN', title: 'Budget-Apps ohne Bankzugang', blurb: 'Sieben Apps, die ohne deine Bankzugangsdaten funktionieren — welche nie verbinden und welche nur können.' },
+  { key: 'EXPORT_GUIDE', title: 'YNAB-Daten exportieren', blurb: 'Wo „Export Plan“ versteckt ist, was in den zwei Dateien steht, und was der Export nicht mitnimmt.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description,
+    url: `${SITE.url}/de/artikel`,
+    inLanguage: 'de',
+    isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url },
+  },
+];
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  lang={lang}
+  alternates={articlesCluster()}
+>
+  <div class="section wrap wrap-narrow">
+    <h1>Artikel</h1>
+    <p class="lede">Alles hier ist aus erster Hand geprüft und mit Datum versehen. Wo eine Zahl nicht zu bestätigen war, steht keine.</p>
+
+    <ul class="index">
+      {
+        items.map((item) => (
+          <li>
+            <h2>
+              <a href={`/${lang}/${PAGES[item.key][lang]}`}>{item.title}</a>
+            </h2>
+            <p class="muted">{item.blurb}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .index {
+    margin: var(--space-xl) 0 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+
+  .index li + li {
+    margin-top: var(--space-l);
+    padding-top: var(--space-l);
+    border-top: 1px solid var(--rule);
+  }
+
+  .index h2 {
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .index p {
+    margin: 0;
+  }
+</style>

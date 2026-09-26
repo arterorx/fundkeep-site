@@ -1,7 +1,7 @@
 ---
 import { SITE } from '../consts';
 import { DEFAULT_LOCALE, localePath, type Locale } from '../i18n/config';
-import { BEST_ALTERNATIVES, LEAVING_YNAB, PRIVACY, SUPPORT } from '../i18n/pages';
+import { ARTICLES, LEAVING_YNAB, PRIVACY, SUPPORT } from '../i18n/pages';
 import { t } from '../i18n/ui';
 import BrandMark from './BrandMark.astro';
 
@@ -32,7 +32,7 @@ const links =
       ]
     : [
         { href: `/${lang}/${LEAVING_YNAB[lang]}`, label: ui('nav.leaving') },
-        { href: `/${lang}/${BEST_ALTERNATIVES[lang]}`, label: ui('nav.compare') },
+        { href: `/${lang}/${ARTICLES[lang]}`, label: ui('nav.articles') },
         // Both of these exist in every language since 26.09.2026. Until then
         // they were linked in English with an English label, because a
         // translated label on an English page is worse than an English label.
